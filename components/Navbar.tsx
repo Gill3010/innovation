@@ -3,7 +3,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-const Navbar = ({ onShowAbout }: { onShowAbout?: (show: boolean) => void }) => {
+type NavbarProps = {
+  onShowAbout?: (show: boolean) => void;
+  onShowServices?: (show: boolean) => void;
+};
+
+const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
@@ -32,9 +37,20 @@ const Navbar = ({ onShowAbout }: { onShowAbout?: (show: boolean) => void }) => {
                 About
               </Link>
             )}
-            <Link href="/services" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">
-              Services
-            </Link>
+
+            {onShowServices ? (
+              <button
+                onClick={() => onShowServices(true)}
+                className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors"
+                type="button"
+              >
+                Services
+              </button>
+            ) : (
+              <Link href="/services" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">
+                Services
+              </Link>
+            )}
             <Link href="/contact" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">
               Contact
             </Link>
@@ -81,9 +97,24 @@ const Navbar = ({ onShowAbout }: { onShowAbout?: (show: boolean) => void }) => {
                 About
               </Link>
             )}
-            <Link href="/services" className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md">
-              Services
-            </Link>
+
+            {onShowServices ? (
+              <button
+                onClick={() => {
+                  onShowServices(true);
+                  setIsMobileMenuOpen(false);
+                }}
+                className="block w-full text-left px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md"
+                type="button"
+              >
+                Services
+              </button>
+            ) : (
+              <Link href="/services" className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md">
+                Services
+              </Link>
+            )}
+
             <Link href="/contact" className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md">
               Contact
             </Link>
