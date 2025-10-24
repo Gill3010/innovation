@@ -8,6 +8,12 @@ interface MenuItem {
   icon: React.ReactElement;
   label: string;
   href: string;
+  key: string;
+}
+
+interface SidebarProps {
+  onNavigate?: (key: string) => void;
+  activeKey?: string;
 }
 
 const menuItems: MenuItem[] = [
@@ -19,6 +25,7 @@ const menuItems: MenuItem[] = [
     ),
     label: 'Dashboard',
     href: '/',
+    key: 'dashboard',
   },
   {
     icon: (
@@ -28,6 +35,7 @@ const menuItems: MenuItem[] = [
     ),
     label: 'Analytics',
     href: '/analytics',
+    key: 'analytics',
   },
   {
     icon: (
@@ -37,10 +45,11 @@ const menuItems: MenuItem[] = [
     ),
     label: 'Projects',
     href: '/projects',
+    key: 'projects',
   },
 ];
 
-const Sidebar = () => {
+const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeKey }) => {
   const [isExpanded, setIsExpanded] = useState(() => {
     if (typeof window !== 'undefined') {
       return window.innerWidth >= 768;
@@ -82,6 +91,19 @@ const Sidebar = () => {
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [handleKeyPress]);
+
+  const handleItemClick = (item: MenuItem) => {
+    if (onNavigate) {
+      onNavigate(item.key);
+    }
+  };
+
+  const isItemActive = (item: MenuItem) => {
+    if (activeKey) {
+      return activeKey === item.key;
+    }
+    return pathname === item.href;
+  };
 
   return (
     <>
@@ -136,20 +158,37 @@ const Sidebar = () => {
           <ul className="space-y-1">
             {menuItems.map((item) => (
               <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className={`flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50
-                    ${pathname === item.href ? 'bg-blue-50 text-blue-600' : ''}
-                    transition-colors duration-200
-                  `}
-                >
-                  <span className="inline-block">{item.icon}</span>
-                  {isExpanded && (
-                    <span className="ml-3 text-sm font-medium whitespace-nowrap">
-                      {item.label}
-                    </span>
-                  )}
-                </Link>
+                {onNavigate ? (
+                  <button
+                    onClick={() => handleItemClick(item)}
+                    className={`flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 w-full text-left
+                      ${isItemActive(item) ? 'bg-blue-50 text-blue-600' : ''}
+                      transition-colors duration-200
+                    `}
+                  >
+                    <span className="inline-block">{item.icon}</span>
+                    {isExpanded && (
+                      <span className="ml-3 text-sm font-medium whitespace-nowrap">
+                        {item.label}
+                      </span>
+                    )}
+                  </button>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className={`flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50
+                      ${isItemActive(item) ? 'bg-blue-50 text-blue-600' : ''}
+                      transition-colors duration-200
+                    `}
+                  >
+                    <span className="inline-block">{item.icon}</span>
+                    {isExpanded && (
+                      <span className="ml-3 text-sm font-medium whitespace-nowrap">
+                        {item.label}
+                      </span>
+                    )}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>

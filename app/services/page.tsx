@@ -4,7 +4,7 @@ import PageShell from '@/components/PageShell';
 
 export const metadata = {
   title: 'Services - Innova Proyectos',
-  description: 'Services and solutions provided by Innova Proyectos.',
+  description: 'Explore our digital transformation and technology services.',
 };
 
 export default function ServicesPage() {

@@ -3,8 +3,8 @@ import AboutUs from '@/components/AboutUs';
 import PageShell from '@/components/PageShell';
 
 export const metadata = {
-  title: 'About - Innova Proyectos',
-  description: 'About Innova Proyectos — mission, vision, values and leadership.',
+  title: 'About Us - Innova Proyectos',
+  description: 'Learn about Innova Proyectos and our mission.',
 };
 
 export default function AboutPage() {
