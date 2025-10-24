@@ -3,8 +3,8 @@
 import React from 'react';
 
 const AboutUs: React.FC = () => {
-  const photoSrc = '/images/israel-samuels.jpg'; // replace with your photo in /public/images or an external URL
-  const resumeHref = '/resume/Israel-Samuels-CV.pdf'; // place the CV in public/resume/
+  const photoSrc = '/images/yo.jpeg'; // replace with your photo in /public/images or an external URL
+  const resumeHref = '/resume/israel-cv.pdf'; // place the CV in public/resume/
 
   return (
     <section className="max-w-7xl mx-auto px-6 py-12 lg:py-20">
