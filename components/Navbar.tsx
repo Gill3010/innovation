@@ -33,15 +33,18 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
         <div className="flex justify-between h-16 items-center">
           {/* Logo */}
           <div className="shrink-0 flex items-center group">
-            <Link href="/" className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg group-hover:scale-105 transition-all duration-300">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
+                <span className="text-white text-lg font-bold">IP</span>
               </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-                Innovation
-              </span>
+              <div className="flex flex-col">
+                <span className="text-xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent leading-tight">
+                  Innova Proyectos
+                </span>
+                <span className="text-xs text-slate-500 font-medium">
+                  Development & Consulting
+                </span>
+              </div>
             </Link>
           </div>
 

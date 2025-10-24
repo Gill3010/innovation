@@ -94,11 +94,12 @@ const Footer = () => {
           <div className="space-y-6">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl flex items-center justify-center shadow-lg">
-                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
+                <span className="text-white text-xl font-bold">IP</span>
               </div>
-              <h3 className="text-2xl font-bold text-white">Innovation Platform</h3>
+              <div className="flex flex-col">
+                <h3 className="text-xl font-bold text-white leading-tight">Innova Proyectos</h3>
+                <span className="text-xs text-slate-400 font-medium">Development & Consulting</span>
+              </div>
             </div>
             <p className="text-slate-400 leading-relaxed max-w-md">
               Empowering the future through innovative solutions. We transform ideas into reality,
