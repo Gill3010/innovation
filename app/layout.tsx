@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Sidebar from "@/components/Sidebar";
-import Footer from "@/components/Footer";
+import ClientShell from '@/components/ClientShell';
+import type { ReactNode } from 'react';
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,22 +20,11 @@ export const metadata: Metadata = {
   description: "A modern and professional innovation platform",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gray-50 flex flex-col`}
-      >
-        <Navbar />
-        <Sidebar />
-        <main className="pt-16 pl-20 lg:pl-20 transition-all duration-300 grow">
-          {children}
-        </main>
-        <Footer />
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gray-50 flex flex-col`}>
+        <ClientShell>{children}</ClientShell>
       </body>
     </html>
   );

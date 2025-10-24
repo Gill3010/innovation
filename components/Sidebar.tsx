@@ -85,36 +85,39 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* Overlay for mobile */}
-      {isMobile && isExpanded && (
-        <div 
-          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
-          onClick={() => setIsExpanded(false)}
-          aria-hidden="true"
-        />
+      {/* Mobile: small fixed toggle when closed so users can open the menu */}
+      {isMobile && !isExpanded && (
+        <button
+          onClick={() => setIsExpanded(true)}
+          aria-label="Open sidebar"
+          className="fixed left-4 top-20 z-50 bg-white border border-gray-100 rounded-full p-2 shadow-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-white border-r border-gray-100 
+        className={`fixed left-0 top-16 bg-white border-r border-gray-100 
           transition-all duration-300 ease-in-out z-50
-          ${isExpanded ? 'w-64' : 'w-20'} 
-          ${isMobile ? (isExpanded ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'}
+          ${isMobile
+            ? (isExpanded ? 'translate-x-0 w-64 h-[calc(100vh-4rem)] overflow-y-auto shadow-lg' : '-translate-x-full')
+            : (isExpanded ? 'w-64 translate-x-0 h-[calc(100vh-4rem)]' : 'w-20 translate-x-0 h-[calc(100vh-4rem)]')
+          }
         `}
         aria-label="Sidebar navigation"
       >
-        {/* Toggle button */}
+        {/* Toggle button (visible when sidebar is open or on desktop) */}
         <button
           onClick={() => setIsExpanded(prev => !prev)}
-          className="absolute -right-3 top-4 bg-white border border-gray-100 rounded-full p-1.5 
-            hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={`absolute bg-white border border-gray-100 rounded-full p-1.5 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 ${isMobile ? 'right-3 top-3' : '-right-3 top-4'}`}
           aria-label={isExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
           aria-expanded={isExpanded}
         >
           <svg
-            className={`w-4 h-4 text-gray-600 transition-transform duration-300 ${
-              isExpanded ? 'rotate-180' : ''
-            }`}
+            className={`w-4 h-4 text-gray-600 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -123,7 +126,7 @@ const Sidebar = () => {
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth={2}
-              d="M15 19l-7-7 7-7"
+              d="M9 5l7 7-7 7"
             />
           </svg>
         </button>

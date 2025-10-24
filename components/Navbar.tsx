@@ -3,11 +3,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-const Navbar = () => {
+const Navbar = ({ onShowAbout }: { onShowAbout?: (show: boolean) => void }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-50">
+    <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-70">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           {/* Logo */}
@@ -19,9 +19,19 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden sm:flex sm:space-x-8">
-            <Link href="/about" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">
-              About
-            </Link>
+            {onShowAbout ? (
+              <button
+                onClick={() => onShowAbout(true)}
+                className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors"
+                type="button"
+              >
+                About
+              </button>
+            ) : (
+              <Link href="/about" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">
+                About
+              </Link>
+            )}
             <Link href="/services" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">
               Services
             </Link>
@@ -55,9 +65,22 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <div className="sm:hidden bg-white border-b border-gray-100">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            <Link href="/about" className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md">
-              About
-            </Link>
+            {onShowAbout ? (
+              <button
+                onClick={() => {
+                  onShowAbout(true);
+                  setIsMobileMenuOpen(false);
+                }}
+                className="block w-full text-left px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md"
+                type="button"
+              >
+                About
+              </button>
+            ) : (
+              <Link href="/about" className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md">
+                About
+              </Link>
+            )}
             <Link href="/services" className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md">
               Services
             </Link>

@@ -1,6 +1,7 @@
-'use client';
+"use client";
 
 import Button from '../components/Button';
+
 
 export default function Home() {
   const videoSrc = "/videos/pexels-office-6774633.mp4";
@@ -41,6 +42,8 @@ export default function Home() {
           <Button text="Get Started" />
         </div>
       </main>
+
+      
     </div>
   );
 }
