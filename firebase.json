@@ -22,9 +22,29 @@
       {
         "source": "/contact",
         "destination": "/contact.html"
+      },
+      {
+        "source": "/dashboard",
+        "destination": "/dashboard.html"
+      },
+      {
+        "source": "/research",
+        "destination": "/research.html"
+      },
+      {
+        "source": "/library",
+        "destination": "/library.html"
       }
     ],
     "cleanUrls": true,
     "trailingSlash": false
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs18"
   }
 }

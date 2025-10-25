@@ -4,7 +4,6 @@ import "./globals.css";
 import ClientShell from '@/components/ClientShell';
 import type { ReactNode } from 'react';
 
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -16,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Innovation Platform",
-  description: "A modern and professional innovation platform",
+  title: "Scientific Research Assistant | Innovation Platform",
+  description: "A modern and intelligent platform for scientific research, collaboration, and publication management",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

@@ -1,0 +1,40 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Reglas para usuarios autenticados
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Reglas para proyectos de investigación
+    match /research_projects/{projectId} {
+      allow read, write: if request.auth != null && 
+        (resource.data.ownerId == request.auth.uid || 
+         request.auth.uid in resource.data.collaborators);
+    }
+    
+    // Reglas para papers y publicaciones
+    match /papers/{paperId} {
+      allow read, write: if request.auth != null && 
+        (resource.data.ownerId == request.auth.uid || 
+         request.auth.uid in resource.data.collaborators);
+    }
+    
+    // Reglas para biblioteca personal
+    match /user_library/{userId}/papers/{paperId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Reglas para colaboraciones
+    match /collaborations/{collaborationId} {
+      allow read, write: if request.auth != null && 
+        (resource.data.participants[request.auth.uid] != null);
+    }
+    
+    // Reglas para métricas y analytics (solo lectura para usuarios autenticados)
+    match /analytics/{document} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+  }
+}
