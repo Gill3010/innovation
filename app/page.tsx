@@ -1,6 +1,7 @@
 "use client";
 
 import Button from '../components/Button';
+import SearchComponent from '../components/SearchComponent';
 
 
 export default function Home() {
@@ -40,6 +41,11 @@ export default function Home() {
         {/* "Get Started" button using Button component */}
         <div className="mt-8">
           <Button text="Get Started" />
+        </div>
+
+        {/* Search Component */}
+        <div className="mt-12">
+          <SearchComponent />
         </div>
       </main>
 

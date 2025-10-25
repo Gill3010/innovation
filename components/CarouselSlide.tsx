@@ -297,6 +297,16 @@ const ResponsiveCarousel: React.FC<ResponsiveCarouselProps> = ({
 // ============================================================
 
 export default function ProjectsContent() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 50);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
   const projectSlides: CarouselSlide[] = [
     {
       id: 1,
@@ -535,7 +545,11 @@ export default function ProjectsContent() {
   ];
 
   return (
-    <div className="w-full">
+    <div 
+      className={`w-full transition-all duration-1000 ease-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+      }`}
+    >
       <ResponsiveCarousel
         slides={projectSlides}
         autoPlay={true}

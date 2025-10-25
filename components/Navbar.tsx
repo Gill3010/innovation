@@ -49,11 +49,11 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden sm:flex sm:items-center sm:space-x-2">
+          <div className="hidden lg:flex lg:items-center lg:space-x-2">
             {onShowAbout ? (
               <button
                 onClick={() => onShowAbout(true)}
-                className="relative px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group"
+                className="relative px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap"
                 type="button"
               >
                 About
@@ -62,7 +62,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
             ) : (
               <Link 
                 href="/about" 
-                className="relative px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group"
+                className="relative px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap"
               >
                 About
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
@@ -72,7 +72,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
             {onShowServices ? (
               <button
                 onClick={() => onShowServices(true)}
-                className="relative px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group"
+                className="relative px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap"
                 type="button"
               >
                 Services
@@ -81,7 +81,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
             ) : (
               <Link 
                 href="/services" 
-                className="relative px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group"
+                className="relative px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap"
               >
                 Services
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
@@ -90,7 +90,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
 
             <Link 
               href="/dashboard" 
-              className="relative px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group"
+              className="relative px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap"
             >
               Dashboard
               <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
@@ -98,7 +98,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
 
             <Link 
               href="/research" 
-              className="relative px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group"
+              className="relative px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap"
             >
               Research
               <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
@@ -106,7 +106,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
 
             <Link 
               href="/library" 
-              className="relative px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group"
+              className="relative px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap"
             >
               Library
               <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
@@ -114,13 +114,90 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
 
             <Link 
               href="/contact" 
-              className="ml-4 inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transform hover:-translate-y-0.5 transition-all duration-300"
+              className="ml-4 inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transform hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap"
             >
               Contact
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </Link>
+          </div>
+
+          {/* Tablet Navigation with Horizontal Scroll */}
+          <div className="hidden sm:flex lg:hidden flex-1 ml-6">
+            <div className="flex overflow-x-auto scrollbar-hide space-x-2 py-2">
+              {onShowAbout ? (
+                <button
+                  onClick={() => onShowAbout(true)}
+                  className="relative px-3 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap flex-shrink-0"
+                  type="button"
+                >
+                  About
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </button>
+              ) : (
+                <Link 
+                  href="/about" 
+                  className="relative px-3 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap flex-shrink-0"
+                >
+                  About
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </Link>
+              )}
+
+              {onShowServices ? (
+                <button
+                  onClick={() => onShowServices(true)}
+                  className="relative px-3 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap flex-shrink-0"
+                  type="button"
+                >
+                  Services
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </button>
+              ) : (
+                <Link 
+                  href="/services" 
+                  className="relative px-3 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap flex-shrink-0"
+                >
+                  Services
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </Link>
+              )}
+
+              <Link 
+                href="/dashboard" 
+                className="relative px-3 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap flex-shrink-0"
+              >
+                Dashboard
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+              </Link>
+
+              <Link 
+                href="/research" 
+                className="relative px-3 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap flex-shrink-0"
+              >
+                Research
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+              </Link>
+
+              <Link 
+                href="/library" 
+                className="relative px-3 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap flex-shrink-0"
+              >
+                Library
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+              </Link>
+
+              <Link 
+                href="/contact" 
+                className="ml-2 inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transform hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap flex-shrink-0"
+              >
+                Contact
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </Link>
+            </div>
           </div>
 
           {/* Mobile menu button */}
@@ -148,114 +225,117 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
       {/* Mobile Navigation */}
       <div 
         className={`sm:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-          isMobileMenuOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'
+          isMobileMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
         <div className="bg-gradient-to-b from-white to-slate-50 border-b border-slate-200/60 shadow-lg">
-          <div className="px-4 pt-2 pb-4 space-y-2">
-            {onShowAbout ? (
-              <button
-                onClick={() => {
-                  onShowAbout(true);
-                  setIsMobileMenuOpen(false);
-                }}
-                className="flex items-center gap-3 w-full text-left px-4 py-3 text-base font-semibold text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 group"
-                type="button"
-              >
-                <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                About
-              </button>
-            ) : (
+          <div className="px-4 pt-2 pb-4 max-h-96 overflow-y-auto scrollbar-hide">
+            <div className="space-y-2">
+              {onShowAbout ? (
+                <button
+                  onClick={() => {
+                    onShowAbout(true);
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="flex items-center gap-3 w-full text-left px-4 py-3 text-base font-semibold text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 group"
+                  type="button"
+                >
+                  <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  About
+                </button>
+              ) : (
+                <Link 
+                  href="/about" 
+                  className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 group"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  About
+                </Link>
+              )}
+
+              {onShowServices ? (
+                <button
+                  onClick={() => {
+                    onShowServices(true);
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="flex items-center gap-3 w-full text-left px-4 py-3 text-base font-semibold text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 group"
+                  type="button"
+                >
+                  <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  Services
+                </button>
+              ) : (
+                <Link 
+                  href="/services" 
+                  className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 group"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  Services
+                </Link>
+              )}
+
               <Link 
-                href="/about" 
+                href="/dashboard" 
                 className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 group"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
                 </svg>
-                About
+                Dashboard
               </Link>
-            )}
 
-            {onShowServices ? (
-              <button
-                onClick={() => {
-                  onShowServices(true);
-                  setIsMobileMenuOpen(false);
-                }}
-                className="flex items-center gap-3 w-full text-left px-4 py-3 text-base font-semibold text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 group"
-                type="button"
-              >
-                <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                Services
-              </button>
-            ) : (
               <Link 
-                href="/services" 
+                href="/research" 
                 className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 group"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
-                Services
+                Research
               </Link>
-            )}
 
-            <Link 
-              href="/dashboard" 
-              className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 group"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
-              </svg>
-              Dashboard
-            </Link>
+              <Link 
+                href="/library" 
+                className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 group"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                Library
+              </Link>
 
-            <Link 
-              href="/research" 
-              className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 group"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-              </svg>
-              Research
-            </Link>
-
-            <Link 
-              href="/library" 
-              className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 group"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-              </svg>
-              Library
-            </Link>
-
-            <Link 
-              href="/contact" 
-              className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-xl shadow-md transition-all duration-200 group"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              Contact
-              <svg className="w-4 h-4 ml-auto group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </Link>
+              <Link 
+                href="/contact" 
+                className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-xl shadow-md transition-all duration-200 group"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                Contact
+                <svg className="w-4 h-4 ml-auto group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
+
     </nav>
   );
 };

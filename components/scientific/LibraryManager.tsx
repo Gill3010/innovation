@@ -3,30 +3,50 @@
 import React, { useState, useEffect } from 'react';
 import { ScientificPaper } from '@/types/scientific';
 import { ScientificDataService } from '@/services/scientificData';
+import { useAuth } from '@/contexts/AuthContext';
+import AddPaperForm from './AddPaperForm';
 
 const LibraryManager: React.FC = () => {
+  const { user } = useAuth();
   const [papers, setPapers] = useState<ScientificPaper[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string>('');
   const [sortBy, setSortBy] = useState<'date' | 'title' | 'citations'>('date');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [showAddPaperForm, setShowAddPaperForm] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    loadPapers();
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 50);
+    
+    return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    if (user) {
+      loadPapers();
+    }
+  }, [user]);
+
   const loadPapers = async () => {
+    if (!user) return;
+    
     try {
       setLoading(true);
-      const userId = 'demo-user'; // En producción vendría de auth
-      const papersData = await ScientificDataService.getPapers(userId);
+      const papersData = await ScientificDataService.getPapers(user.id);
       setPapers(papersData);
     } catch (error) {
       console.error('Error loading papers:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePaperAdded = () => {
+    loadPapers(); // Recargar datos después de agregar un paper
   };
 
   const handleMarkAsRead = async (paperId: string, isRead: boolean) => {
@@ -79,13 +99,22 @@ const LibraryManager: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
       {/* Header */}
-      <div className="mb-8">
+      <div 
+        className={`mb-8 transition-all duration-1000 ease-out ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}
+      >
         <h1 className="text-3xl font-bold text-slate-900 mb-2">Research Library</h1>
         <p className="text-slate-600">Your personal collection of scientific papers</p>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div 
+        className={`grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 transition-all duration-1000 ease-out ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}
+        style={{ transitionDelay: '100ms' }}
+      >
         <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
           <div className="flex items-center justify-between">
             <div>
@@ -144,7 +173,12 @@ const LibraryManager: React.FC = () => {
       </div>
 
       {/* Filters and Controls */}
-      <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200 mb-8">
+      <div 
+        className={`bg-white rounded-xl p-6 shadow-lg border border-slate-200 mb-8 transition-all duration-1000 ease-out ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}
+        style={{ transitionDelay: '200ms' }}
+      >
         <div className="flex flex-col lg:flex-row gap-4">
           {/* Search */}
           <div className="flex-1">
@@ -225,7 +259,12 @@ const LibraryManager: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'}>
+        <div 
+          className={`${viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'} transition-all duration-1000 ease-out ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}
+          style={{ transitionDelay: '300ms' }}
+        >
           {filteredPapers.map((paper) => (
             <div key={paper.id} className={`bg-white rounded-xl shadow-lg border border-slate-200 hover:shadow-xl transition-shadow ${
               viewMode === 'list' ? 'p-6' : 'p-6'
@@ -346,7 +385,12 @@ const LibraryManager: React.FC = () => {
       )}
 
       {!loading && filteredPapers.length === 0 && (
-        <div className="text-center py-12 text-slate-500">
+        <div 
+          className={`text-center py-12 text-slate-500 transition-all duration-1000 ease-out ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}
+          style={{ transitionDelay: '400ms' }}
+        >
           <svg className="w-16 h-16 mx-auto mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
@@ -354,10 +398,21 @@ const LibraryManager: React.FC = () => {
           <p className="text-sm mb-4">
             {searchQuery || selectedTag ? 'Try adjusting your filters' : 'Add your first paper to get started'}
           </p>
-          <a href="/research" className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+          <button 
+            onClick={() => setShowAddPaperForm(true)}
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
             Add Papers
-          </a>
+          </button>
         </div>
+      )}
+
+      {/* Add Paper Form Modal */}
+      {showAddPaperForm && (
+        <AddPaperForm
+          onClose={() => setShowAddPaperForm(false)}
+          onSuccess={handlePaperAdded}
+        />
       )}
     </div>
   );

@@ -9,6 +9,15 @@ const DashboardShell: React.FC = () => {
   const [recentPapers, setRecentPapers] = useState<ScientificPaper[]>([]);
   const [recentProjects, setRecentProjects] = useState<ResearchProject[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 50);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     loadDashboardData();
@@ -54,13 +63,22 @@ const DashboardShell: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
       {/* Header */}
-      <div className="mb-8">
+      <div 
+        className={`mb-8 transition-all duration-1000 ease-out ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'
+        }`}
+      >
         <h1 className="text-3xl font-bold text-slate-900 mb-2">Research Dashboard</h1>
-        <p className="text-slate-600">Welcome back! Here's your research overview.</p>
+        <p className="text-slate-600">Welcome back! Here&apos;s your research overview.</p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div 
+        className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 transition-all duration-1000 ease-out ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'
+        }`}
+        style={{ transitionDelay: '100ms' }}
+      >
         <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
           <div className="flex items-center justify-between">
             <div>
@@ -119,7 +137,12 @@ const DashboardShell: React.FC = () => {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div 
+        className={`grid grid-cols-1 lg:grid-cols-3 gap-8 transition-all duration-1000 ease-out ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'
+        }`}
+        style={{ transitionDelay: '200ms' }}
+      >
         {/* Recent Papers */}
         <div className="lg:col-span-2">
           <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
@@ -215,7 +238,12 @@ const DashboardShell: React.FC = () => {
       </div>
 
       {/* Quick Actions */}
-      <div className="mt-8 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-6 text-white">
+      <div 
+        className={`mt-8 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-6 text-white transition-all duration-1000 ease-out ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'
+        }`}
+        style={{ transitionDelay: '300ms' }}
+      >
         <h2 className="text-xl font-bold mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <a href="/research" className="bg-white/10 backdrop-blur-sm rounded-lg p-4 hover:bg-white/20 transition-colors">
