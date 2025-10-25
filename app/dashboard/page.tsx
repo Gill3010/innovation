@@ -1,6 +1,7 @@
 import React from 'react';
 import DashboardShell from '@/components/scientific/DashboardShell';
 import PageShell from '@/components/PageShell';
+import ProtectedRoute from '@/components/auth/ProtectedRoute';
 
 export const metadata = {
   title: 'Research Dashboard - Scientific Assistant',
@@ -10,7 +11,9 @@ export const metadata = {
 export default function DashboardPage() {
   return (
     <PageShell>
-      <DashboardShell />
+      <ProtectedRoute>
+        <DashboardShell />
+      </ProtectedRoute>
     </PageShell>
   );
 }

@@ -3,9 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import { DashboardStats, ScientificPaper, ResearchProject } from '@/types/scientific';
 import { ScientificDataService } from '@/services/scientificData';
+import { useAuth } from '@/contexts/AuthContext';
 import AddPaperForm from './AddPaperForm';
 
 const DashboardShell: React.FC = () => {
+  const { user } = useAuth();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [recentPapers, setRecentPapers] = useState<ScientificPaper[]>([]);
   const [recentProjects, setRecentProjects] = useState<ResearchProject[]>([]);
@@ -22,19 +24,21 @@ const DashboardShell: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    loadDashboardData();
-  }, []);
+    if (user) {
+      loadDashboardData();
+    }
+  }, [user]);
 
   const loadDashboardData = async () => {
+    if (!user) return;
+    
     try {
       setLoading(true);
-      // Simular userId - en producción vendría de la autenticación
-      const userId = 'demo-user';
       
       const [dashboardStats, papers, projects] = await Promise.all([
-        ScientificDataService.getDashboardStats(userId),
-        ScientificDataService.getPapers(userId),
-        ScientificDataService.getProjects(userId)
+        ScientificDataService.getDashboardStats(user.id),
+        ScientificDataService.getPapers(user.id),
+        ScientificDataService.getProjects(user.id)
       ]);
 
       setStats(dashboardStats);
@@ -50,6 +54,23 @@ const DashboardShell: React.FC = () => {
   const handlePaperAdded = () => {
     loadDashboardData(); // Recargar datos después de agregar un paper
   };
+
+  if (!user) {
+    return (
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-slate-900 mb-4">Please Sign In</h1>
+          <p className="text-slate-600 mb-8">You need to be signed in to access your research dashboard.</p>
+          <button
+            onClick={() => window.location.href = '/'}
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Go to Home
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (

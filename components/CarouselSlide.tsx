@@ -95,7 +95,7 @@ const ResponsiveCarousel: React.FC<ResponsiveCarouselProps> = ({
 
   return (
     <section className={`relative w-full ${className}`}>
-      <div className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden rounded-2xl md:rounded-3xl shadow-2xl bg-linear-to-br from-gray-50 to-gray-100">
+      <div className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden rounded-2xl md:rounded-3xl shadow-2xl bg-gradient-to-br from-gray-50 to-gray-100">
         
         <div className="absolute inset-0">
           <Image
@@ -113,7 +113,7 @@ const ResponsiveCarousel: React.FC<ResponsiveCarouselProps> = ({
             }`}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1920px"
           />
-          <div className="absolute inset-0 bg-linear-to-t from-[#0A1628]/95 via-[#0A1628]/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/95 via-[#0A1628]/50 to-transparent" />
         </div>
 
         <div className="relative h-full flex items-end">
@@ -137,7 +137,7 @@ const ResponsiveCarousel: React.FC<ResponsiveCarouselProps> = ({
                 {currentSlide.title}
               </h2>
 
-              <div className="w-20 sm:w-24 h-1 bg-linear-to-r from-[#00D4FF] to-[#0099FF] rounded-full mb-4 sm:mb-6 animate-fadeInUp animation-delay-300" />
+              <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-[#00D4FF] to-[#0099FF] rounded-full mb-4 sm:mb-6 animate-fadeInUp animation-delay-300" />
 
               <p className="text-base sm:text-lg md:text-xl text-gray-200 mb-6 sm:mb-8 max-w-2xl leading-relaxed animate-fadeInUp animation-delay-400">
                 {currentSlide.description}
@@ -159,7 +159,7 @@ const ResponsiveCarousel: React.FC<ResponsiveCarouselProps> = ({
               {currentSlide.link && (
                 <a
                   href={currentSlide.link}
-                  className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-linear-to-r from-[#00D4FF] to-[#0099FF] text-white font-bold text-sm sm:text-base rounded-full hover:shadow-2xl transition-all duration-300 transform hover:scale-105 animate-fadeInUp animation-delay-600"
+                  className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-[#00D4FF] to-[#0099FF] text-white font-bold text-sm sm:text-base rounded-full hover:shadow-2xl transition-all duration-300 transform hover:scale-105 animate-fadeInUp animation-delay-600"
                   aria-label={`Learn more about ${currentSlide.title}`}
                 >
                   Learn More

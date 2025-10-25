@@ -4,9 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { ScientificPaper, ResearchProject, PaperFormData, ProjectFormData } from '@/types/scientific';
 import { ScientificDataService } from '@/services/scientificData';
 import { ScientificAPIService } from '@/services/scientificAPI';
+import { useAuth } from '@/contexts/AuthContext';
 import AddPaperForm from './AddPaperForm';
 
 const ResearchManager: React.FC = () => {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<'papers' | 'projects'>('papers');
   const [papers, setPapers] = useState<ScientificPaper[]>([]);
   const [projects, setProjects] = useState<ResearchProject[]>([]);
@@ -27,17 +29,20 @@ const ResearchManager: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    loadData();
-  }, []);
+    if (user) {
+      loadData();
+    }
+  }, [user]);
 
   const loadData = async () => {
+    if (!user) return;
+    
     try {
       setLoading(true);
-      const userId = 'demo-user'; // En producción vendría de auth
       
       const [papersData, projectsData] = await Promise.all([
-        ScientificDataService.getPapers(userId),
-        ScientificDataService.getProjects(userId)
+        ScientificDataService.getPapers(user.id),
+        ScientificDataService.getProjects(user.id)
       ]);
 
       setPapers(papersData);
@@ -69,6 +74,8 @@ const ResearchManager: React.FC = () => {
   };
 
   const addPaperFromAPI = async (apiPaper: any) => {
+    if (!user) return;
+    
     try {
       const normalizedPaper = ScientificAPIService.normalizePaperData(apiPaper, 'crossref');
       
@@ -82,7 +89,7 @@ const ResearchManager: React.FC = () => {
         url: normalizedPaper.url,
         citations: normalizedPaper.citations,
         tags: [],
-        ownerId: 'demo-user',
+        ownerId: user.id,
         isRead: false,
       };
 
@@ -105,6 +112,23 @@ const ResearchManager: React.FC = () => {
     project.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
     project.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
   );
+
+  if (!user) {
+    return (
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-slate-900 mb-4">Please Sign In</h1>
+          <p className="text-slate-600 mb-8">You need to be signed in to access the research manager.</p>
+          <button
+            onClick={() => window.location.href = '/'}
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Go to Home
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">

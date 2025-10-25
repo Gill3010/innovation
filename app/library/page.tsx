@@ -1,6 +1,7 @@
 import React from 'react';
 import LibraryManager from '@/components/scientific/LibraryManager';
 import PageShell from '@/components/PageShell';
+import ProtectedRoute from '@/components/auth/ProtectedRoute';
 
 export const metadata = {
   title: 'Research Library - Scientific Assistant',
@@ -10,7 +11,9 @@ export const metadata = {
 export default function LibraryPage() {
   return (
     <PageShell>
-      <LibraryManager />
+      <ProtectedRoute>
+        <LibraryManager />
+      </ProtectedRoute>
     </PageShell>
   );
 }

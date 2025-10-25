@@ -188,6 +188,10 @@ export class ScientificDataService {
 
   // ===== MÉTRICAS Y ESTADÍSTICAS =====
   static async getDashboardStats(userId: string): Promise<DashboardStats> {
+    if (!userId) {
+      throw new Error('User ID is required');
+    }
+
     // Obtener conteos básicos
     const papersQuery = query(
       collection(db, 'papers'),
