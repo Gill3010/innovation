@@ -35,8 +35,9 @@ const UserProfile: React.FC = () => {
 
       await updateUserProfile(userData);
       setIsEditing(false);
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Error al actualizar perfil';
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }

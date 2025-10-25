@@ -53,8 +53,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin, onClose })
 
       await register(formData.email, formData.password, userData);
       if (onClose) onClose();
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Error al crear cuenta';
+      setError(errorMessage);
     }
   };
 

@@ -8,16 +8,20 @@ service cloud.firestore {
     
     // Reglas para proyectos de investigación
     match /research_projects/{projectId} {
-      allow read, write: if request.auth != null && 
+      allow read: if request.auth != null && 
         (resource.data.ownerId == request.auth.uid || 
          request.auth.uid in resource.data.collaborators);
+      allow create: if request.auth != null && request.resource.data.ownerId == request.auth.uid;
+      allow update, delete: if request.auth != null && resource.data.ownerId == request.auth.uid;
     }
     
     // Reglas para papers y publicaciones
     match /papers/{paperId} {
-      allow read, write: if request.auth != null && 
+      allow read: if request.auth != null && 
         (resource.data.ownerId == request.auth.uid || 
          request.auth.uid in resource.data.collaborators);
+      allow create: if request.auth != null && request.resource.data.ownerId == request.auth.uid;
+      allow update, delete: if request.auth != null && resource.data.ownerId == request.auth.uid;
     }
     
     // Reglas para biblioteca personal

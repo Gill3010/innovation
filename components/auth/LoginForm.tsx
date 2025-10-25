@@ -30,8 +30,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister, onClose }) =>
     try {
       await login(formData.email, formData.password);
       if (onClose) onClose();
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Error de autenticación';
+      setError(errorMessage);
     }
   };
 

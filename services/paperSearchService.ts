@@ -23,12 +23,7 @@ export interface PaperResult {
 export async function searchCrossRef(query: string, rows: number = 10): Promise<PaperResult[]> {
   try {
     const response = await fetch(
-      `https://api.crossref.org/works?query=${encodeURIComponent(query)}&rows=${rows}`,
-      {
-        headers: {
-          'User-Agent': 'InnovaProyectos/1.0 (https://innovationplatforms.web.app)'
-        }
-      }
+      `https://api.crossref.org/works?query=${encodeURIComponent(query)}&rows=${rows}`
     );
 
     if (!response.ok) {
@@ -199,4 +194,5 @@ export async function searchAllSources(query: string): Promise<{
     arxiv: arxiv.status === 'fulfilled' ? arxiv.value : [],
   };
 }
+
 

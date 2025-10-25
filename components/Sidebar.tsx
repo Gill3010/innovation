@@ -68,10 +68,15 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeKey }) => {
 
   // Initialize client-side state after hydration
   useEffect(() => {
-    setIsClient(true);
-    const isMobileView = window.innerWidth < 768;
-    setIsMobile(isMobileView);
-    setIsExpanded(!isMobileView);
+    // Use setTimeout to avoid cascading renders
+    const timer = setTimeout(() => {
+      setIsClient(true);
+      const isMobileView = window.innerWidth < 768;
+      setIsMobile(isMobileView);
+      setIsExpanded(!isMobileView);
+    }, 0);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   // Add resize listener

@@ -11,7 +11,6 @@ export class ScientificAPIService {
       const response = await fetch(`${CROSSREF_API_BASE}/${doi}`, {
         headers: {
           'Accept': 'application/json',
-          'User-Agent': 'Scientific-Assistant/1.0 (mailto:info@innovaproyectos.com)',
         },
       });
 
@@ -40,7 +39,6 @@ export class ScientificAPIService {
       const response = await fetch(`${CROSSREF_API_BASE}?${params}`, {
         headers: {
           'Accept': 'application/json',
-          'User-Agent': 'Scientific-Assistant/1.0 (mailto:info@innovaproyectos.com)',
         },
       });
 

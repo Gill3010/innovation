@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { PaperFormData } from '@/types/scientific';
+import { PaperFormData, CrossRefPaper } from '@/types/scientific';
 import { ScientificAPIService } from '@/services/scientificAPI';
 import { ScientificDataService } from '@/services/scientificData';
 import { useAuth } from '@/contexts/AuthContext';
@@ -32,7 +32,7 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<CrossRefPaper[]>([]);
   const [searching, setSearching] = useState(false);
 
   const handleInputChange = (field: keyof PaperFormData, value: string | string[]) => {
@@ -98,7 +98,7 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
     }
   };
 
-  const handleSelectSearchResult = (paper: any) => {
+  const handleSelectSearchResult = (paper: CrossRefPaper) => {
     const normalized = ScientificAPIService.normalizePaperData(paper, 'crossref');
     setFormData(prev => ({
       ...prev,
@@ -244,7 +244,7 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
                 >
                   <h4 className="font-medium text-slate-900">{paper.title?.[0] || 'Untitled'}</h4>
                   <p className="text-sm text-slate-600">
-                    {paper.author?.map((a: any) => `${a.given} ${a.family}`).join(', ') || 'Unknown authors'}
+                    {paper.author?.map(a => `${a.given} ${a.family}`).join(', ') || 'Unknown authors'}
                   </p>
                   <p className="text-xs text-slate-500">
                     {paper['container-title']?.[0] || 'Unknown journal'} • {paper['published-print']?.['date-parts']?.[0]?.[0] || 'Unknown year'}
