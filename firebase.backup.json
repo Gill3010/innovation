@@ -34,18 +34,6 @@
       {
         "source": "/library",
         "destination": "/library.html"
-      },
-      {
-        "source": "/login",
-        "destination": "/login.html"
-      },
-      {
-        "source": "/register",
-        "destination": "/register.html"
-      },
-      {
-        "source": "/profile",
-        "destination": "/profile.html"
       }
     ],
     "cleanUrls": true,
@@ -54,6 +42,9 @@
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
+  },
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs18"
   }
 }
-

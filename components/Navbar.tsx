@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useTranslation } from '@/contexts/TranslationContext';
 import { useAuth } from '@/contexts/AuthContext';
 import LanguageSelector from './LanguageSelector';
-import UserProfile from './auth/UserProfile';
 
 type NavbarProps = {
   onShowAbout?: (show: boolean) => void;
@@ -15,7 +14,6 @@ type NavbarProps = {
 const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [showUserProfile, setShowUserProfile] = useState(false);
   const { translate } = useTranslation();
   const { user, isLoading } = useAuth();
 
@@ -131,15 +129,15 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
               </div>
             ) : user ? (
               <div className="ml-4 flex items-center gap-2">
-                <button
-                  onClick={() => setShowUserProfile(true)}
+                <Link
+                  href="/profile"
                   className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-100 text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-200 transition-all duration-300"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                   {user.name || translate('Profile')}
-                </button>
+                </Link>
                 <Link 
                   href="/contact" 
                   className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transform hover:-translate-y-0.5 transition-all duration-300"
@@ -377,18 +375,16 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
               {/* Auth Section - Mobile */}
               <div className="border-t border-slate-200/60 pt-2 mt-2">
                 {user ? (
-                  <button
-                    onClick={() => {
-                      setShowUserProfile(true);
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className="flex items-center gap-3 w-full text-left px-4 py-3 text-base font-semibold text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 group"
+                  <Link
+                    href="/profile"
+                    className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 group"
+                    onClick={() => setIsMobileMenuOpen(false)}
                   >
                     <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                     {user.name || translate('Profile')}
-                  </button>
+                  </Link>
                 ) : (
                   <>
                     <Link
@@ -432,25 +428,6 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
           </div>
         </div>
       </div>
-
-      {/* User Profile Modal */}
-      {showUserProfile && (
-        <div className="fixed inset-0 bg-black/60 z-[9999]">
-          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md p-4">
-            <div className="relative">
-              <button
-                onClick={() => setShowUserProfile(false)}
-                className="absolute -top-4 -right-4 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors z-10"
-              >
-                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-              <UserProfile />
-            </div>
-          </div>
-        </div>
-      )}
 
     </nav>
   );
