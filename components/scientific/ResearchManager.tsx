@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { ScientificPaper, ResearchProject, PaperFormData, ProjectFormData } from '@/types/scientific';
 import { ScientificDataService } from '@/services/scientificData';
 import { ScientificAPIService } from '@/services/scientificAPI';
+import AddPaperForm from './AddPaperForm';
 
 const ResearchManager: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'papers' | 'projects'>('papers');
@@ -15,6 +16,7 @@ const ResearchManager: React.FC = () => {
   const [apiSearchResults, setApiSearchResults] = useState<any[]>([]);
   const [apiSearching, setApiSearching] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [showAddPaperForm, setShowAddPaperForm] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -45,6 +47,10 @@ const ResearchManager: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePaperAdded = () => {
+    loadData(); // Recargar datos después de agregar un paper
   };
 
   const handleApiSearch = async (query: string) => {
@@ -160,7 +166,13 @@ const ResearchManager: React.FC = () => {
             </button>
             
             <button
-              onClick={() => setShowAddForm(!showAddForm)}
+              onClick={() => {
+                if (activeTab === 'papers') {
+                  setShowAddPaperForm(true);
+                } else {
+                  setShowAddForm(!showAddForm);
+                }
+              }}
               className="px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 flex items-center gap-2"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -331,7 +343,13 @@ const ResearchManager: React.FC = () => {
                 {searchQuery ? 'Try adjusting your search terms' : `Add your first ${activeTab.slice(0, -1)} to get started`}
               </p>
               <button
-                onClick={() => setShowAddForm(true)}
+                onClick={() => {
+                  if (activeTab === 'papers') {
+                    setShowAddPaperForm(true);
+                  } else {
+                    setShowAddForm(true);
+                  }
+                }}
                 className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 Add {activeTab === 'papers' ? 'Paper' : 'Project'}
@@ -339,6 +357,14 @@ const ResearchManager: React.FC = () => {
             </div>
           )}
         </div>
+      )}
+
+      {/* Add Paper Form Modal */}
+      {showAddPaperForm && (
+        <AddPaperForm
+          onClose={() => setShowAddPaperForm(false)}
+          onSuccess={handlePaperAdded}
+        />
       )}
     </div>
   );

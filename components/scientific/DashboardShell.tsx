@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { DashboardStats, ScientificPaper, ResearchProject } from '@/types/scientific';
 import { ScientificDataService } from '@/services/scientificData';
+import AddPaperForm from './AddPaperForm';
 
 const DashboardShell: React.FC = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -10,6 +11,7 @@ const DashboardShell: React.FC = () => {
   const [recentProjects, setRecentProjects] = useState<ResearchProject[]>([]);
   const [loading, setLoading] = useState(true);
   const [isVisible, setIsVisible] = useState(false);
+  const [showAddPaperForm, setShowAddPaperForm] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -43,6 +45,10 @@ const DashboardShell: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePaperAdded = () => {
+    loadDashboardData(); // Recargar datos después de agregar un paper
   };
 
   if (loading) {
@@ -246,14 +252,17 @@ const DashboardShell: React.FC = () => {
       >
         <h2 className="text-xl font-bold mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <a href="/research" className="bg-white/10 backdrop-blur-sm rounded-lg p-4 hover:bg-white/20 transition-colors">
+          <button 
+            onClick={() => setShowAddPaperForm(true)}
+            className="bg-white/10 backdrop-blur-sm rounded-lg p-4 hover:bg-white/20 transition-colors"
+          >
             <div className="flex items-center gap-3">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
               <span className="font-medium">Add New Paper</span>
             </div>
-          </a>
+          </button>
           
           <a href="/research" className="bg-white/10 backdrop-blur-sm rounded-lg p-4 hover:bg-white/20 transition-colors">
             <div className="flex items-center gap-3">
@@ -274,6 +283,14 @@ const DashboardShell: React.FC = () => {
           </a>
         </div>
       </div>
+
+      {/* Add Paper Form Modal */}
+      {showAddPaperForm && (
+        <AddPaperForm
+          onClose={() => setShowAddPaperForm(false)}
+          onSuccess={handlePaperAdded}
+        />
+      )}
     </div>
   );
 };
