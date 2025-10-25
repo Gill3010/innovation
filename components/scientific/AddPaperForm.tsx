@@ -198,7 +198,7 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
               placeholder="Enter DOI (e.g., 10.1038/nature12373)"
               value={formData.doi}
               onChange={(e) => handleInputChange('doi', e.target.value)}
-              className="flex-1 px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button
               onClick={handleSearchByDOI}
@@ -219,7 +219,7 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
               placeholder="Enter paper title"
               value={formData.title}
               onChange={(e) => handleInputChange('title', e.target.value)}
-              className="flex-1 px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button
               onClick={handleSearchByTitle}
@@ -263,7 +263,7 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
               type="text"
               value={formData.title}
               onChange={(e) => handleInputChange('title', e.target.value)}
-              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
@@ -275,7 +275,7 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
               placeholder="Enter authors separated by commas"
               value={formData.authors.join(', ')}
               onChange={(e) => handleInputChange('authors', e.target.value.split(',').map(a => a.trim()).filter(a => a))}
-              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
@@ -286,7 +286,7 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
               value={formData.abstract}
               onChange={(e) => handleInputChange('abstract', e.target.value)}
               rows={4}
-              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -297,7 +297,7 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
                 type="text"
                 value={formData.journal}
                 onChange={(e) => handleInputChange('journal', e.target.value)}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
@@ -306,7 +306,7 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
                 type="date"
                 value={formData.publicationDate}
                 onChange={(e) => handleInputChange('publicationDate', e.target.value)}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
@@ -318,7 +318,7 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
               placeholder="Enter tags separated by commas"
               value={formData.tags.join(', ')}
               onChange={(e) => handleInputChange('tags', e.target.value.split(',').map(t => t.trim()).filter(t => t))}
-              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 

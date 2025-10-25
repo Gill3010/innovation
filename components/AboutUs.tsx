@@ -21,7 +21,7 @@ const AboutUs: React.FC = () => {
     <section className="max-w-7xl mx-auto px-6 py-12 lg:py-20">
       {/* Hero Section - Who we are */}
       <div 
-        className={`bg-gradient-to-br from-slate-50 to-blue-50/30 shadow-lg rounded-3xl overflow-hidden border border-slate-200/60 mb-8 transition-all duration-1000 ease-out ${
+        className={`bg-linear-to-br from-slate-50 to-blue-50/30 shadow-lg rounded-3xl overflow-hidden border border-slate-200/60 mb-8 transition-all duration-1000 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
         style={{ transitionDelay: '100ms' }}
@@ -89,7 +89,7 @@ const AboutUs: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-start">
           <div className="p-6 md:p-8 flex justify-center md:justify-start">
             <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-400 rounded-full blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-500"></div>
+              <div className="absolute inset-0 bg-linear-to-br from-blue-600 to-blue-400 rounded-full blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-500"></div>
               <div className="relative w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden shadow-2xl ring-4 ring-white transform group-hover:scale-105 transition-transform duration-500 ease-out">
                 <img src={photoSrc} alt="Israel Samuels" className="w-full h-full object-cover" />
               </div>
@@ -154,7 +154,7 @@ const AboutUs: React.FC = () => {
               <a
                 href={resumeHref}
                 download
-                className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-blue-800 transform hover:-translate-y-0.5 transition-all duration-300 font-semibold text-sm group"
+                className="inline-flex items-center gap-3 px-6 py-3 bg-linear-to-r from-blue-600 to-blue-700 text-white rounded-xl shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-blue-800 transform hover:-translate-y-0.5 transition-all duration-300 font-semibold text-sm group"
               >
                 <svg className="w-5 h-5 group-hover:animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v12m0 0l-4-4m4 4l4-4M21 12v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6" />

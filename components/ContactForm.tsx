@@ -85,7 +85,7 @@ export default function ContactForm() {
   return (
     <div className="max-w-7xl mx-auto px-6 py-12 lg:py-20">
       <div 
-        className={`max-w-3xl mx-auto bg-gradient-to-br from-white to-slate-50/50 p-8 md:p-10 rounded-3xl shadow-xl border border-slate-200/60 relative overflow-hidden transition-all duration-1000 ease-out ${
+        className={`max-w-3xl mx-auto bg-linear-to-br from-white to-slate-50/50 p-8 md:p-10 rounded-3xl shadow-xl border border-slate-200/60 relative overflow-hidden transition-all duration-1000 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
       >
@@ -93,7 +93,7 @@ export default function ContactForm() {
         
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-50 rounded-2xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-linear-to-br from-blue-100 to-blue-50 rounded-2xl flex items-center justify-center">
               <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
@@ -203,7 +203,7 @@ export default function ContactForm() {
           <button
             onClick={handleSubmit}
             disabled={submitting}
-            className="group inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5 transition-all duration-300 font-semibold"
+            className="group inline-flex items-center gap-3 px-8 py-4 bg-linear-to-r from-blue-600 to-blue-700 text-white rounded-xl shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5 transition-all duration-300 font-semibold"
           >
             {submitting ? (
               <>

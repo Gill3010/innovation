@@ -25,42 +25,42 @@ const socialLinks: SocialLink[] = [
     href: 'https://twitter.com/youraccount',
     label: 'Follow us on X (Twitter)',
     hoverColor: 'hover:text-[#1DA1F2]',
-    bgGradient: 'hover:bg-gradient-to-br hover:from-[#1DA1F2]/20 hover:to-[#1DA1F2]/5',
+    bgGradient: 'hover:bg-linear-to-br hover:from-[#1DA1F2]/20 hover:to-[#1DA1F2]/5',
   },
   {
     icon: <FaInstagram className="w-5 h-5" />,
     href: 'https://instagram.com/youraccount',
     label: 'Follow us on Instagram',
     hoverColor: 'hover:text-[#E4405F]',
-    bgGradient: 'hover:bg-gradient-to-br hover:from-[#E4405F]/20 hover:to-[#833AB4]/5',
+    bgGradient: 'hover:bg-linear-to-br hover:from-[#E4405F]/20 hover:to-[#833AB4]/5',
   },
   {
     icon: <FaLinkedinIn className="w-5 h-5" />,
     href: 'https://linkedin.com/company/yourcompany',
     label: 'Connect with us on LinkedIn',
     hoverColor: 'hover:text-[#0A66C2]',
-    bgGradient: 'hover:bg-gradient-to-br hover:from-[#0A66C2]/20 hover:to-[#0A66C2]/5',
+    bgGradient: 'hover:bg-linear-to-br hover:from-[#0A66C2]/20 hover:to-[#0A66C2]/5',
   },
   {
     icon: <FaFacebookF className="w-5 h-5" />,
     href: 'https://facebook.com/yourpage',
     label: 'Like us on Facebook',
     hoverColor: 'hover:text-[#1877F2]',
-    bgGradient: 'hover:bg-gradient-to-br hover:from-[#1877F2]/20 hover:to-[#1877F2]/5',
+    bgGradient: 'hover:bg-linear-to-br hover:from-[#1877F2]/20 hover:to-[#1877F2]/5',
   },
   {
     icon: <FaWhatsapp className="w-5 h-5" />,
     href: 'https://wa.me/yourphone',
     label: 'Contact us on WhatsApp',
     hoverColor: 'hover:text-[#25D366]',
-    bgGradient: 'hover:bg-gradient-to-br hover:from-[#25D366]/20 hover:to-[#25D366]/5',
+    bgGradient: 'hover:bg-linear-to-br hover:from-[#25D366]/20 hover:to-[#25D366]/5',
   },
   {
     icon: <FaGithub className="w-5 h-5" />,
     href: 'https://github.com/yourorganization',
     label: 'Check our GitHub',
     hoverColor: 'hover:text-slate-200',
-    bgGradient: 'hover:bg-gradient-to-br hover:from-slate-700/40 hover:to-slate-800/20',
+    bgGradient: 'hover:bg-linear-to-br hover:from-slate-700/40 hover:to-slate-800/20',
   },
 ];
 
@@ -78,7 +78,7 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer className="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-slate-300 relative overflow-hidden">
+    <footer className="bg-linear-to-b from-slate-900 via-slate-900 to-slate-950 text-slate-300 relative overflow-hidden">
       {/* Decorative background elements */}
       <div className="absolute inset-0 opacity-30">
         <div className="absolute top-0 left-0 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
@@ -95,7 +95,7 @@ const Footer = () => {
           {/* Brand section */}
           <div className="space-y-6">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl flex items-center justify-center shadow-lg">
+              <div className="w-12 h-12 bg-linear-to-br from-blue-600 to-blue-700 rounded-2xl flex items-center justify-center shadow-lg">
                 <span className="text-white text-xl font-bold">IP</span>
               </div>
               <div className="flex flex-col">

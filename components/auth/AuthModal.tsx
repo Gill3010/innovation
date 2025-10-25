@@ -16,7 +16,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-[9999] flex items-center justify-center p-4 overflow-y-auto">
+    <div className="fixed inset-0 bg-black/60 z-9999 flex items-center justify-center p-4 overflow-y-auto">
       <div className="w-full max-w-md my-8">
         <div className="relative">
           {/* Close button */}

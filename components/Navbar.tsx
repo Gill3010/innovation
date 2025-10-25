@@ -39,11 +39,11 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
           {/* Logo */}
           <div className="shrink-0 flex items-center group">
             <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg group-hover:scale-105 transition-all duration-300">
+              <div className="w-10 h-10 bg-linear-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg group-hover:scale-105 transition-all duration-300">
                 <span className="text-white text-lg font-bold">IP</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent leading-tight">
+                <span className="text-xl font-bold bg-linear-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent leading-tight">
                   {translate('Innova Proyectos')}
                 </span>
                 <span className="text-xs text-slate-500 font-medium">
@@ -140,7 +140,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
                 </Link>
                 <Link 
                   href="/contact" 
-                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transform hover:-translate-y-0.5 transition-all duration-300"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-linear-to-r from-blue-600 to-blue-700 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transform hover:-translate-y-0.5 transition-all duration-300"
                 >
                   {translate('Contact')}
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -161,7 +161,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
                 </Link>
                 <Link 
                   href="/contact" 
-                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transform hover:-translate-y-0.5 transition-all duration-300"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-linear-to-r from-blue-600 to-blue-700 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transform hover:-translate-y-0.5 transition-all duration-300"
                 >
                   {translate('Contact')}
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -240,7 +240,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
 
               <Link 
                 href="/contact" 
-                className="ml-2 inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transform hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap shrink-0"
+                className="ml-2 inline-flex items-center gap-2 px-4 py-2 bg-linear-to-r from-blue-600 to-blue-700 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transform hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap shrink-0"
               >
                 {translate('Contact')}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -278,7 +278,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
           isMobileMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
-        <div className="bg-gradient-to-b from-white to-slate-50 border-b border-slate-200/60 shadow-lg">
+        <div className="bg-linear-to-b from-white to-slate-50 border-b border-slate-200/60 shadow-lg">
           <div className="px-4 pt-2 pb-4 max-h-96 overflow-y-auto scrollbar-hide">
             <div className="space-y-2">
               {/* Language Selector - Mobile */}
@@ -413,7 +413,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
 
               <Link 
                 href="/contact" 
-                className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-xl shadow-md transition-all duration-200 group mt-2"
+                className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-white bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-xl shadow-md transition-all duration-200 group mt-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

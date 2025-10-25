@@ -266,7 +266,7 @@ const DashboardShell: React.FC = () => {
 
       {/* Quick Actions */}
       <div 
-        className={`mt-8 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-6 text-white transition-all duration-1000 ease-out ${
+        className={`mt-8 bg-linear-to-r from-blue-600 to-blue-700 rounded-xl p-6 text-white transition-all duration-1000 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'
         }`}
         style={{ transitionDelay: '300ms' }}
