@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTranslation } from '@/contexts/TranslationContext';
 
 interface MenuItem {
   icon: React.ReactElement;
@@ -50,19 +51,11 @@ const menuItems: MenuItem[] = [
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeKey }) => {
-  const [isExpanded, setIsExpanded] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return window.innerWidth >= 768;
-    }
-    return true;
-  });
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return window.innerWidth < 768;
-    }
-    return false;
-  });
+  const [isExpanded, setIsExpanded] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const pathname = usePathname();
+  const { translate } = useTranslation();
 
   // Handle screen resize
   const handleResize = useCallback(() => {
@@ -73,11 +66,21 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeKey }) => {
     }
   }, []);
 
+  // Initialize client-side state after hydration
+  useEffect(() => {
+    setIsClient(true);
+    const isMobileView = window.innerWidth < 768;
+    setIsMobile(isMobileView);
+    setIsExpanded(!isMobileView);
+  }, []);
+
   // Add resize listener
   useEffect(() => {
+    if (!isClient) return;
+    
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [handleResize]);
+  }, [handleResize, isClient]);
 
   // Handle keyboard navigation
   const handleKeyPress = useCallback((e: KeyboardEvent) => {
@@ -108,7 +111,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeKey }) => {
   return (
     <>
       {/* Mobile: small fixed toggle when closed so users can open the menu */}
-      {isMobile && !isExpanded && (
+      {isClient && isMobile && !isExpanded && (
         <button
           onClick={() => setIsExpanded(true)}
           aria-label="Open sidebar"
@@ -124,9 +127,11 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeKey }) => {
       <aside
         className={`fixed left-0 top-16 bg-white border-r border-gray-100 
           transition-all duration-300 ease-in-out z-50
-          ${isMobile
-            ? (isExpanded ? 'translate-x-0 w-64 h-[calc(100vh-4rem)] overflow-y-auto shadow-lg' : '-translate-x-full')
-            : (isExpanded ? 'w-64 translate-x-0 h-[calc(100vh-4rem)]' : 'w-20 translate-x-0 h-[calc(100vh-4rem)]')
+          ${!isClient 
+            ? 'w-64 translate-x-0 h-[calc(100vh-4rem)]'
+            : isMobile
+              ? (isExpanded ? 'translate-x-0 w-64 h-[calc(100vh-4rem)] overflow-y-auto shadow-lg' : '-translate-x-full')
+              : (isExpanded ? 'w-64 translate-x-0 h-[calc(100vh-4rem)]' : 'w-20 translate-x-0 h-[calc(100vh-4rem)]')
           }
         `}
         aria-label="Sidebar navigation"
@@ -134,7 +139,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeKey }) => {
         {/* Toggle button (visible when sidebar is open or on desktop) */}
         <button
           onClick={() => setIsExpanded(prev => !prev)}
-          className={`absolute bg-white border border-gray-100 rounded-full p-1.5 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 ${isMobile ? 'right-3 top-3' : '-right-3 top-4'}`}
+          className={`absolute bg-white border border-gray-100 rounded-full p-1.5 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 ${!isClient ? '-right-3 top-4' : isMobile ? 'right-3 top-3' : '-right-3 top-4'}`}
           aria-label={isExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
           aria-expanded={isExpanded}
         >
@@ -169,7 +174,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeKey }) => {
                     <span className="inline-block">{item.icon}</span>
                     {isExpanded && (
                       <span className="ml-3 text-sm font-medium whitespace-nowrap">
-                        {item.label}
+                        {translate(item.label)}
                       </span>
                     )}
                   </button>
@@ -184,7 +189,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeKey }) => {
                     <span className="inline-block">{item.icon}</span>
                     {isExpanded && (
                       <span className="ml-3 text-sm font-medium whitespace-nowrap">
-                        {item.label}
+                        {translate(item.label)}
                       </span>
                     )}
                   </Link>

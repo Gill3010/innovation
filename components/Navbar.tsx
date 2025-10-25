@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useTranslation } from '@/contexts/TranslationContext';
+import LanguageSelector from './LanguageSelector';
 
 type NavbarProps = {
   onShowAbout?: (show: boolean) => void;
@@ -11,6 +13,7 @@ type NavbarProps = {
 const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { translate } = useTranslation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,7 +26,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
 
   return (
     <nav 
-      className={`fixed top-0 left-0 right-0 z-[70] transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-70 transition-all duration-300 ${
         isScrolled 
           ? 'bg-white/95 backdrop-blur-lg shadow-lg border-b border-slate-200/60' 
           : 'bg-white/80 backdrop-blur-md border-b border-slate-100'
@@ -34,18 +37,23 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
           {/* Logo */}
           <div className="shrink-0 flex items-center group">
             <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg group-hover:scale-105 transition-all duration-300">
+              <div className="w-10 h-10 bg-linear-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg group-hover:scale-105 transition-all duration-300">
                 <span className="text-white text-lg font-bold">IP</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent leading-tight">
-                  Innova Proyectos
+                <span className="text-xl font-bold bg-linear-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent leading-tight">
+                  {translate('Innova Proyectos')}
                 </span>
                 <span className="text-xs text-slate-500 font-medium">
-                  Development & Consulting
+                  {translate('Development & Consulting')}
                 </span>
               </div>
             </Link>
+          </div>
+
+          {/* Language Selector - Desktop */}
+          <div className="hidden lg:flex lg:items-center">
+            <LanguageSelector />
           </div>
 
           {/* Desktop Navigation */}
@@ -56,7 +64,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
                 className="relative px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap"
                 type="button"
               >
-                About
+                {translate('About')}
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
               </button>
             ) : (
@@ -64,7 +72,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
                 href="/about" 
                 className="relative px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap"
               >
-                About
+                {translate('About')}
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
               </Link>
             )}
@@ -75,7 +83,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
                 className="relative px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap"
                 type="button"
               >
-                Services
+                {translate('Services')}
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
               </button>
             ) : (
@@ -83,7 +91,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
                 href="/services" 
                 className="relative px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap"
               >
-                Services
+                {translate('Services')}
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
               </Link>
             )}
@@ -92,7 +100,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
               href="/dashboard" 
               className="relative px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap"
             >
-              Dashboard
+              {translate('Dashboard')}
               <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
             </Link>
 
@@ -100,7 +108,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
               href="/research" 
               className="relative px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap"
             >
-              Research
+              {translate('Research')}
               <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
             </Link>
 
@@ -108,15 +116,15 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
               href="/library" 
               className="relative px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap"
             >
-              Library
+              {translate('Library')}
               <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
             </Link>
 
             <Link 
               href="/contact" 
-              className="ml-4 inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transform hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap"
+              className="ml-4 inline-flex items-center gap-2 px-6 py-2.5 bg-linear-to-r from-blue-600 to-blue-700 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transform hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap"
             >
-              Contact
+              {translate('Contact')}
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
@@ -126,21 +134,22 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
           {/* Tablet Navigation with Horizontal Scroll */}
           <div className="hidden sm:flex lg:hidden flex-1 ml-6">
             <div className="flex overflow-x-auto scrollbar-hide space-x-2 py-2">
+              <LanguageSelector />
               {onShowAbout ? (
                 <button
                   onClick={() => onShowAbout(true)}
-                  className="relative px-3 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap flex-shrink-0"
+                  className="relative px-3 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap shrink-0"
                   type="button"
                 >
-                  About
+                  {translate('About')}
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
                 </button>
               ) : (
                 <Link 
                   href="/about" 
-                  className="relative px-3 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap flex-shrink-0"
+                  className="relative px-3 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap shrink-0"
                 >
-                  About
+                  {translate('About')}
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
                 </Link>
               )}
@@ -148,51 +157,51 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
               {onShowServices ? (
                 <button
                   onClick={() => onShowServices(true)}
-                  className="relative px-3 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap flex-shrink-0"
+                  className="relative px-3 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap shrink-0"
                   type="button"
                 >
-                  Services
+                  {translate('Services')}
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
                 </button>
               ) : (
                 <Link 
                   href="/services" 
-                  className="relative px-3 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap flex-shrink-0"
+                  className="relative px-3 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap shrink-0"
                 >
-                  Services
+                  {translate('Services')}
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
                 </Link>
               )}
 
               <Link 
                 href="/dashboard" 
-                className="relative px-3 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap flex-shrink-0"
+                className="relative px-3 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap shrink-0"
               >
-                Dashboard
+                {translate('Dashboard')}
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
               </Link>
 
               <Link 
                 href="/research" 
-                className="relative px-3 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap flex-shrink-0"
+                className="relative px-3 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap shrink-0"
               >
-                Research
+                {translate('Research')}
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
               </Link>
 
               <Link 
                 href="/library" 
-                className="relative px-3 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap flex-shrink-0"
+                className="relative px-3 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors duration-200 group whitespace-nowrap shrink-0"
               >
-                Library
+                {translate('Library')}
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
               </Link>
 
               <Link 
                 href="/contact" 
-                className="ml-2 inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transform hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap flex-shrink-0"
+                className="ml-2 inline-flex items-center gap-2 px-4 py-2 bg-linear-to-r from-blue-600 to-blue-700 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transform hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap shrink-0"
               >
-                Contact
+                {translate('Contact')}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
@@ -228,9 +237,13 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
           isMobileMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
-        <div className="bg-gradient-to-b from-white to-slate-50 border-b border-slate-200/60 shadow-lg">
+        <div className="bg-linear-to-b from-white to-slate-50 border-b border-slate-200/60 shadow-lg">
           <div className="px-4 pt-2 pb-4 max-h-96 overflow-y-auto scrollbar-hide">
             <div className="space-y-2">
+              {/* Language Selector - Mobile */}
+              <div className="px-4 py-3 border-b border-slate-200/60">
+                <LanguageSelector />
+              </div>
               {onShowAbout ? (
                 <button
                   onClick={() => {
@@ -243,7 +256,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
                   <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  About
+                  {translate('About')}
                 </button>
               ) : (
                 <Link 
@@ -254,7 +267,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
                   <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  About
+                  {translate('About')}
                 </Link>
               )}
 
@@ -270,7 +283,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
                   <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  Services
+                  {translate('Services')}
                 </button>
               ) : (
                 <Link 
@@ -281,7 +294,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
                   <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  Services
+                  {translate('Services')}
                 </Link>
               )}
 
@@ -293,7 +306,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
                 <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
                 </svg>
-                Dashboard
+                {translate('Dashboard')}
               </Link>
 
               <Link 
@@ -304,7 +317,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
                 <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
-                Research
+                {translate('Research')}
               </Link>
 
               <Link 
@@ -315,18 +328,18 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
                 <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
-                Library
+                {translate('Library')}
               </Link>
 
               <Link 
                 href="/contact" 
-                className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-xl shadow-md transition-all duration-200 group"
+                className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-white bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-xl shadow-md transition-all duration-200 group"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                Contact
+                {translate('Contact')}
                 <svg className="w-4 h-4 ml-auto group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>

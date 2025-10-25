@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from '@/contexts/TranslationContext';
 
 const Services: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const { translate } = useTranslation();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -21,7 +23,7 @@ const Services: React.FC = () => {
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
       >
-        <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4 tracking-tight">Our Solutions</h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4 tracking-tight">{translate('Our Solutions')}</h1>
         <p className="text-lg text-slate-600 max-w-3xl mx-auto font-light leading-relaxed">
           We build high-performance technology platforms using agile methodologies and international
           standards. Our approach incorporates cutting-edge technologies such as Artificial
@@ -178,7 +180,7 @@ const Services: React.FC = () => {
         <div className="p-8 md:p-12 relative">
           <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/5 rounded-full blur-3xl -z-10"></div>
           
-          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-10 text-center tracking-tight">Why Choose Us</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-10 text-center tracking-tight">{translate('Why Choose Us')}</h2>
           
           <div className="grid md:grid-cols-2 gap-8">
             <div className="space-y-6">
@@ -289,7 +291,7 @@ const Services: React.FC = () => {
         
         <div className="p-8 md:p-12 text-center relative z-10">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 tracking-tight">
-            Ready to transform your digital infrastructure?
+            {translate('Ready to transform your digital infrastructure?')}
           </h2>
           <p className="text-blue-50 text-lg mb-8 max-w-3xl mx-auto font-light leading-relaxed">
   Let&apos;s discuss how we can help you achieve your technology goals with robust, scalable and
@@ -305,7 +307,7 @@ const Services: React.FC = () => {
               <svg className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
-              Contact Us
+              {translate('Contact Us')}
             </a>
             
             <a
@@ -315,7 +317,7 @@ const Services: React.FC = () => {
               <svg className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
               </svg>
-              Request Consultation
+              {translate('Request Consultation')}
             </a>
           </div>
         </div>

@@ -1,0 +1,18 @@
+{
+  "version": "0.2",
+  "language": "en,es",
+  "words": [
+    "revistas",
+    "Magento",
+    "WooCommerce",
+    "Shopify",
+    "Tailwind",
+    "TypeScript",
+    "Nextjs",
+    "React",
+    "JavaScript",
+    "Nodejs"
+  ],
+  "ignoreWords": [],
+  "import": []
+}

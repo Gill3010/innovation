@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from '@/contexts/TranslationContext';
 
 const AboutUs: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const photoSrc = '/images/yo.jpeg';
   const resumeHref = '/resume/israel-cv.pdf';
+  const { translate } = useTranslation();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -43,7 +45,7 @@ const AboutUs: React.FC = () => {
               <div className="group">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-1 h-6 bg-blue-600 rounded-full"></div>
-                  <h3 className="text-lg font-bold text-slate-900">Mission</h3>
+                  <h3 className="text-lg font-bold text-slate-900">{translate('Mission')}</h3>
                 </div>
                 <p className="text-slate-600 text-base leading-relaxed">
                   To accelerate digital transformation through robust, secure and high-performance technology
@@ -54,7 +56,7 @@ const AboutUs: React.FC = () => {
               <div className="group">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-1 h-6 bg-blue-600 rounded-full"></div>
-                  <h3 className="text-lg font-bold text-slate-900">Vision</h3>
+                  <h3 className="text-lg font-bold text-slate-900">{translate('Vision')}</h3>
                 </div>
                 <p className="text-slate-600 text-base leading-relaxed">
                   To be the trusted technology partner in Latin America for organizations seeking world-class
@@ -65,7 +67,7 @@ const AboutUs: React.FC = () => {
               <div className="group">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-1 h-6 bg-blue-600 rounded-full"></div>
-                  <h3 className="text-lg font-bold text-slate-900">Values</h3>
+                  <h3 className="text-lg font-bold text-slate-900">{translate('Values')}</h3>
                 </div>
                 <p className="text-slate-600 text-base leading-relaxed">
                   Innovation, technical excellence, transparent execution, commitment to security and focus on
@@ -111,7 +113,7 @@ const AboutUs: React.FC = () => {
                   <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  Specialization
+                  {translate('Specialization')}
                 </h3>
                 <ul className="text-slate-600 text-sm space-y-3">
                   <li className="flex items-start">
@@ -138,7 +140,7 @@ const AboutUs: React.FC = () => {
                   <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  Key Experience
+                  {translate('Key Experience')}
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
                   Extensive experience delivering high-performance platforms, collaborating with international
@@ -157,7 +159,7 @@ const AboutUs: React.FC = () => {
                 <svg className="w-5 h-5 group-hover:animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v12m0 0l-4-4m4 4l4-4M21 12v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6" />
                 </svg>
-                Download Resume
+                {translate('Download Resume')}
               </a>
             </div>
           </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useTranslation } from '@/contexts/TranslationContext';
 
 type FormState = {
   name: string;
@@ -22,6 +23,7 @@ export default function ContactForm() {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const { translate } = useTranslation();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -33,10 +35,10 @@ export default function ContactForm() {
 
   const validate = () => {
     const e: Partial<FormState> = {};
-    if (!form.name.trim()) e.name = "Please enter your name.";
-    if (!form.email.trim()) e.email = "Please enter your email.";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = "Please enter a valid email.";
-    if (!form.message.trim()) e.message = "Please enter a message.";
+    if (!form.name.trim()) e.name = translate("Please enter your name.");
+    if (!form.email.trim()) e.email = translate("Please enter your email.");
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = translate("Please enter a valid email.");
+    if (!form.message.trim()) e.message = translate("Please enter a message.");
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -60,13 +62,13 @@ export default function ContactForm() {
       });
 
       if (res.ok) {
-        setSuccess('Message sent — we will contact you shortly.');
+        setSuccess(translate('Message sent — we will contact you shortly.'));
         setForm(initialState);
       } else {
         const subject = encodeURIComponent(`Contact from ${form.name} — Innova Proyectos`);
         const body = encodeURIComponent(`Name: ${form.name}\nOrganization: ${form.organization}\nEmail: ${form.email}\n\nMessage:\n${form.message}`);
         window.location.href = `mailto:info@innovaproyectos.com?subject=${subject}&body=${body}`;
-        setSuccess('Opened mail client as a fallback.');
+        setSuccess(translate('Opened mail client as a fallback.'));
         setForm(initialState);
       }
     } catch {
@@ -96,9 +98,9 @@ export default function ContactForm() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">Contact Us</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">{translate('Contact Us')}</h2>
           </div>
-          <p className="text-slate-600 font-light">Fill the form and we will get back to you within 1-2 business days.</p>
+          <p className="text-slate-600 font-light">{translate('Fill the form and we will get back to you within 1-2 business days.')}</p>
         </div>
 
         <div className="space-y-6">
@@ -108,7 +110,7 @@ export default function ContactForm() {
                 <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
-                Name
+                {translate('Name')}
               </span>
               <input
                 value={form.name}
@@ -116,7 +118,7 @@ export default function ContactForm() {
                 className={`px-4 py-3 bg-white border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
                   errors.name ? 'border-rose-300 bg-rose-50/30' : 'border-slate-200 hover:border-slate-300'
                 }`}
-                placeholder="Your full name"
+                placeholder={translate('Your full name')}
               />
               {errors.name && (
                 <span className="text-xs text-rose-600 mt-2 flex items-center gap-1">
@@ -133,7 +135,7 @@ export default function ContactForm() {
                 <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
                 </svg>
-                Email
+                {translate('Email')}
               </span>
               <input
                 value={form.email}
@@ -142,7 +144,7 @@ export default function ContactForm() {
                 className={`px-4 py-3 bg-white border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
                   errors.email ? 'border-rose-300 bg-rose-50/30' : 'border-slate-200 hover:border-slate-300'
                 }`}
-                placeholder="you@company.com"
+                placeholder={translate('you@company.com')}
               />
               {errors.email && (
                 <span className="text-xs text-rose-600 mt-2 flex items-center gap-1">
@@ -160,13 +162,13 @@ export default function ContactForm() {
               <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
               </svg>
-              Organization <span className="text-slate-400 font-normal">(optional)</span>
+              {translate('Organization')} <span className="text-slate-400 font-normal">({translate('optional')})</span>
             </span>
             <input
               value={form.organization}
               onChange={handleChange('organization')}
               className="px-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all duration-200"
-              placeholder="Company or institution"
+              placeholder={translate('Company or institution')}
             />
           </div>
 
@@ -175,7 +177,7 @@ export default function ContactForm() {
               <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
               </svg>
-              Message
+              {translate('Message')}
             </span>
             <textarea
               value={form.message}
@@ -184,7 +186,7 @@ export default function ContactForm() {
               className={`px-4 py-3 bg-white border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none ${
                 errors.message ? 'border-rose-300 bg-rose-50/30' : 'border-slate-200 hover:border-slate-300'
               }`}
-              placeholder="Tell us briefly about your project or needs"
+              placeholder={translate('Tell us briefly about your project or needs')}
             />
             {errors.message && (
               <span className="text-xs text-rose-600 mt-2 flex items-center gap-1">
@@ -209,14 +211,14 @@ export default function ContactForm() {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Sending…
+                {translate('Sending…')}
               </>
             ) : (
               <>
                 <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
-                Send Message
+                {translate('Send Message')}
               </>
             )}
           </button>
@@ -232,7 +234,7 @@ export default function ContactForm() {
         </div>
 
         <div className="mt-10 pt-8 border-t border-slate-200">
-          <p className="text-sm text-slate-500 mb-4 font-medium">Or reach us directly:</p>
+          <p className="text-sm text-slate-500 mb-4 font-medium">{translate('Or reach us directly:')}</p>
           <div className="flex flex-col sm:flex-row gap-4">
             <a 
               href="mailto:info@innovaproyectos.com"

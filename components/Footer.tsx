@@ -9,6 +9,7 @@ import {
   FaWhatsapp,
   FaGithub,
 } from 'react-icons/fa6';
+import { useTranslation } from '@/contexts/TranslationContext';
 
 interface SocialLink {
   icon: React.ReactElement;
@@ -66,6 +67,7 @@ const socialLinks: SocialLink[] = [
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const [isVisible, setIsVisible] = useState(false);
+  const { translate } = useTranslation();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -121,7 +123,7 @@ const Footer = () => {
           <div className="space-y-6">
             <h4 className="text-lg font-bold text-white flex items-center gap-2">
               <div className="w-1 h-6 bg-blue-600 rounded-full"></div>
-              Quick Links
+              {translate('Quick Links')}
             </h4>
             <ul className="space-y-3">
               {['About', 'Services', 'Projects', 'Contact'].map((item, index) => (
@@ -143,7 +145,7 @@ const Footer = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                     <span className="group-hover:translate-x-1 transition-transform duration-200">
-                      {item}
+                      {translate(item)}
                     </span>
                   </a>
                 </li>
@@ -155,10 +157,10 @@ const Footer = () => {
           <div className="space-y-6">
             <h4 className="text-lg font-bold text-white flex items-center gap-2">
               <div className="w-1 h-6 bg-blue-600 rounded-full"></div>
-              Connect With Us
+              {translate('Connect With Us')}
             </h4>
             <p className="text-sm text-slate-400">
-              Follow us on social media for updates and news
+              {translate('Follow us on social media for updates and news')}
             </p>
             <div className="flex flex-wrap gap-3">
               {socialLinks.map((social, index) => (
@@ -192,7 +194,7 @@ const Footer = () => {
               <svg className="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
               </svg>
-              <span>© {currentYear} Innovation Platform. All rights reserved.</span>
+              <span>© {currentYear} Innovation Platform. {translate('All rights reserved')}.</span>
             </div>
             <div className="mt-4 md:mt-0">
               <ul className="flex flex-wrap gap-6 text-sm text-slate-400">
@@ -204,7 +206,7 @@ const Footer = () => {
                     <svg className="w-4 h-4 text-slate-500 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
-                    Privacy Policy
+                    {translate('Privacy Policy')}
                   </a>
                 </li>
                 <li>
@@ -215,7 +217,7 @@ const Footer = () => {
                     <svg className="w-4 h-4 text-slate-500 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    Terms of Service
+                    {translate('Terms of Service')}
                   </a>
                 </li>
               </ul>
