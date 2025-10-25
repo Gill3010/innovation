@@ -115,7 +115,7 @@ export default function ContactForm() {
               <input
                 value={form.name}
                 onChange={handleChange('name')}
-                className={`px-4 py-3 bg-white border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
+                className={`px-4 py-3 bg-white border rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
                   errors.name ? 'border-rose-300 bg-rose-50/30' : 'border-slate-200 hover:border-slate-300'
                 }`}
                 placeholder={translate('Your full name')}
@@ -141,7 +141,7 @@ export default function ContactForm() {
                 value={form.email}
                 onChange={handleChange('email')}
                 type="email"
-                className={`px-4 py-3 bg-white border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
+                className={`px-4 py-3 bg-white border rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
                   errors.email ? 'border-rose-300 bg-rose-50/30' : 'border-slate-200 hover:border-slate-300'
                 }`}
                 placeholder={translate('you@company.com')}
@@ -167,7 +167,7 @@ export default function ContactForm() {
             <input
               value={form.organization}
               onChange={handleChange('organization')}
-              className="px-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all duration-200"
+              className="px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all duration-200"
               placeholder={translate('Company or institution')}
             />
           </div>
@@ -183,7 +183,7 @@ export default function ContactForm() {
               value={form.message}
               onChange={handleChange('message')}
               rows={6}
-              className={`px-4 py-3 bg-white border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none ${
+              className={`px-4 py-3 bg-white border rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none ${
                 errors.message ? 'border-rose-300 bg-rose-50/30' : 'border-slate-200 hover:border-slate-300'
               }`}
               placeholder={translate('Tell us briefly about your project or needs')}
