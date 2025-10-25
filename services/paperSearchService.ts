@@ -139,13 +139,38 @@ export async function searchArXiv(query: string, maxResults: number = 10): Promi
 }
 
 /**
+ * Helper: Limpiar DOI (acepta URL completa o solo código)
+ */
+function cleanDOI(doi: string): string {
+  // Eliminar espacios
+  doi = doi.trim();
+  
+  // Si es una URL completa, extraer solo el código DOI
+  if (doi.startsWith('http://') || doi.startsWith('https://')) {
+    // Ejemplos:
+    // https://doi.org/10.5281/zenodo.15150726 → 10.5281/zenodo.15150726
+    // http://dx.doi.org/10.1038/nature12373 → 10.1038/nature12373
+    const match = doi.match(/10\.\d{4,}(?:\.\d+)*\/\S+/);
+    if (match) {
+      return match[0];
+    }
+  }
+  
+  // Si ya es solo el código DOI, devolverlo tal cual
+  return doi;
+}
+
+/**
  * Busca papers por DOI
- * @param doi - DOI del paper
+ * @param doi - DOI del paper (acepta URL completa o solo código)
  * @returns Información del paper
  */
 export async function searchByDOI(doi: string): Promise<PaperResult | null> {
   try {
-    const response = await fetch(`https://api.crossref.org/works/${encodeURIComponent(doi)}`);
+    // Limpiar el DOI antes de usar
+    const cleanedDOI = cleanDOI(doi);
+    
+    const response = await fetch(`https://api.crossref.org/works/${encodeURIComponent(cleanedDOI)}`);
 
     if (!response.ok) {
       return null;

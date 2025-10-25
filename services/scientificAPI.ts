@@ -5,10 +5,33 @@ const CROSSREF_API_BASE = 'https://api.crossref.org/works';
 const PUBMED_API_BASE = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils';
 
 export class ScientificAPIService {
+  // Helper: Limpiar DOI (acepta URL completa o solo código)
+  private static cleanDOI(doi: string): string {
+    // Eliminar espacios
+    doi = doi.trim();
+    
+    // Si es una URL completa, extraer solo el código DOI
+    if (doi.startsWith('http://') || doi.startsWith('https://')) {
+      // Ejemplos:
+      // https://doi.org/10.5281/zenodo.15150726 → 10.5281/zenodo.15150726
+      // http://dx.doi.org/10.1038/nature12373 → 10.1038/nature12373
+      const match = doi.match(/10\.\d{4,}(?:\.\d+)*\/\S+/);
+      if (match) {
+        return match[0];
+      }
+    }
+    
+    // Si ya es solo el código DOI, devolverlo tal cual
+    return doi;
+  }
+
   // CrossRef API - Para obtener metadatos de papers por DOI
   static async getPaperByDOI(doi: string): Promise<CrossRefPaper | null> {
     try {
-      const response = await fetch(`${CROSSREF_API_BASE}/${doi}`, {
+      // Limpiar el DOI antes de usar
+      const cleanedDOI = this.cleanDOI(doi);
+      
+      const response = await fetch(`${CROSSREF_API_BASE}/${cleanedDOI}`, {
         headers: {
           'Accept': 'application/json',
         },
