@@ -300,7 +300,7 @@ export default function ProjectsContent() {
   const projectSlides: CarouselSlide[] = [
     {
       id: 1,
-      image: '/api/placeholder/1920/1080',
+      image: '/images/revistas.up.ac.pa.png',
       title: 'Transform Your Digital Presence',
       subtitle: 'Web Development',
       description: 'Build stunning, high-performance websites that engage users and drive results. Our expert team delivers cutting-edge solutions tailored to your business needs.',
