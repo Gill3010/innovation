@@ -16,6 +16,8 @@ const LibraryManager: React.FC = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showAddPaperForm, setShowAddPaperForm] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [paperToDelete, setPaperToDelete] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -64,6 +66,22 @@ const LibraryManager: React.FC = () => {
       await loadPapers(); // Recargar datos
     } catch (error) {
       console.error('Error updating paper:', error);
+    }
+  };
+
+  const handleDeletePaper = async () => {
+    if (!paperToDelete || !user) return;
+    
+    try {
+      setDeleting(true);
+      await ScientificDataService.deletePaper(paperToDelete);
+      setPaperToDelete(null);
+      await loadPapers(); // Recargar datos
+    } catch (error) {
+      console.error('Error deleting paper:', error);
+      alert('Error deleting paper. Please try again.');
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -319,16 +337,27 @@ const LibraryManager: React.FC = () => {
                         {paper.citations} citations
                       </span>
                     )}
-                    {paper.doi && (
-                      <a
-                        href={`https://doi.org/${paper.doi}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs text-blue-600 hover:text-blue-700"
+                    <div className="flex items-center gap-2">
+                      {paper.doi && (
+                        <a
+                          href={`https://doi.org/${paper.doi}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-600 hover:text-blue-700"
+                        >
+                          View DOI
+                        </a>
+                      )}
+                      <button
+                        onClick={() => setPaperToDelete(paper.id)}
+                        className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
+                        title="Delete paper"
                       >
-                        View DOI
-                      </a>
-                    )}
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                 </>
               ) : (
@@ -376,6 +405,16 @@ const LibraryManager: React.FC = () => {
                         View Paper
                       </a>
                     )}
+                    <button
+                      onClick={() => setPaperToDelete(paper.id)}
+                      className="px-3 py-1 bg-red-600 text-white text-xs rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-1.5"
+                      title="Delete paper"
+                    >
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                      Delete
+                    </button>
                   </div>
                 </div>
               )}
@@ -413,6 +452,63 @@ const LibraryManager: React.FC = () => {
           onClose={() => setShowAddPaperForm(false)}
           onSuccess={handlePaperAdded}
         />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {paperToDelete && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
+          <div 
+            className="bg-white rounded-3xl p-8 max-w-md w-full shadow-xl border border-slate-200/60 relative"
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 bg-red-100 rounded-2xl flex items-center justify-center">
+                <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">Delete Paper?</h3>
+                <p className="text-sm text-slate-600">This action cannot be undone.</p>
+              </div>
+            </div>
+
+            <p className="text-slate-700 mb-8">
+              Are you sure you want to remove this paper from your library? This will delete it permanently from your collection.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button
+                onClick={handleDeletePaper}
+                disabled={deleting}
+                className="flex-1 group inline-flex items-center justify-center gap-3 px-6 py-3 bg-linear-to-r from-red-600 to-red-700 text-white rounded-xl shadow-lg hover:shadow-xl hover:from-red-700 hover:to-red-800 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5 transition-all duration-300 font-semibold"
+              >
+                {deleting ? (
+                  <>
+                    <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Deleting...
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    Delete Paper
+                  </>
+                )}
+              </button>
+              <button
+                onClick={() => setPaperToDelete(null)}
+                disabled={deleting}
+                className="flex-1 px-6 py-3 border-2 border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -4,6 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { PaperFormData, CrossRefPaper } from '@/types/scientific';
 import { ScientificAPIService } from '@/services/scientificAPI';
 import { ScientificDataService } from '@/services/scientificData';
+import { OJSAPIService, OJSSubmissionResponse } from '@/services/ojsAPI';
+
+// Verificar si OJS está configurado
+const hasOJSCredentials = () => {
+  return !!(process.env.NEXT_PUBLIC_OJS_API_KEY && process.env.NEXT_PUBLIC_OJS_API_SECRET);
+};
 import { useAuth } from '@/contexts/AuthContext';
 
 interface AddPaperFormProps {
@@ -35,6 +41,8 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
   const [searchResults, setSearchResults] = useState<CrossRefPaper[]>([]);
   const [searching, setSearching] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [submitToJournal, setSubmitToJournal] = useState(false);
+  const [ojsResult, setOjsResult] = useState<OJSSubmissionResponse | null>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -139,6 +147,8 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
 
     setLoading(true);
     setError(null);
+    setSuccess(null);
+    setOjsResult(null);
 
     try {
       const paperData = {
@@ -149,8 +159,30 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
         tags: formData.tags.filter(tag => tag.trim() !== ''),
       };
 
+      // 1. Primero guardar en nuestra base de datos local
       await ScientificDataService.createPaper(paperData);
-      setSuccess('Paper added successfully!');
+      
+      // 2. Si el usuario quiere enviar al journal, intentar enviar a OJS
+      if (submitToJournal) {
+        try {
+          const ojsPaper = OJSAPIService.convertToOJSFormat(formData);
+          const ojsResponse = await OJSAPIService.submitPaper(ojsPaper);
+          setOjsResult(ojsResponse);
+          
+          if (ojsResponse.success) {
+            setSuccess(`Paper added successfully! Submission ID: ${ojsResponse.submissionId}`);
+          } else {
+            setSuccess('Paper saved locally, but OJS submission failed. Check console for details.');
+            setError(ojsResponse.error || 'Unknown error occurred');
+          }
+        } catch (ojsError) {
+          console.error('OJS submission error:', ojsError);
+          setSuccess('Paper saved locally, but OJS submission failed.');
+          setError('Could not connect to OJS. Paper was saved to your library.');
+        }
+      } else {
+        setSuccess('Paper added successfully to your library!');
+      }
       
       // Reset form
       setFormData({
@@ -173,7 +205,7 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
       setTimeout(() => {
         onSuccess();
         onClose();
-      }, 1500);
+      }, 3000);
       
     } catch (error) {
       setError('Error adding paper. Please try again.');
@@ -393,6 +425,30 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
               className="px-4 py-3 border border-slate-200 rounded-xl text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all duration-200"
             />
           </div>
+
+          {/* Checkbox para enviar a OJS - Solo mostrar si las credenciales están configuradas */}
+          {hasOJSCredentials() && (
+            <div className="flex items-start gap-3 p-4 bg-blue-50/30 border border-blue-100 rounded-xl">
+              <input
+                type="checkbox"
+                id="submitToJournal"
+                checked={submitToJournal}
+                onChange={(e) => setSubmitToJournal(e.target.checked)}
+                className="mt-1 w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 focus:ring-2"
+              />
+              <label htmlFor="submitToJournal" className="text-sm text-slate-700 cursor-pointer">
+                <div className="flex items-center gap-2 mb-1">
+                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span className="font-semibold">Also submit to journal (OJS)</span>
+                </div>
+                <p className="text-xs text-slate-600 ml-7">
+                  Send this paper to the journal for review. The paper will be saved to your library regardless.
+                </p>
+              </label>
+            </div>
+          )}
 
           {/* Error/Success Messages */}
           {error && (
