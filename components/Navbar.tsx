@@ -26,8 +26,42 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      const nav = document.querySelector('nav');
+      
+      if (nav && !nav.contains(target)) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    // Small delay to prevent immediate closing
+    const timer = setTimeout(() => {
+      document.addEventListener('click', handleClickOutside);
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isMobileMenuOpen]);
+
   return (
-    <nav 
+    <>
+      {/* Overlay for mobile menu */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-60 sm:hidden transition-opacity duration-300"
+          onClick={() => setIsMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+      
+      <nav 
       className={`fixed top-0 left-0 right-0 z-70 transition-all duration-300 ${
         isScrolled 
           ? 'bg-white/95 backdrop-blur-lg shadow-lg border-b border-slate-200/60' 
@@ -430,6 +464,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
       </div>
 
     </nav>
+    </>
   );
 };
 

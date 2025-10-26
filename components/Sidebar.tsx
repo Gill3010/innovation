@@ -115,6 +115,15 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeKey }) => {
 
   return (
     <>
+      {/* Overlay for mobile and desktop when sidebar is expanded */}
+      {isClient && isExpanded && (
+        <div
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity duration-300 cursor-pointer"
+          onClick={() => setIsExpanded(false)}
+          aria-hidden="true"
+        />
+      )}
+
       {/* Mobile: small fixed toggle when closed so users can open the menu */}
       {isClient && isMobile && !isExpanded && (
         <button
@@ -135,11 +144,12 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeKey }) => {
           ${!isClient 
             ? 'w-64 translate-x-0 h-[calc(100vh-4rem)]'
             : isMobile
-              ? (isExpanded ? 'translate-x-0 w-64 h-[calc(100vh-4rem)] overflow-y-auto shadow-lg' : '-translate-x-full')
-              : (isExpanded ? 'w-64 translate-x-0 h-[calc(100vh-4rem)]' : 'w-20 translate-x-0 h-[calc(100vh-4rem)]')
+              ? (isExpanded ? 'translate-x-0 w-64 h-[calc(100vh-4rem)] overflow-y-auto shadow-2xl' : '-translate-x-full')
+              : (isExpanded ? 'w-64 translate-x-0 h-[calc(100vh-4rem)] shadow-lg' : 'w-20 translate-x-0 h-[calc(100vh-4rem)]')
           }
         `}
         aria-label="Sidebar navigation"
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Toggle button (visible when sidebar is open or on desktop) */}
         <button

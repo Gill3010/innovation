@@ -31,6 +31,23 @@ const Chatbot = () => {
     }
   }, [isOpen]);
 
+  // Prevent body scroll when chatbot is open on mobile
+  useEffect(() => {
+    if (isOpen) {
+      // Check if mobile
+      const isMobile = window.innerWidth < 640; // sm breakpoint
+      if (isMobile) {
+        document.body.style.overflow = 'hidden';
+      }
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
 
@@ -84,14 +101,14 @@ const Chatbot = () => {
 
   return (
     <>
-      {/* Chatbot Toggle Button */}
+      {/* Chatbot Toggle Button - Hidden on mobile when chat is open */}
       <button
         onClick={toggleChatbot}
-        className={`fixed bottom-6 z-50 w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 ${
+        className={`fixed bottom-6 right-6 z-90 w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 ${
           isOpen
-            ? 'bg-red-600 hover:bg-red-700'
+            ? 'hidden sm:flex bg-red-600 hover:bg-red-700'
             : 'bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800'
-        } right-6 sm:right-6`}
+        }`}
         aria-label="Toggle chatbot"
       >
         {isOpen ? (
@@ -105,52 +122,67 @@ const Chatbot = () => {
         )}
       </button>
 
-      {/* Chatbot Window */}
+      {/* Chatbot Window - Fullscreen on mobile, floating on desktop */}
       <div
-        className={`fixed inset-x-3 bottom-20 top-20 sm:inset-x-auto sm:right-6 sm:w-96 sm:max-w-md sm:bottom-24 sm:top-auto sm:h-[600px] max-h-[calc(100vh-160px)] sm:max-h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col transition-all duration-300 z-50 ${
-          isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
-        }`}
+        className={`fixed bg-white shadow-2xl flex flex-col transition-all duration-300 z-100
+          ${isOpen 
+            ? 'opacity-100 translate-y-0' 
+            : 'opacity-0 translate-y-4 pointer-events-none'
+          }
+          inset-0 sm:inset-auto sm:right-6 sm:bottom-24 sm:w-96 sm:h-[600px] sm:rounded-2xl
+        `}
       >
         {/* Chatbot Header */}
-        <div className="bg-linear-to-r from-blue-600 to-blue-700 text-white p-2.5 sm:p-4 rounded-t-2xl flex items-center justify-between shrink-0">
+        <div className="bg-linear-to-r from-blue-600 to-blue-700 text-white p-3 sm:p-4 flex items-center justify-between shrink-0 sm:rounded-t-2xl">
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-7 h-7 sm:w-10 sm:h-10 bg-white/20 rounded-full flex items-center justify-center shrink-0">
-              <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-full flex items-center justify-center shrink-0">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
               </svg>
             </div>
             <div className="min-w-0">
-              <h3 className="font-bold text-sm sm:text-lg">Research Assistant</h3>
-              <p className="text-xs sm:text-sm text-blue-100 hidden sm:block">I can help with scientific research</p>
+              <h3 className="font-bold text-base sm:text-lg">Research Assistant</h3>
+              <p className="text-xs text-blue-100 hidden sm:block">I can help with scientific research</p>
             </div>
           </div>
+          
+          {/* Close button for mobile */}
+          <button
+            onClick={toggleChatbot}
+            className="sm:hidden p-2 hover:bg-white/10 rounded-lg transition-colors"
+            aria-label="Close chatbot"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
         </div>
 
         {/* Messages Container */}
-        <div className="flex-1 overflow-y-auto p-2 sm:p-4 space-y-2 sm:space-y-4 scrollbar-hide">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-4 space-y-3 sm:space-y-4 scrollbar-hide bg-slate-50 sm:bg-white">
           {messages.map((message, index) => (
             <div
               key={index}
               className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-[85%] sm:max-w-[80%] rounded-xl sm:rounded-2xl px-2.5 py-1.5 sm:px-4 sm:py-3 ${
+                className={`max-w-[85%] sm:max-w-[80%] rounded-xl sm:rounded-2xl px-3 py-2 sm:px-4 sm:py-3 ${
                   message.role === 'user'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-slate-100 text-slate-800'
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'bg-white sm:bg-slate-100 text-slate-800 shadow-md sm:shadow-none'
                 }`}
               >
-                <p className="text-xs sm:text-sm whitespace-pre-wrap wrap-break-word leading-relaxed">{message.content}</p>
+                <p className="text-sm sm:text-sm whitespace-pre-wrap wrap-break-word leading-relaxed">{message.content}</p>
               </div>
             </div>
           ))}
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-slate-100 rounded-xl sm:rounded-2xl px-2.5 py-1.5 sm:px-4 sm:py-3">
+              <div className="bg-white sm:bg-slate-100 rounded-xl sm:rounded-2xl px-3 py-2 sm:px-4 sm:py-3 shadow-md sm:shadow-none">
                 <div className="flex gap-1">
-                  <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                  <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                  <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                  <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                  <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                  <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
                 </div>
               </div>
             </div>
@@ -159,8 +191,8 @@ const Chatbot = () => {
         </div>
 
         {/* Input Container */}
-        <div className="border-t border-slate-200 p-2 sm:p-4 shrink-0">
-          <div className="flex gap-1.5 sm:gap-2">
+        <div className="border-t border-slate-200 p-3 sm:p-4 shrink-0 bg-white">
+          <div className="flex gap-2 sm:gap-2">
             <input
               ref={inputRef}
               type="text"
@@ -168,15 +200,15 @@ const Chatbot = () => {
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Ask about research..."
-              className="flex-1 px-2.5 py-2 sm:px-4 sm:py-3 rounded-lg sm:rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-xs sm:text-sm"
+              className="flex-1 px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               disabled={isLoading}
             />
             <button
               onClick={handleSendMessage}
               disabled={!inputValue.trim() || isLoading}
-              className="px-2.5 py-2 sm:px-4 sm:py-3 bg-linear-to-r from-blue-600 to-blue-700 text-white rounded-lg sm:rounded-xl hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg shrink-0"
+              className="px-3 py-2.5 sm:px-4 sm:py-3 bg-linear-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg shrink-0"
             >
-              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
               </svg>
             </button>
