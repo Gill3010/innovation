@@ -51,7 +51,7 @@ const menuItems: MenuItem[] = [
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeKey }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const pathname = usePathname();
@@ -73,7 +73,8 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeKey }) => {
       setIsClient(true);
       const isMobileView = window.innerWidth < 768;
       setIsMobile(isMobileView);
-      setIsExpanded(!isMobileView);
+      // Always start collapsed, user can expand if needed
+      setIsExpanded(false);
     }, 0);
     
     return () => clearTimeout(timer);
