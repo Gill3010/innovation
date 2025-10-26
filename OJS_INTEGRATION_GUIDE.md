@@ -272,3 +272,6 @@ Si tienes problemas con la integración:
 
 **Última actualización**: Enero 2025  
 **Versión de la Integración**: 1.0.0
+
+
+

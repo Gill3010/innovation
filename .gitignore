@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Firebase service account keys (NEVER COMMIT)
+*-key.json
+*.json.key
+
+# Migration scripts backup
+scripts/backup/
+scripts/verification-report.json

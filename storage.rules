@@ -1,0 +1,110 @@
+rules_version = '2';
+
+// Reglas de seguridad para Firebase Storage
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper function: Verificar autenticación
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function: Verificar si el usuario es el propietario
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    // Helper function: Verificar tamaño de archivo (max 10MB)
+    function isValidSize() {
+      return request.resource.size < 10 * 1024 * 1024;
+    }
+    
+    // Helper function: Verificar tipo de archivo PDF
+    function isPDF() {
+      return request.resource.contentType == 'application/pdf';
+    }
+    
+    // Helper function: Verificar tipo de archivo de imagen
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+    
+    // ===== ARCHIVOS DE USUARIO =====
+    // Estructura: users/{userId}/...
+    match /users/{userId}/{allPaths=**} {
+      // Lectura: Cualquier usuario autenticado puede ver
+      allow read: if isAuthenticated();
+      
+      // Escritura: Solo el propietario
+      allow write: if isAuthenticated() && isOwner(userId) && isValidSize();
+    }
+    
+    // ===== AVATARES DE USUARIO =====
+    // Estructura: avatars/{userId}.{ext}
+    match /avatars/{userId}.{ext} {
+      // Lectura: Todos los usuarios autenticados
+      allow read: if isAuthenticated();
+      
+      // Escritura: Solo el propietario, solo imágenes, max 2MB
+      allow write: if isAuthenticated() && 
+                      isOwner(userId) && 
+                      isImage() && 
+                      request.resource.size < 2 * 1024 * 1024;
+    }
+    
+    // ===== PDFs DE PAPERS =====
+    // Estructura: papers/{paperId}/{filename}
+    match /papers/{paperId}/{filename} {
+      // Lectura: Cualquier usuario autenticado
+      allow read: if isAuthenticated();
+      
+      // Escritura: Cualquier usuario autenticado puede subir PDFs
+      // Nota: Las reglas de Firestore controlan quién puede crear papers
+      allow write: if isAuthenticated() && isPDF() && isValidSize();
+    }
+    
+    // ===== ARCHIVOS DE PROYECTOS =====
+    // Estructura: projects/{projectId}/{filename}
+    match /projects/{projectId}/{allPaths=**} {
+      // Lectura: Cualquier usuario autenticado
+      allow read: if isAuthenticated();
+      
+      // Escritura: Cualquier usuario autenticado
+      // Nota: Las reglas de Firestore controlan acceso a proyectos
+      allow write: if isAuthenticated() && isValidSize();
+    }
+    
+    // ===== ARCHIVOS PÚBLICOS =====
+    // Estructura: public/{allPaths}
+    match /public/{allPaths=**} {
+      // Lectura: Público (sin autenticación requerida)
+      allow read: if true;
+      
+      // Escritura: Solo usuarios autenticados
+      allow write: if isAuthenticated() && isValidSize();
+    }
+    
+    // ===== ARCHIVOS TEMPORALES =====
+    // Estructura: temp/{userId}/{filename}
+    match /temp/{userId}/{filename} {
+      // Lectura: Solo el propietario
+      allow read: if isAuthenticated() && isOwner(userId);
+      
+      // Escritura: Solo el propietario, max 20MB
+      allow write: if isAuthenticated() && 
+                      isOwner(userId) && 
+                      request.resource.size < 20 * 1024 * 1024;
+      
+      // Auto-delete después de 24 horas (implementar con Cloud Function)
+    }
+    
+    // ===== DENEGAR TODO LO DEMÁS =====
+    // Cualquier ruta no especificada arriba será denegada
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
+
+

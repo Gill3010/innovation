@@ -1,0 +1,21 @@
+{
+  "name": "innovation-migration-scripts",
+  "version": "1.0.0",
+  "description": "Scripts para migración de Innovation Platforms a InnovaProyectos",
+  "private": true,
+  "scripts": {
+    "export": "node export-firestore.js",
+    "import": "node import-firestore.js",
+    "verify": "node verify-migration.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.5.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+
+
+

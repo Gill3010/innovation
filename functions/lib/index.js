@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.searchExternalPapers = exports.getResearchMetrics = exports.helloWorld = void 0;
+exports.translateText = exports.searchExternalPapers = exports.getResearchMetrics = exports.helloWorld = void 0;
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
+const https = require("https");
 // Inicializar Firebase Admin
 admin.initializeApp();
 // Función básica de prueba
@@ -51,6 +52,87 @@ exports.searchExternalPapers = functions.https.onRequest(async (request, respons
     catch (error) {
         console.error('Error searching external papers:', error);
         response.status(500).json({ error: 'Error searching external papers' });
+    }
+});
+// Función proxy para traducir texto usando LibreTranslate
+exports.translateText = functions.https.onRequest(async (request, response) => {
+    // Configurar CORS headers
+    response.set('Access-Control-Allow-Origin', '*');
+    response.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    response.set('Access-Control-Allow-Headers', 'Content-Type');
+    // Manejar preflight requests
+    if (request.method === 'OPTIONS') {
+        response.status(204).send('');
+        return;
+    }
+    // Solo permitir POST requests
+    if (request.method !== 'POST') {
+        response.status(405).json({ error: 'Method not allowed' });
+        return;
+    }
+    try {
+        const { q, source, target, format } = request.body;
+        // Validar parámetros requeridos
+        if (!q || !target) {
+            response.status(400).json({ error: 'Missing required parameters: q (text) and target (language)' });
+            return;
+        }
+        // Preparar datos para LibreTranslate
+        const postData = JSON.stringify({
+            q: q,
+            source: source || 'auto',
+            target: target,
+            format: format || 'text'
+        });
+        // Configurar opciones para la petición a LibreTranslate
+        const options = {
+            hostname: 'libretranslate.de',
+            port: 443,
+            path: '/translate',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(postData),
+                'User-Agent': 'Firebase-Cloud-Function/1.0'
+            }
+        };
+        // Realizar petición a LibreTranslate
+        const libretranslateRequest = https.request(options, (libretranslateResponse) => {
+            let data = '';
+            libretranslateResponse.on('data', (chunk) => {
+                data += chunk;
+            });
+            libretranslateResponse.on('end', () => {
+                try {
+                    const result = JSON.parse(data);
+                    if (libretranslateResponse.statusCode === 200) {
+                        response.json(result);
+                    }
+                    else {
+                        console.error('LibreTranslate API error:', libretranslateResponse.statusCode, data);
+                        response.status(libretranslateResponse.statusCode || 500).json({
+                            error: 'Translation service error',
+                            details: data
+                        });
+                    }
+                }
+                catch (parseError) {
+                    console.error('Error parsing LibreTranslate response:', parseError);
+                    response.status(500).json({ error: 'Error parsing translation response' });
+                }
+            });
+        });
+        libretranslateRequest.on('error', (error) => {
+            console.error('Error making request to LibreTranslate:', error);
+            response.status(500).json({ error: 'Translation service unavailable' });
+        });
+        // Enviar datos a LibreTranslate
+        libretranslateRequest.write(postData);
+        libretranslateRequest.end();
+    }
+    catch (error) {
+        console.error('Error in translateText function:', error);
+        response.status(500).json({ error: 'Internal server error' });
     }
 });
 //# sourceMappingURL=index.js.map

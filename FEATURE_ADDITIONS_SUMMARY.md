@@ -198,3 +198,6 @@ NEXT_PUBLIC_OJS_API_SECRET=your_ojs_api_secret
 
 **Última actualización**: Enero 2025  
 **Versión**: 1.0.0
+
+
+

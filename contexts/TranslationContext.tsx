@@ -27,7 +27,6 @@ export const languages: Language[] = [
 // Traducciones estáticas para textos comunes
 const staticTranslations: Record<string, Record<string, string>> = {
   en: {
-    'Innova Proyectos': 'Innova Proyectos',
     'Development & Consulting': 'Development & Consulting',
     'About': 'About',
     'Services': 'Services',
@@ -75,7 +74,7 @@ const staticTranslations: Record<string, Record<string, string>> = {
     'Specialization': 'Specialization',
     'Key Experience': 'Key Experience',
     'Empowering the future through innovative solutions. We transform ideas into reality, creating meaningful impact in the digital world.': 'Empowering the future through innovative solutions. We transform ideas into reality, creating meaningful impact in the digital world.',
-    'Innovation Platform': 'Innovation Platform',
+    'Innova Proyectos': 'Innova Proyectos',
     'We are a company specialized in designing and developing scalable digital infrastructures for educational institutions, research centers and organizations seeking to transform their technology footprint.': 'We are a company specialized in designing and developing scalable digital infrastructures for educational institutions, research centers and organizations seeking to transform their technology footprint.',
     'To accelerate digital transformation through robust, secure and high-performance technology solutions that support the strategic goals of our clients.': 'To accelerate digital transformation through robust, secure and high-performance technology solutions that support the strategic goals of our clients.',
     'To be the trusted technology partner in Latin America for organizations seeking world-class digital solutions meeting international standards.': 'To be the trusted technology partner in Latin America for organizations seeking world-class digital solutions meeting international standards.',
@@ -283,7 +282,6 @@ const staticTranslations: Record<string, Record<string, string>> = {
     'Redirecting to login...': 'Redirecting to login...',
   },
   es: {
-    'Innova Proyectos': 'Innova Proyectos',
     'Development & Consulting': 'Desarrollo y Consultoría',
     'About': 'Acerca de',
     'Services': 'Servicios',
@@ -331,7 +329,7 @@ const staticTranslations: Record<string, Record<string, string>> = {
     'Specialization': 'Especialización',
     'Key Experience': 'Experiencia Clave',
     'Empowering the future through innovative solutions. We transform ideas into reality, creating meaningful impact in the digital world.': 'Impulsando el futuro a través de soluciones innovadoras. Transformamos ideas en realidad, creando un impacto significativo en el mundo digital.',
-    'Innovation Platform': 'Plataforma de Innovación',
+    'Innova Proyectos': 'Innova Proyectos',
     'We are a company specialized in designing and developing scalable digital infrastructures for educational institutions, research centers and organizations seeking to transform their technology footprint.': 'Somos una empresa especializada en diseñar y desarrollar infraestructuras digitales escalables para instituciones educativas, centros de investigación y organizaciones que buscan transformar su huella tecnológica.',
     'To accelerate digital transformation through robust, secure and high-performance technology solutions that support the strategic goals of our clients.': 'Acelerar la transformación digital a través de soluciones tecnológicas robustas, seguras y de alto rendimiento que apoyen los objetivos estratégicos de nuestros clientes.',
     'To be the trusted technology partner in Latin America for organizations seeking world-class digital solutions meeting international standards.': 'Ser el socio tecnológico de confianza en América Latina para organizaciones que buscan soluciones digitales de clase mundial que cumplan con estándares internacionales.',

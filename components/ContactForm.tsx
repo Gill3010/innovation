@@ -55,27 +55,29 @@ export default function ContactForm() {
     setSuccess(null);
 
     try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+      // Importar Firebase dinámicamente
+      const { db } = await import('@/lib/firebase');
+      const { collection, addDoc, serverTimestamp } = await import('firebase/firestore');
+      
+      // Guardar en Firestore
+      await addDoc(collection(db, 'contact_messages'), {
+        name: form.name,
+        email: form.email,
+        organization: form.organization || '',
+        message: form.message,
+        createdAt: serverTimestamp(),
+        status: 'unread',
       });
-
-      if (res.ok) {
-        setSuccess(translate('Message sent — we will contact you shortly.'));
-        setForm(initialState);
-      } else {
-        const subject = encodeURIComponent(`Contact from ${form.name} — Innova Proyectos`);
-        const body = encodeURIComponent(`Name: ${form.name}\nOrganization: ${form.organization}\nEmail: ${form.email}\n\nMessage:\n${form.message}`);
-        window.location.href = `mailto:info@innovaproyectos.com?subject=${subject}&body=${body}`;
-        setSuccess(translate('Opened mail client as a fallback.'));
-        setForm(initialState);
-      }
-    } catch {
+      
+      setSuccess(translate('Message sent — we will contact you shortly.'));
+      setForm(initialState);
+    } catch (error) {
+      console.error('Error sending message:', error);
+      // Fallback: abrir cliente de correo
       const subject = encodeURIComponent(`Contact from ${form.name} — Innova Proyectos`);
       const body = encodeURIComponent(`Name: ${form.name}\nOrganization: ${form.organization}\nEmail: ${form.email}\n\nMessage:\n${form.message}`);
       window.location.href = `mailto:info@innovaproyectos.com?subject=${subject}&body=${body}`;
-      setSuccess('Opened mail client as a fallback.');
+      setSuccess(translate('Opened mail client as a fallback.'));
       setForm(initialState);
     } finally {
       setSubmitting(false);

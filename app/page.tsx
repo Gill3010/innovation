@@ -31,7 +31,7 @@ export default function Home() {
       <main className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center">
         <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
           <span className="block">Welcome to</span>
-          <span className="block text-blue-300">Innovation Platform</span>
+          <span className="block text-blue-300">Innova Proyectos</span>
         </h1>
 
         <p className="mt-4 max-w-xl text-lg text-white/90 sm:text-lg md:mt-6 md:text-xl">

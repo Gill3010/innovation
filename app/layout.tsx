@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Scientific Research Assistant | Innovation Platform",
+  title: "Scientific Research Assistant | Innova Proyectos",
   description: "A modern and intelligent platform for scientific research, collaboration, and publication management",
 };
 

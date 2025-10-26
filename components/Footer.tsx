@@ -194,7 +194,7 @@ const Footer = () => {
               <svg className="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
               </svg>
-              <span>© {currentYear} Innovation Platform. {translate('All rights reserved')}.</span>
+              <span>© {currentYear} Innova Proyectos. {translate('All rights reserved')}.</span>
             </div>
             <div className="mt-4 md:mt-0">
               <ul className="flex flex-wrap gap-6 text-sm text-slate-400">
