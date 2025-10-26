@@ -4,6 +4,7 @@ import React from 'react';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
 import Footer from '@/components/Footer';
+import Chatbot from '@/components/Chatbot';
 
 const ClientShell: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
@@ -16,6 +17,7 @@ const ClientShell: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       </main>
 
       <Footer />
+      <Chatbot />
     </>
   );
 };
