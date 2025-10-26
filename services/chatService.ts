@@ -81,7 +81,7 @@ export class ChatService {
   }
 
   // Clean and process the response
-  private static cleanResponse(response: string, originalMessage: string): string {
+  private static cleanResponse(response: string, originalMessage: string): string | null {
     // Remove the original message if it was included in the response
     let cleaned = response.replace(originalMessage, '').trim();
     
