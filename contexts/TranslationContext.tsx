@@ -280,6 +280,8 @@ const staticTranslations: Record<string, Record<string, string>> = {
     'Authentication Required': 'Authentication Required',
     'Please sign in to access this page': 'Please sign in to access this page',
     'Redirecting to login...': 'Redirecting to login...',
+    'View Profile': 'View Profile',
+    'Log Out': 'Log Out',
   },
   es: {
     'Development & Consulting': 'Desarrollo y Consultoría',
@@ -535,6 +537,8 @@ const staticTranslations: Record<string, Record<string, string>> = {
     'Authentication Required': 'Autenticación Requerida',
     'Please sign in to access this page': 'Por favor inicia sesión para acceder a esta página',
     'Redirecting to login...': 'Redirigiendo al inicio de sesión...',
+    'View Profile': 'Ver Perfil',
+    'Log Out': 'Cerrar Sesión',
   },
 };
 

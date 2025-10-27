@@ -14,8 +14,9 @@ type NavbarProps = {
 const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const { translate } = useTranslation();
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,6 +50,29 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
       document.removeEventListener('click', handleClickOutside);
     };
   }, [isMobileMenuOpen]);
+
+  // Close user menu when clicking outside
+  useEffect(() => {
+    if (!isUserMenuOpen) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      
+      if (!target.closest('.user-menu-container')) {
+        setIsUserMenuOpen(false);
+      }
+    };
+
+    // Small delay to prevent immediate closing
+    const timer = setTimeout(() => {
+      document.addEventListener('click', handleClickOutside);
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isUserMenuOpen]);
 
   return (
     <>
@@ -163,15 +187,62 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
               </div>
             ) : user ? (
               <div className="ml-4 flex items-center gap-2">
-                <Link
-                  href="/profile"
-                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-100 text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-200 transition-all duration-300"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                  {user.name || translate('Profile')}
-                </Link>
+                {/* User Menu */}
+                <div className="relative user-menu-container">
+                  <button
+                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-100 text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-200 transition-all duration-300"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    {user.name || translate('Profile')}
+                    <svg 
+                      className={`w-4 h-4 transition-transform duration-300 ${isUserMenuOpen ? 'transform rotate-180' : ''}`}
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  <div
+                    className={`absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border-2 border-slate-200 overflow-hidden transition-all duration-300 ease-in-out ${
+                      isUserMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
+                    }`}
+                  >
+                    <Link
+                      href="/profile"
+                      onClick={() => setIsUserMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 border-b border-slate-100"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                      {translate('View Profile')}
+                    </Link>
+                    
+                    <button
+                      onClick={async () => {
+                        try {
+                          await logout();
+                          setIsUserMenuOpen(false);
+                        } catch (error) {
+                          console.error('Logout error:', error);
+                        }
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-red-600 hover:bg-red-50 transition-all duration-200"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                      </svg>
+                      {translate('Log Out')}
+                    </button>
+                  </div>
+                </div>
+
                 <Link 
                   href="/contact" 
                   className="inline-flex items-center gap-2 px-4 py-2.5 bg-linear-to-r from-blue-600 to-blue-700 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transform hover:-translate-y-0.5 transition-all duration-300"
@@ -409,16 +480,68 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
               {/* Auth Section - Mobile */}
               <div className="border-t border-slate-200/60 pt-2 mt-2">
                 {user ? (
-                  <Link
-                    href="/profile"
-                    className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 group"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                    {user.name || translate('Profile')}
-                  </Link>
+                  <>
+                    <button
+                      onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                      className="w-full flex items-center justify-between px-4 py-3 text-base font-semibold text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 group"
+                    >
+                      <div className="flex items-center gap-3">
+                        <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        {user.name || translate('Profile')}
+                      </div>
+                      <svg 
+                        className={`w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-transform duration-300 ${isUserMenuOpen ? 'transform rotate-180' : ''}`}
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+
+                    {/* Dropdown Menu - Mobile */}
+                    <div
+                      className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                        isUserMenuOpen ? 'max-h-96 opacity-100 mt-2' : 'max-h-0 opacity-0'
+                      }`}
+                    >
+                      <div className="bg-slate-50 rounded-xl border-2 border-slate-200">
+                        <Link
+                          href="/profile"
+                          onClick={() => {
+                            setIsUserMenuOpen(false);
+                            setIsMobileMenuOpen(false);
+                          }}
+                          className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-slate-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 border-b border-slate-200"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          </svg>
+                          {translate('View Profile')}
+                        </Link>
+                        
+                        <button
+                          onClick={async () => {
+                            try {
+                              await logout();
+                              setIsUserMenuOpen(false);
+                              setIsMobileMenuOpen(false);
+                            } catch (error) {
+                              console.error('Logout error:', error);
+                            }
+                          }}
+                          className="w-full flex items-center gap-3 px-4 py-3 text-base font-semibold text-red-600 hover:bg-red-50 transition-all duration-200"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                          </svg>
+                          {translate('Log Out')}
+                        </button>
+                      </div>
+                    </div>
+                  </>
                 ) : (
                   <>
                     <Link
