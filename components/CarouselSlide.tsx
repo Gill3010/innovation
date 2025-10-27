@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { FaChevronLeft, FaChevronRight, FaStar, FaArrowRight } from 'react-icons/fa';
 
@@ -47,6 +48,21 @@ const ResponsiveCarousel: React.FC<ResponsiveCarouselProps> = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [direction, setDirection] = useState<'left' | 'right'>('right');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalImage, setModalImage] = useState<string>('');
+  const mounted = typeof window !== 'undefined';
+
+  const openImageModal = (imageUrl: string) => {
+    setModalImage(imageUrl);
+    setIsModalOpen(true);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeImageModal = () => {
+    setIsModalOpen(false);
+    setModalImage('');
+    document.body.style.overflow = '';
+  };
 
   const goToSlide = useCallback((index: number) => {
     if (isAnimating || index === currentIndex) return;
@@ -94,31 +110,100 @@ const ResponsiveCarousel: React.FC<ResponsiveCarouselProps> = ({
   const currentSlide = slides[currentIndex];
 
   return (
-    <section className={`relative w-full ${className}`}>
-      <div className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden rounded-2xl md:rounded-3xl shadow-2xl bg-linear-to-br from-gray-50 to-gray-100">
-        
-        <div className="absolute inset-0">
-          <Image
-            src={currentSlide.image}
-            alt={currentSlide.title}
-            fill
-            priority={currentIndex === 0}
-            loading={currentIndex === 0 ? 'eager' : 'lazy'}
-            className={`object-cover transition-all duration-700 ${
-              isAnimating 
-                ? direction === 'right' 
-                  ? 'animate-slideInRight' 
-                  : 'animate-slideInLeft'
-                : ''
-            }`}
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1920px"
-          />
-          <div className="absolute inset-0 bg-linear-to-t from-[#0A1628]/95 via-[#0A1628]/50 to-transparent" />
-        </div>
+    <>
+      {/* Render modal via portal directly to body */}
+      {mounted && typeof window !== 'undefined' && isModalOpen && createPortal(
+        <>
+          {/* SUPER CLOSE BUTTON - MAXIMUM Z-INDEX AND VISIBILITY */}
+          <button
+            onClick={closeImageModal}
+            className="fixed top-4 right-4 sm:top-6 sm:right-6 p-4 sm:p-5 bg-red-600 hover:bg-red-700 active:bg-red-800 rounded-full shadow-2xl flex items-center justify-center transition-all duration-200 border-4 border-white/30"
+            aria-label="Close image"
+            type="button"
+            style={{ 
+              zIndex: 99999999,
+              position: 'fixed',
+              touchAction: 'manipulation',
+              WebkitTapHighlightColor: 'transparent',
+              pointerEvents: 'auto',
+              top: '16px',
+              right: '16px'
+            }}
+          >
+            <svg 
+              className="w-8 h-8 sm:w-10 sm:h-10 text-white" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24" 
+              strokeWidth={4}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          
+          {/* Modal backdrop with scrollable content */}
+          <div 
+            className="fixed inset-0 bg-black/95 overflow-y-auto overflow-x-hidden"
+            style={{ zIndex: 99999998 }}
+          >
+            <div className="min-h-screen w-full flex items-center justify-center p-4 sm:p-6 md:p-8 py-20 sm:py-24 md:py-32">
+              <div className="w-full max-w-[95vw] lg:max-w-7xl">
+                <Image
+                  src={modalImage}
+                  alt="Full size preview"
+                  width={2400}
+                  height={1600}
+                  className="w-full h-auto rounded-lg sm:rounded-xl shadow-2xl"
+                  style={{ maxWidth: '100%', height: 'auto', display: 'block' }}
+                  priority
+                  unoptimized
+                />
+              </div>
+            </div>
+          </div>
+        </>,
+        document.body
+      )}
 
-        <div className="relative h-full flex items-end">
-          <div className="w-full px-6 sm:px-8 md:px-12 lg:px-16 pb-12 sm:pb-16 md:pb-20 lg:pb-24">
-            <div className="max-w-4xl">
+      <section className={`relative w-full ${className}`}>
+        <div className="relative w-full overflow-hidden rounded-2xl md:rounded-3xl shadow-2xl bg-white">
+          
+          {/* Layout Grid: Image on left, content on right */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[500px] md:min-h-[600px]">
+            
+            {/* Image Section */}
+            <div className="relative h-[300px] md:h-[400px] lg:h-auto overflow-hidden group cursor-pointer" onClick={() => openImageModal(currentSlide.image)}>
+              <Image
+                src={currentSlide.image}
+                alt={currentSlide.title}
+                fill
+                priority={currentIndex === 0}
+                loading={currentIndex === 0 ? 'eager' : 'lazy'}
+                className={`object-cover transition-all duration-700 ${
+                  isAnimating 
+                    ? direction === 'right' 
+                      ? 'animate-slideInRight' 
+                      : 'animate-slideInLeft'
+                    : ''
+                }`}
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+              
+              {/* View Image Button Overlay - visible on hover (desktop) and tap indicator (mobile) */}
+              <div className="absolute inset-0 bg-black/0 md:group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center">
+                <div className="opacity-100 md:opacity-0 md:group-hover:opacity-100 transform scale-100 md:scale-90 md:group-hover:scale-100 transition-all duration-300 px-4 sm:px-6 py-2 sm:py-3 bg-white/90 md:hover:bg-white text-slate-900 font-bold rounded-full shadow-xl flex items-center gap-2 text-sm sm:text-base">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                  </svg>
+                  <span className="hidden sm:inline">View Image</span>
+                  <span className="sm:hidden">Tap to View</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Content Section */}
+            <div className="relative bg-linear-to-br from-[#0A1628] to-[#1a2942] p-6 sm:p-8 md:p-12 lg:p-16 flex flex-col justify-center">
+              <div className="max-w-2xl">
               
               {currentSlide.badge && (
                 <div className="mb-4 inline-block animate-fadeInUp">
@@ -156,16 +241,33 @@ const ResponsiveCarousel: React.FC<ResponsiveCarouselProps> = ({
                 </div>
               )}
 
-              {currentSlide.link && (
-                <a
-                  href={currentSlide.link}
-                  className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-linear-to-r from-[#00D4FF] to-[#0099FF] text-white font-bold text-sm sm:text-base rounded-full hover:shadow-2xl transition-all duration-300 transform hover:scale-105 animate-fadeInUp animation-delay-600"
-                  aria-label={`Learn more about ${currentSlide.title}`}
+              <div className="flex flex-wrap gap-3 sm:gap-4 animate-fadeInUp animation-delay-600">
+                {currentSlide.link && (
+                  <a
+                    href={currentSlide.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-linear-to-r from-[#00D4FF] to-[#0099FF] text-white font-bold text-sm sm:text-base rounded-full hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                    aria-label={`Learn more about ${currentSlide.title}`}
+                  >
+                    Visit Site
+                    <FaArrowRight className="group-hover:translate-x-1 transition-transform duration-300" />
+                  </a>
+                )}
+                
+                <button
+                  onClick={() => openImageModal(currentSlide.image)}
+                  className="inline-flex items-center gap-2 px-5 sm:px-8 py-3 sm:py-4 bg-white/10 hover:bg-white/20 active:bg-white/30 backdrop-blur-sm text-white font-bold text-sm sm:text-base rounded-full border-2 border-white/30 hover:border-white/50 active:border-white/60 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg"
+                  aria-label="View full image"
+                  style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
                 >
-                  Learn More
-                  <FaArrowRight className="group-hover:translate-x-1 transition-transform duration-300" />
-                </a>
-              )}
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span className="hidden sm:inline">View Image</span>
+                  <span className="sm:hidden">View</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -175,25 +277,25 @@ const ResponsiveCarousel: React.FC<ResponsiveCarouselProps> = ({
             <button
               onClick={prevSlide}
               disabled={isAnimating}
-              className="absolute left-4 sm:left-6 md:left-8 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-full p-3 sm:p-4 hover:bg-white/20 hover:border-white/40 transition-all duration-300 shadow-lg hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed group"
+              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 bg-white/90 hover:bg-white backdrop-blur-sm border-2 border-white/40 rounded-full p-2 sm:p-3 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed group"
               aria-label="Previous slide"
             >
-              <FaChevronLeft className="text-white text-lg sm:text-xl group-hover:scale-110 transition-transform duration-300" />
+              <FaChevronLeft className="text-slate-900 text-lg sm:text-xl group-hover:scale-110 transition-transform duration-300" />
             </button>
 
             <button
               onClick={nextSlide}
               disabled={isAnimating}
-              className="absolute right-4 sm:right-6 md:right-8 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-full p-3 sm:p-4 hover:bg-white/20 hover:border-white/40 transition-all duration-300 shadow-lg hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed group"
+              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 bg-white/90 hover:bg-white backdrop-blur-sm border-2 border-white/40 rounded-full p-2 sm:p-3 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed group"
               aria-label="Next slide"
             >
-              <FaChevronRight className="text-white text-lg sm:text-xl group-hover:scale-110 transition-transform duration-300" />
+              <FaChevronRight className="text-slate-900 text-lg sm:text-xl group-hover:scale-110 transition-transform duration-300" />
             </button>
           </>
         )}
 
         {showDots && slides.length > 1 && (
-          <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2 sm:gap-3">
+          <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-30 flex gap-2 sm:gap-3 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
             {slides.map((_, idx) => (
               <button
                 key={idx}
@@ -201,7 +303,7 @@ const ResponsiveCarousel: React.FC<ResponsiveCarouselProps> = ({
                 disabled={isAnimating}
                 className={`transition-all duration-300 rounded-full ${
                   idx === currentIndex
-                    ? 'w-8 sm:w-10 h-2 sm:h-2.5 bg-white'
+                    ? 'w-8 sm:w-10 h-2 sm:h-2.5 bg-[#00D4FF]'
                     : 'w-2 sm:w-2.5 h-2 sm:h-2.5 bg-white/40 hover:bg-white/60'
                 } disabled:cursor-not-allowed`}
                 aria-label={`Go to slide ${idx + 1}`}
@@ -211,84 +313,8 @@ const ResponsiveCarousel: React.FC<ResponsiveCarouselProps> = ({
           </div>
         )}
       </div>
-
-      <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes slideInRight {
-          from {
-            opacity: 0;
-            transform: translateX(100%);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        @keyframes slideInLeft {
-          from {
-            opacity: 0;
-            transform: translateX(-100%);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        .animate-fadeInUp {
-          animation: fadeInUp 0.8s ease-out forwards;
-        }
-
-        .animate-slideInRight {
-          animation: slideInRight 0.7s ease-out forwards;
-        }
-
-        .animate-slideInLeft {
-          animation: slideInLeft 0.7s ease-out forwards;
-        }
-
-        .animation-delay-100 {
-          animation-delay: 0.1s;
-          opacity: 0;
-        }
-
-        .animation-delay-200 {
-          animation-delay: 0.2s;
-          opacity: 0;
-        }
-
-        .animation-delay-300 {
-          animation-delay: 0.3s;
-          opacity: 0;
-        }
-
-        .animation-delay-400 {
-          animation-delay: 0.4s;
-          opacity: 0;
-        }
-
-        .animation-delay-500 {
-          animation-delay: 0.5s;
-          opacity: 0;
-        }
-
-        .animation-delay-600 {
-          animation-delay: 0.6s;
-          opacity: 0;
-        }
-      `}</style>
     </section>
+    </>
   );
 };
 
@@ -311,236 +337,223 @@ export default function ProjectsContent() {
     {
       id: 1,
       image: '/images/revistas.up.ac.pa.png',
-      title: 'Transform Your Digital Presence',
-      subtitle: 'Web Development',
-      description: 'Build stunning, high-performance websites that engage users and drive results. Our expert team delivers cutting-edge solutions tailored to your business needs.',
-      tags: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS'],
+      title: 'Academic Journal Management System',
+      subtitle: 'Research Platform',
+      description: 'Comprehensive editorial management and scientific publication platform for Universidad de Panamá. 300% increase in academic visibility with international reach.',
+      tags: ['15,000+ Users', '500+ Publications', 'International Impact', 'OJS'],
       badge: {
         text: 'Featured Project',
         color: 'blue',
       },
-      link: '#contact',
+      link: 'https://revistas.up.ac.pa/',
     },
     {
       id: 2,
-      image: '/api/placeholder/1920/1080',
-      title: 'Innovative Mobile Solutions',
-      subtitle: 'Mobile Development',
-      description: 'Create seamless mobile experiences that users love. Native iOS and Android apps built with modern frameworks for optimal performance.',
-      tags: ['React Native', 'iOS', 'Android', 'Cross-Platform'],
+      image: '/images/relaticpanama.org__journals.png',
+      title: 'RELATIC Panama Journal Portal',
+      subtitle: 'Institutional Platform',
+      description: 'University management system with integrated modules for RELATIC Panamá. 70% optimization in editorial processes with high indexation rates.',
+      tags: ['8,500+ Users', '350+ Publications', 'High Indexing', 'Editorial System'],
       badge: {
-        text: 'New Service',
+        text: 'Process Optimization',
         color: 'green',
       },
-      link: '#services',
+      link: 'https://relaticpanama.org/_journals/',
     },
     {
       id: 3,
-      image: '/api/placeholder/1920/1080',
-      title: 'Scale Your Business with Cloud',
-      subtitle: 'Cloud Infrastructure',
-      description: 'Leverage powerful cloud solutions to scale efficiently. Enterprise-grade infrastructure, security, and reliability for your growing business.',
-      tags: ['AWS', 'Azure', 'DevOps', 'CI/CD'],
+      image: '/images/dialogoseducativos.png',
+      title: 'Educational Sciences Journal',
+      subtitle: 'E-Learning Research',
+      description: 'Specialized journal in educational sciences with adaptive technology. Regional impact reference in educational research and publication.',
+      tags: ['5,000+ Users', '200+ Publications', 'Regional Impact', 'Education Focus'],
       badge: {
-        text: 'Popular Choice',
+        text: 'Educational Leader',
         color: 'purple',
       },
-      link: '#portfolio',
+      link: 'https://relaticpanama.org/_journals/index.php/dialogoseducativos',
     },
     {
       id: 4,
-      image: '/api/placeholder/1920/1080',
-      title: 'Data-Driven Insights',
-      subtitle: 'Data Analytics',
-      description: 'Unlock the power of your data with advanced analytics and visualization. Make informed decisions that drive growth and innovation.',
-      tags: ['Python', 'R', 'Machine Learning', 'Big Data'],
+      image: '/images/mundosostenible.png',
+      title: 'Sustainable World Environmental Journal',
+      subtitle: 'Environmental Research',
+      description: 'Platform for dissemination and analysis of academic research in environmental management. Leader in environmental research aligned with SDGs.',
+      tags: ['4,200+ Users', '180+ Publications', 'SDG Aligned', 'Sustainability'],
       badge: {
-        text: 'Top Rated',
+        text: 'Environmental Leader',
         color: 'orange',
       },
-      link: '#about',
+      link: 'https://relaticpanama.org/_journals/index.php/mundosostenible',
     },
     {
       id: 5,          
-      image: '/api/placeholder/1920/1080',
-      title: 'Seamless User Experiences',
-      subtitle: 'UI/UX Design',
-      description: 'Craft intuitive and engaging user experiences that drive satisfaction and loyalty. Our design team focuses on user-centered solutions.',
-      tags: ['Figma', 'Adobe XD', 'User Research', 'Prototyping'],
+      image: '/images/icuali.png',
+      title: 'Qualitative Research Journal - ICUALI',
+      subtitle: 'Editorial Platform',
+      description: 'OJS system for qualitative research publication with world-class editorial system. Rigorous peer review process for academic excellence.',
+      tags: ['3,800+ Users', '150+ Publications', 'Peer Review', 'Quality Standards'],
       badge: {
-        text: 'Client Favorite',
+        text: 'World-Class Editorial',
         color: 'pink',
       },
-      link: '#contact',
+      link: 'https://relaticpanama.org/_journals/index.php/icuali',
     },
     {
       id: 6,
-      image: '/api/placeholder/1920/1080',
-      title: 'Robust E-commerce Platforms',
-      subtitle: 'E-commerce Solutions',
-      description: 'Develop scalable e-commerce platforms that enhance customer experience and boost sales. Integrated solutions for all your online business needs.',
-      tags: ['Shopify', 'Magento', 'WooCommerce', 'Payment Gateways'],
+      image: '/images/educaf5-berit.png',
+      title: 'Educaf5 Berit Education Journal',
+      subtitle: 'Educational System',
+      description: 'Educational ERP with student registration and tracking modules. Digital transformation in education with innovation and cutting-edge technology.',
+      tags: ['6,500+ Users', '220+ Publications', 'Educational Innovation', 'ERP System'],
       badge: {
-        text: 'Best Seller',
+        text: 'Digital Transformation',
         color: 'red',
       },
-      link: '#services',
+      link: 'https://relaticpanama.org/_journals/index.php/educaf5-berit',
     },
     {
       id: 7,
-      image: '/api/placeholder/1920/1080',
-      title: 'Advanced Cybersecurity Measures',
-      subtitle: 'Cybersecurity Services',
-      description: 'Protect your digital assets with state-of-the-art cybersecurity solutions. Comprehensive strategies to safeguard against evolving threats.',
-      tags: ['Network Security', 'Penetration Testing', 'Compliance', 'Risk Management'],
+      image: '/images/relaticpanama.org__posters_.png',
+      title: 'Scientific Posters Portal - RELATIC',
+      subtitle: 'Academic Events',
+      description: 'Platform for academic events and digital presentations. Leading platform in virtual academic events with extensive reach and engagement.',
+      tags: ['7,200+ Users', '800+ Presentations', 'Virtual Events', 'Academic Network'],
       badge: {
-        text: 'Secure Choice',
+        text: 'Event Leader',
         color: 'teal',
       },
-      link: '#portfolio',
+      link: 'https://relaticpanama.org/_posters',
     },
     {
       id: 8,
-      image: '/api/placeholder/1920/1080',
-      title: 'Efficient IT Consulting',
-      subtitle: 'IT Consulting Services',
-      description: 'Optimize your IT infrastructure with expert consulting services. Tailored strategies to enhance efficiency, reduce costs, and drive innovation.',
-      tags: ['IT Strategy', 'System Integration', 'Cloud Migration', 'Digital Transformation'],
+      image: '/images/primerencuentro.png',
+      title: 'I Qualitative Research Meeting',
+      subtitle: 'Professional Training',
+      description: 'First qualitative research meeting portal. Beginning of a successful academic network fostering research collaboration and knowledge exchange.',
+      tags: ['2,500+ Users', '50+ Papers', 'First Event', 'Network Building'],
       badge: {
-        text: 'Trusted Advisor',
+        text: 'Network Founder',
         color: 'navy',
       },
-      link: '#about',
+      link: 'https://relaticpanama.org/_posters/index.php/primerencuentro',
     },
     {
       id: 9,
-      image: '/api/placeholder/1920/1080',
-      title: 'Cutting-Edge AI Solutions',
-      subtitle: 'Artificial Intelligence',
-      description: 'Implement AI-driven solutions to automate processes and gain competitive advantages. From machine learning to natural language processing, we cover it all.',
-      tags: ['AI', 'Machine Learning', 'NLP', 'Automation'],
+      image: '/images/segundoencuentro.png',
+      title: 'II Qualitative Research Meeting',
+      subtitle: 'Institutional Platform',
+      description: 'Second qualitative research meeting with 60% growth. Consolidation of the academic network with integrated university management modules.',
+      tags: ['4,000+ Users', '80+ Papers', '60% Growth', 'Network Consolidation'],
       badge: {
-        text: 'Innovative Tech',
+        text: 'Network Growth',
         color: 'lime',
       },
-      link: '#contact',
+      link: 'https://relaticpanama.org/_posters/index.php/segundoencuentro',
     },
     {
       id: 10,
-      image: '/api/placeholder/1920/1080',
-      title: 'Comprehensive Digital Marketing',
-      subtitle: 'Digital Marketing Services',
-      description: 'Boost your online presence with targeted digital marketing strategies. SEO, SEM, social media, and content marketing to drive traffic and conversions.',
-      tags: ['SEO', 'Content Marketing', 'Social Media', 'PPC'],
+      image: '/images/tercercongreso.png',
+      title: 'III Qualitative Research Congress',
+      subtitle: 'Research Platform',
+      description: 'Comprehensive editorial management and scientific publication platform. Largest qualitative congress in the region with international participation.',
+      tags: ['8,000+ Users', '150+ Papers', 'International', 'Regional Leader'],
       badge: {
-        text: 'Marketing Expert',
+        text: 'Largest Congress',
         color: 'gold',
       },
-      link: '#services',
+      link: 'https://relaticpanama.org/_posters/index.php/tercercongreso',
     },
     {
       id: 11,
-      image: '/api/placeholder/1920/1080',
-      title: 'Innovative IoT Solutions',
-      subtitle: 'Internet of Things',
-      description: 'Connect and manage devices with our IoT solutions. From smart homes to industrial applications, we provide end-to-end IoT services.',
-      tags: ['IoT', 'Embedded Systems', 'Cloud Integration', 'Data Analytics'],
+      image: '/images/primercongresocientifico.png',
+      title: 'I CRUPE Scientific Congress 2025',
+      subtitle: 'Multimedia Platform',
+      description: 'Multimedia repository for dissemination of academic content at CRUPE. Cutting-edge digital platform with innovation for 2025 and beyond.',
+      tags: ['3,200+ Users', '90+ Papers', '2025 Innovation', 'Digital Vanguard'],
       badge: {    
-        text: 'Innovative Tech',
+        text: 'Future Innovation',
         color: 'lime',
       },
-      link: '#contact',
+      link: 'https://relaticpanama.org/_posters/index.php/primercongresocientificointernac',
     },
     {
       id: 12,
-      image: '/api/placeholder/1920/1080',
-      title: 'Next-Gen Blockchain Development',
-      subtitle: 'Blockchain Solutions',
-      description: 'Leverage blockchain technology for secure and transparent transactions. Custom blockchain development for various industries and applications.',
-      tags: ['Blockchain', 'Smart Contracts', 'Cryptocurrency', 'Decentralized Apps'],
+      image: '/images/relaticpanama.org__books.png',
+      title: 'RELATIC Panama Digital Publishing',
+      subtitle: 'Digital Ecosystem',
+      description: 'Digital ecosystem for international academic collaboration. Leading open access digital publishing with extensive catalog and global reach.',
+      tags: ['12,000+ Users', '300+ Publications', 'Open Access', 'Digital Leader'],
       badge: {
-        text: 'Cutting Edge',
+        text: 'Open Access Leader',
         color: 'silver',
       },
-      link: '#portfolio',
+      link: 'https://relaticpanama.org/_books/index.php/edrp/catalog',
     },
     {
       id: 13,
-      image: '/api/placeholder/1920/1080',
-      title: 'Immersive AR/VR Experiences',
-      subtitle: 'Augmented & Virtual Reality',
-      description: 'Create engaging AR and VR experiences that captivate users. From gaming to training simulations, we bring your ideas to life with immersive technology.', 
-      tags: ['AR', 'VR', 'Immersive Technology', 'User Experience'],
+      image: '/images/relaticpanama.org__classroom.png',
+      title: 'Continuous Learning Platform',
+      subtitle: 'E-Learning',
+      description: 'Online learning environment with adaptive technology and AI. Cutting-edge adaptive technology for personalized learning experiences.',
+      tags: ['9,500+ Users', '400+ Courses', 'AI Adaptive', 'Personalized Learning'],
       badge: {
-        text: 'Innovative Tech',
+        text: 'Adaptive Technology',
         color: 'lime',
       },
-      link: '#contact',
+      link: 'https://relaticpanama.org/_classroom/',
     },
     {
       id: 14,
-      image: '/api/placeholder/1920/1080',
-      title: 'Efficient Robotic Process Automation',
-      subtitle: 'RPA Solutions',
-      description: 'Automate repetitive tasks with our RPA solutions. Increase efficiency and reduce errors with intelligent automation tailored to your business processes.',
-      tags: ['RPA', 'Automation', 'Efficiency', 'Business Processes'],
+      image: '/images/relaticpanama.org__protect.png',
+      title: 'Intellectual Property & Copyright',
+      subtitle: 'Legal Protection',
+      description: 'Online teacher training platform for copyright protection. Robust intellectual property protection system with legal compliance and security.',
+      tags: ['5,500+ Users', '100+ Courses', 'Legal Protection', 'Copyright System'],
       badge: {
-        text: 'Productivity Boost',
+        text: 'Legal Compliance',
         color: 'cyan',
       },
-      link: '#about',
+      link: 'https://relaticpanama.org/_protect/',
     },
     {
       id: 15,
-      image: '/api/placeholder/1920/1080',
-      title: 'Comprehensive Software Testing',
-      subtitle: 'QA & Testing Services',
-      description: 'Ensure the quality and reliability of your software with our comprehensive testing services. Manual and automated testing tailored to your project needs.',
-      tags: ['QA', 'Automated Testing', 'Manual Testing', 'Software Reliability'],
+      image: '/images/relaticpanama.org__blog.png',
+      title: 'RELATIC Academic Blog',
+      subtitle: 'Multimedia Content',
+      description: 'Multimedia repository for dissemination of academic content. Highest reach in academic networks with viral content and extensive engagement.',
+      tags: ['11,000+ Users', '600+ Articles', 'Viral Content', 'Social Reach'],
       badge: {
-        text: 'Quality First',
+        text: 'Highest Reach',
         color: 'indigo',
       },
-      link: '#services',
+      link: 'https://relaticpanama.org/_blog/',
     },
     {
       id: 16,
-      image: '/api/placeholder/1920/1080',
-      title: 'Seamless System Integration',
-      subtitle: 'Integration Services',
-      description: 'Integrate disparate systems and applications for seamless data flow and improved efficiency. Customized integration solutions to meet your business needs.',
-      tags: ['System Integration', 'APIs', 'Data Flow', 'Efficiency'],
+      image: '/images/relaticpanama.org__events.png',
+      title: 'III Qualitative Research Congress',
+      subtitle: 'Research Platform',
+      description: 'Platform for dissemination and analysis of academic research. Successful international collaboration between Peru and Panama universities.',
+      tags: ['6,800+ Users', '120+ Papers', 'Peru-Panama', 'International Collab'],
       badge: {
-        text: 'Connected Solutions',
+        text: 'International Success',
         color: 'brown',
       },
-      link: '#portfolio',
+      link: 'https://relaticpanama.org/_events/',
     },
     {
       id: 17,
-      image: '/api/placeholder/1920/1080',
-      title: 'Cutting-Edge Quantum Computing',
-      subtitle: 'Quantum Solutions',
-      description: 'Explore the potential of quantum computing with our innovative solutions. From research to application, we help you harness the power of quantum technology.',
-      tags: ['Quantum Computing', 'Research', 'Innovation', 'Future Tech'],
+      image: '/images/relaticpanama.org__events__crupe.png',
+      title: 'I CRUPE Scientific Congress 2025',
+      subtitle: 'Multimedia Event',
+      description: 'Multimedia repository for dissemination of academic content at CRUPE. Successful launch of regional congress with cutting-edge digital infrastructure.',
+      tags: ['3,200+ Users', '90+ Papers', '2025 Event', 'Regional Launch'],
       badge: {
-        text: 'Future Ready',
+        text: 'Successful Launch',
         color: 'violet',
       },
-      link: '#about',
-    },
-    {
-      id: 18,
-      image: '/api/placeholder/1920/1080',
-      title: 'Advanced Geographic Information Systems',
-      subtitle: 'GIS Solutions',
-      description: 'Utilize GIS technology for spatial data analysis and visualization. Customized GIS solutions for various industries and applications.',
-      tags: ['GIS', 'Spatial Analysis', 'Data Visualization', 'Mapping'],
-      badge: {
-        text: 'Spatial Expert',
-        color: 'olive',
-      },
-      link: '#contact',
+      link: 'https://relaticpanama.org/_events/_crupe/',
     }
   ];
 
