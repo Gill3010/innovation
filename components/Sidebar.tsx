@@ -182,12 +182,19 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeKey }) => {
                 {onNavigate ? (
                   <button
                     onClick={() => handleItemClick(item)}
-                    className={`flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 w-full text-left
+                    className={`flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 w-full text-left group
                       ${isItemActive(item) ? 'bg-blue-50 text-blue-600' : ''}
                       transition-colors duration-200
                     `}
                   >
-                    <span className="inline-block">{item.icon}</span>
+                    <span className="inline-block relative">
+                      {item.icon}
+                      {!isExpanded && (
+                        <span className="absolute left-full ml-2 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-900 text-white text-sm font-medium rounded-md whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none z-50 shadow-lg">
+                          {translate(item.label)}
+                        </span>
+                      )}
+                    </span>
                     {isExpanded && (
                       <span className="ml-3 text-sm font-medium whitespace-nowrap">
                         {translate(item.label)}
@@ -197,12 +204,19 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeKey }) => {
                 ) : (
                   <Link
                     href={item.href}
-                    className={`flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50
+                    className={`flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 group
                       ${isItemActive(item) ? 'bg-blue-50 text-blue-600' : ''}
                       transition-colors duration-200
                     `}
                   >
-                    <span className="inline-block">{item.icon}</span>
+                    <span className="inline-block relative">
+                      {item.icon}
+                      {!isExpanded && (
+                        <span className="absolute left-full ml-2 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-900 text-white text-sm font-medium rounded-md whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none z-50 shadow-lg">
+                          {translate(item.label)}
+                        </span>
+                      )}
+                    </span>
                     {isExpanded && (
                       <span className="ml-3 text-sm font-medium whitespace-nowrap">
                         {translate(item.label)}

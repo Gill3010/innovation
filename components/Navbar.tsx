@@ -84,6 +84,15 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
           aria-hidden="true"
         />
       )}
+
+      {/* Overlay for user menu dropdown */}
+      {isUserMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-70 transition-opacity duration-300"
+          onClick={() => setIsUserMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
       
       <nav 
       className={`fixed top-0 left-0 right-0 z-70 transition-all duration-300 ${
@@ -209,7 +218,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
 
                   {/* Dropdown Menu */}
                   <div
-                    className={`absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border-2 border-slate-200 overflow-hidden transition-all duration-300 ease-in-out ${
+                    className={`absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border-2 border-slate-200 overflow-hidden transition-all duration-300 ease-in-out z-80 ${
                       isUserMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
                     }`}
                   >
@@ -503,7 +512,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
 
                     {/* Dropdown Menu - Mobile */}
                     <div
-                      className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                      className={`overflow-hidden transition-all duration-300 ease-in-out relative z-80 ${
                         isUserMenuOpen ? 'max-h-96 opacity-100 mt-2' : 'max-h-0 opacity-0'
                       }`}
                     >
