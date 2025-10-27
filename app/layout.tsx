@@ -19,6 +19,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Scientific Research Assistant | Innova Proyectos",
   description: "A modern and intelligent platform for scientific research, collaboration, and publication management",
+  icons: {
+    icon: '/icon.png',
+    shortcut: '/icon.png',
+    apple: '/icon.png',
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
