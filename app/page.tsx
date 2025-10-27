@@ -1,14 +1,39 @@
 "use client";
 
+import { useState, useEffect } from 'react';
 import Button from '../components/Button';
 import SearchComponent from '../components/SearchComponent';
 
 
 export default function Home() {
   const videoSrc = "/videos/pexels-office-6774633.mp4";
+  const [showScrollIndicator, setShowScrollIndicator] = useState(false);
+
+  useEffect(() => {
+    const checkScrollable = () => {
+      // Check if there's content to scroll
+      const hasScrollableContent = window.innerHeight < document.documentElement.scrollHeight;
+      // Check if user has scrolled past certain point
+      const scrolledPercentage = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+      
+      setShowScrollIndicator(hasScrollableContent && scrolledPercentage < 90);
+    };
+
+    // Check on mount
+    checkScrollable();
+
+    // Check on scroll
+    window.addEventListener('scroll', checkScrollable);
+    window.addEventListener('resize', checkScrollable);
+
+    return () => {
+      window.removeEventListener('scroll', checkScrollable);
+      window.removeEventListener('resize', checkScrollable);
+    };
+  }, []);
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden">
+    <div className="relative min-h-screen w-full overflow-x-hidden">
       {/* Background video */}
       <video
         className="absolute inset-0 h-full w-full object-cover"
@@ -49,7 +74,37 @@ export default function Home() {
         </div>
       </main>
 
-      
+      {/* Scroll Indicator */}
+      {showScrollIndicator && (
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-20 animate-bounce">
+          <div className="flex flex-col items-center">
+            <span className="text-sm text-white/80 mb-2 font-medium tracking-wide">
+              Scroll to explore
+            </span>
+            <div className="relative w-12 h-12">
+              {/* Animated arrow */}
+              <svg
+                className="w-12 h-12 text-white drop-shadow-lg"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                />
+              </svg>
+              {/* Pulsing circle effect */}
+              <div className="absolute inset-0 animate-ping">
+                <div className="w-12 h-12 rounded-full border-2 border-white/30"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

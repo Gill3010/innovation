@@ -6,6 +6,7 @@ const SearchComponent: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const [placeholder, setPlaceholder] = useState('Search research papers, projects, or topics...');
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -13,6 +14,34 @@ const SearchComponent: React.FC = () => {
     }, 100);
     
     return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const updatePlaceholder = () => {
+      if (window.innerWidth < 640) {
+        // Mobile: shorten placeholder
+        setPlaceholder('Search papers, topics...');
+      } else if (window.innerWidth < 768) {
+        // Small tablets: medium placeholder
+        setPlaceholder('Search papers, topics...');
+      } else if (window.innerWidth < 1024) {
+        // Tablets: longer placeholder
+        setPlaceholder('Search research papers, topics...');
+      } else {
+        // Desktop: full placeholder
+        setPlaceholder('Search research papers, projects, or topics...');
+      }
+    };
+
+    // Set initial placeholder
+    updatePlaceholder();
+
+    // Update on resize
+    window.addEventListener('resize', updatePlaceholder);
+
+    return () => {
+      window.removeEventListener('resize', updatePlaceholder);
+    };
   }, []);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -34,9 +63,9 @@ const SearchComponent: React.FC = () => {
     >
       <form onSubmit={handleSearch} className="relative">
         <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
             <svg 
-              className={`w-5 h-5 transition-colors duration-200 ${
+              className={`w-4 h-4 sm:w-5 sm:h-5 transition-colors duration-200 ${
                 isFocused ? 'text-blue-400' : 'text-white/70'
               }`} 
               fill="none" 
@@ -58,8 +87,8 @@ const SearchComponent: React.FC = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            placeholder="Search research papers, projects, or topics..."
-            className={`w-full pl-12 pr-4 py-4 text-lg bg-white/10 backdrop-blur-md border-2 rounded-2xl text-white placeholder-white/70 focus:outline-none focus:ring-4 focus:ring-blue-500/30 transition-all duration-300 ${
+            placeholder={placeholder}
+            className={`w-full pl-10 sm:pl-12 pr-4 sm:pr-28 md:pr-32 py-3 text-sm sm:text-base md:text-lg bg-white/10 backdrop-blur-md border-2 rounded-xl sm:rounded-2xl text-white placeholder-white/70 focus:outline-none focus:ring-4 focus:ring-blue-500/30 transition-all duration-300 ${
               isFocused 
                 ? 'border-blue-400/50 bg-white/20 shadow-lg shadow-blue-500/20' 
                 : 'border-white/20 hover:border-white/30 hover:bg-white/15'
@@ -69,13 +98,14 @@ const SearchComponent: React.FC = () => {
           <button
             type="submit"
             disabled={!searchQuery.trim()}
-            className={`absolute right-2 top-1/2 transform -translate-y-1/2 px-6 py-2 rounded-xl font-semibold transition-all duration-300 ${
+            className={`absolute right-1 sm:right-2 top-1/2 transform -translate-y-1/2 px-3 py-1.5 sm:px-6 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm md:text-base font-semibold transition-all duration-300 ${
               searchQuery.trim()
                 ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl hover:scale-105'
                 : 'bg-white/20 text-white/50 cursor-not-allowed'
             }`}
           >
-            Search
+            <span className="hidden sm:inline">Search</span>
+            <span className="sm:hidden">Go</span>
           </button>
         </div>
       </form>
