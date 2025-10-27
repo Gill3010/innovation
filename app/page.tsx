@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Button from '../components/Button';
 import SearchComponent from '../components/SearchComponent';
+import HeroCTA from '../components/HeroCTA';
 
 
 export default function Home() {
@@ -33,10 +34,10 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="relative min-h-screen w-full overflow-x-hidden">
-      {/* Background video */}
+    <div className="relative w-full overflow-x-hidden">
+      {/* Background video - Fixed position to stay static during scroll */}
       <video
-        className="absolute inset-0 h-full w-full object-cover"
+        className="fixed inset-0 h-screen w-full object-cover z-0"
         src={videoSrc}
         autoPlay
         muted
@@ -48,12 +49,12 @@ export default function Home() {
       {/* Subtle overlay to ensure text readability */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-black/30"
+        className="fixed inset-0 h-screen bg-black/30 z-0"
         style={{ mixBlendMode: 'normal' }}
       />
 
       {/* Centered content overlay — preserves original text exactly */}
-      <main className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center">
+      <main className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center bg-transparent">
         <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
           <span className="block">Welcome to</span>
           <span className="block text-blue-300">Innova Proyectos</span>
@@ -73,6 +74,11 @@ export default function Home() {
           <SearchComponent />
         </div>
       </main>
+
+      {/* Hero CTA Section */}
+      <div className="relative z-10">
+        <HeroCTA />
+      </div>
 
       {/* Scroll Indicator */}
       {showScrollIndicator && (
