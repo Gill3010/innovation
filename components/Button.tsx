@@ -1,14 +1,30 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
+
 interface ButtonProps {
   text: string;
   onClick?: () => void;
 }
 
 const Button = ({ text, onClick }: ButtonProps) => {
+  const router = useRouter();
+  const { user } = useAuth();
+
   const handleClick = () => {
-    alert('¡Hola desde Next.js!');
-    if (onClick) onClick();
+    if (onClick) {
+      onClick();
+      return;
+    }
+
+    // Si el usuario está autenticado, redirigir al dashboard
+    if (user) {
+      router.push('/dashboard');
+    } else {
+      // Si no está autenticado, redirigir al login
+      router.push('/login');
+    }
   };
 
   return (

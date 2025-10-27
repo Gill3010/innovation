@@ -87,12 +87,34 @@ const AboutUs: React.FC = () => {
         style={{ transitionDelay: '300ms' }}
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-start">
-          <div className="p-6 md:p-8 flex justify-center md:justify-start">
-            <div className="relative group">
-              <div className="absolute inset-0 bg-linear-to-br from-blue-600 to-blue-400 rounded-full blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-500"></div>
-              <div className="relative w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden shadow-2xl ring-4 ring-white transform group-hover:scale-105 transition-transform duration-500 ease-out">
+          <div className="p-6 md:p-8 flex flex-col justify-start items-center">
+            <div className="relative group mb-6">
+              <div className="absolute inset-0 bg-linear-to-br from-blue-600 to-blue-400 rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-500"></div>
+              <div className="relative w-40 h-60 md:w-52 md:h-72 rounded-2xl overflow-hidden shadow-2xl ring-4 ring-white transform group-hover:scale-105 transition-transform duration-500 ease-out">
                 <img src={photoSrc} alt="Israel Samuels" className="w-full h-full object-cover" />
               </div>
+            </div>
+
+            {/* Tech Tags */}
+            <div className="flex flex-wrap gap-2 justify-center max-w-[280px]">
+              <span className="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold border border-blue-200">
+                AI
+              </span>
+              <span className="px-3 py-1.5 bg-purple-50 text-purple-700 rounded-full text-xs font-semibold border border-purple-200">
+                Machine Learning
+              </span>
+              <span className="px-3 py-1.5 bg-green-50 text-green-700 rounded-full text-xs font-semibold border border-green-200">
+                Cloud Architecture
+              </span>
+              <span className="px-3 py-1.5 bg-orange-50 text-orange-700 rounded-full text-xs font-semibold border border-orange-200">
+                Cybersecurity
+              </span>
+              <span className="px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-full text-xs font-semibold border border-indigo-200">
+                Distributed Systems
+              </span>
+              <span className="px-3 py-1.5 bg-pink-50 text-pink-700 rounded-full text-xs font-semibold border border-pink-200">
+                Full Stack
+              </span>
             </div>
           </div>
 

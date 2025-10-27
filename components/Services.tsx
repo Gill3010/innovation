@@ -311,7 +311,7 @@ const Services: React.FC = () => {
             </a>
             
             <a
-              href="tel:+50766661234"
+              href="tel:+50765498362"
               className="group inline-flex items-center gap-3 px-8 py-4 bg-blue-500/90 backdrop-blur-sm text-white rounded-xl shadow-lg hover:bg-blue-400 hover:shadow-2xl hover:scale-105 transition-all duration-300 font-semibold"
             >
               <svg className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">

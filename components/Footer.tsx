@@ -2,10 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-  FaXTwitter,
-  FaInstagram,
   FaLinkedinIn,
-  FaFacebookF,
   FaWhatsapp,
   FaGithub,
 } from 'react-icons/fa6';
@@ -21,46 +18,25 @@ interface SocialLink {
 
 const socialLinks: SocialLink[] = [
   {
-    icon: <FaXTwitter className="w-5 h-5" />,
-    href: 'https://twitter.com/youraccount',
-    label: 'Follow us on X (Twitter)',
-    hoverColor: 'hover:text-[#1DA1F2]',
-    bgGradient: 'hover:bg-linear-to-br hover:from-[#1DA1F2]/20 hover:to-[#1DA1F2]/5',
+    icon: <FaGithub className="w-6 h-6" />,
+    href: 'https://github.com/Gill3010',
+    label: 'GitHub Profile - Israel Samuels',
+    hoverColor: 'hover:text-slate-200',
+    bgGradient: 'hover:bg-linear-to-br hover:from-slate-700/40 hover:to-slate-800/20',
   },
   {
-    icon: <FaInstagram className="w-5 h-5" />,
-    href: 'https://instagram.com/youraccount',
-    label: 'Follow us on Instagram',
-    hoverColor: 'hover:text-[#E4405F]',
-    bgGradient: 'hover:bg-linear-to-br hover:from-[#E4405F]/20 hover:to-[#833AB4]/5',
-  },
-  {
-    icon: <FaLinkedinIn className="w-5 h-5" />,
-    href: 'https://linkedin.com/company/yourcompany',
-    label: 'Connect with us on LinkedIn',
+    icon: <FaLinkedinIn className="w-6 h-6" />,
+    href: 'https://www.linkedin.com/in/israel-samuels-g-201419197/',
+    label: 'LinkedIn Profile - Israel Samuels',
     hoverColor: 'hover:text-[#0A66C2]',
     bgGradient: 'hover:bg-linear-to-br hover:from-[#0A66C2]/20 hover:to-[#0A66C2]/5',
   },
   {
-    icon: <FaFacebookF className="w-5 h-5" />,
-    href: 'https://facebook.com/yourpage',
-    label: 'Like us on Facebook',
-    hoverColor: 'hover:text-[#1877F2]',
-    bgGradient: 'hover:bg-linear-to-br hover:from-[#1877F2]/20 hover:to-[#1877F2]/5',
-  },
-  {
-    icon: <FaWhatsapp className="w-5 h-5" />,
-    href: 'https://wa.me/yourphone',
-    label: 'Contact us on WhatsApp',
+    icon: <FaWhatsapp className="w-6 h-6" />,
+    href: 'https://wa.me/50765498362',
+    label: 'Contact via WhatsApp',
     hoverColor: 'hover:text-[#25D366]',
     bgGradient: 'hover:bg-linear-to-br hover:from-[#25D366]/20 hover:to-[#25D366]/5',
-  },
-  {
-    icon: <FaGithub className="w-5 h-5" />,
-    href: 'https://github.com/yourorganization',
-    label: 'Check our GitHub',
-    hoverColor: 'hover:text-slate-200',
-    bgGradient: 'hover:bg-linear-to-br hover:from-slate-700/40 hover:to-slate-800/20',
   },
 ];
 
@@ -81,19 +57,19 @@ const Footer = () => {
     <footer className="bg-linear-to-b from-slate-900 via-slate-900 to-slate-950 text-slate-300 relative overflow-hidden">
       {/* Decorative background elements */}
       <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-1/2 translate-x-1/2 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl"></div>
       </div>
 
       {/* Main footer content */}
       <div 
-        className={`relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 transition-all duration-1000 ease-out ${
+        className={`relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 transition-all duration-1000 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
           {/* Brand section */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-linear-to-br from-blue-600 to-blue-700 rounded-2xl flex items-center justify-center shadow-lg">
                 <span className="text-white text-xl font-bold">IP</span>
@@ -103,29 +79,26 @@ const Footer = () => {
                 <span className="text-xs text-slate-400 font-medium">Development & Consulting</span>
               </div>
             </div>
-            <p className="text-slate-400 leading-relaxed max-w-md">
-              Empowering the future through innovative solutions. We transform ideas into reality,
-              creating meaningful impact in the digital world.
+            <p className="text-sm text-slate-400 leading-relaxed">
+            Empowering the future through innovative solutions. We transform ideas into reality, creating meaningful impact in the digital world.
             </p>
-            <div className="flex items-center gap-3 text-sm">
-              <div className="flex items-center gap-2 text-slate-400">
-                <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                <a href="mailto:info@innovaproyectos.com" className="hover:text-blue-400 transition-colors">
-                  info@innovaproyectos.com
-                </a>
-              </div>
+            <div className="flex items-center gap-2 text-sm">
+              <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <a href="mailto:info@innovaproyectos.com" className="text-slate-400 hover:text-blue-400 transition-colors">
+                info@innovaproyectos.com
+              </a>
             </div>
           </div>
 
-          {/* Quick links section */}
-          <div className="space-y-6">
-            <h4 className="text-lg font-bold text-white flex items-center gap-2">
-              <div className="w-1 h-6 bg-blue-600 rounded-full"></div>
+          {/* Quick links */}
+          <div className="space-y-4">
+            <h4 className="text-base font-bold text-white flex items-center gap-2">
+              <div className="w-1 h-5 bg-blue-600 rounded-full"></div>
               {translate('Quick Links')}
             </h4>
-            <ul className="space-y-3">
+            <ul className="space-y-2">
               {['About', 'Services', 'Projects', 'Contact'].map((item, index) => (
                 <li 
                   key={item}
@@ -134,10 +107,10 @@ const Footer = () => {
                 >
                   <a
                     href={`/${item.toLowerCase()}`}
-                    className="group flex items-center gap-2 text-slate-400 hover:text-white transition-all duration-200"
+                    className="group flex items-center gap-2 text-slate-400 hover:text-white transition-all duration-200 text-sm"
                   >
                     <svg 
-                      className="w-4 h-4 text-blue-500 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" 
+                      className="w-3 h-3 text-blue-500 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" 
                       fill="none" 
                       stroke="currentColor" 
                       viewBox="0 0 24 24"
@@ -153,16 +126,13 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Social links section */}
-          <div className="space-y-6">
-            <h4 className="text-lg font-bold text-white flex items-center gap-2">
-              <div className="w-1 h-6 bg-blue-600 rounded-full"></div>
+          {/* Social links */}
+          <div className="space-y-4">
+            <h4 className="text-base font-bold text-white flex items-center gap-2">
+              <div className="w-1 h-5 bg-blue-600 rounded-full"></div>
               {translate('Connect With Us')}
             </h4>
-            <p className="text-sm text-slate-400">
-              {translate('Follow us on social media for updates and news')}
-            </p>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex gap-3 flex-wrap">
               {socialLinks.map((social, index) => (
                 <a
                   key={social.href}
@@ -170,15 +140,16 @@ const Footer = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
-                  className={`bg-slate-800/50 backdrop-blur-sm p-4 rounded-2xl border border-slate-700/50 
-                    transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-blue-500/20
-                    ${social.hoverColor} ${social.bgGradient} hover:border-slate-600`}
+                  className={`group bg-slate-800/80 backdrop-blur-sm p-5 rounded-xl border-2 border-slate-700/50 
+                    transition-all duration-300 hover:scale-110 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/20
+                    ${social.hoverColor} ${social.bgGradient} hover:border-slate-500`}
                   style={{ 
-                    transitionDelay: `${index * 50}ms`,
-                    animation: isVisible ? 'none' : 'none'
+                    transitionDelay: `${index * 80}ms`,
                   }}
                 >
-                  {social.icon}
+                  <div className="transition-transform duration-300 group-hover:scale-110">
+                    {social.icon}
+                  </div>
                 </a>
               ))}
             </div>
@@ -188,39 +159,19 @@ const Footer = () => {
 
       {/* Bottom bar */}
       <div className="relative border-t border-slate-800/50 bg-slate-950/50 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="md:flex md:items-center md:justify-between gap-4">
-            <div className="flex items-center gap-2 text-sm text-slate-400">
-              <svg className="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
-              </svg>
-              <span>© {currentYear} Innova Proyectos. {translate('All rights reserved')}.</span>
-            </div>
-            <div className="mt-4 md:mt-0">
-              <ul className="flex flex-wrap gap-6 text-sm text-slate-400">
-                <li>
-                  <a
-                    href="/privacy"
-                    className="hover:text-white transition-colors duration-200 flex items-center gap-1 group"
-                  >
-                    <svg className="w-4 h-4 text-slate-500 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                    {translate('Privacy Policy')}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="/terms"
-                    className="hover:text-white transition-colors duration-200 flex items-center gap-1 group"
-                  >
-                    <svg className="w-4 h-4 text-slate-500 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    {translate('Terms of Service')}
-                  </a>
-                </li>
-              </ul>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex flex-col items-center space-y-2 text-center">
+            <p className="text-sm text-slate-400">
+              © {currentYear} <span className="text-white font-semibold">Innova Proyectos</span>. {translate('All rights reserved')}.
+            </p>
+            <div className="flex flex-wrap justify-center gap-6 text-xs text-slate-500">
+              <a href="/privacy" className="hover:text-white transition-colors duration-200">
+                {translate('Privacy Policy')}
+              </a>
+              <span className="text-slate-700">•</span>
+              <a href="/terms" className="hover:text-white transition-colors duration-200">
+                {translate('Terms of Service')}
+              </a>
             </div>
           </div>
         </div>
