@@ -104,7 +104,7 @@ const Chatbot = () => {
       {/* Chatbot Toggle Button - Hidden on mobile when chat is open */}
       <button
         onClick={toggleChatbot}
-        className={`fixed bottom-6 right-6 landscape:bottom-4 landscape:right-4 z-90 w-14 h-14 landscape:w-12 landscape:h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 ${
+        className={`fixed bottom-6 right-6 landscape:bottom-4 landscape:right-4 z-90 w-16 h-16 landscape:w-14 landscape:h-14 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 animate-pulse ${
           isOpen
             ? 'hidden sm:flex landscape:flex bg-red-600 hover:bg-red-700'
             : 'bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800'
@@ -116,8 +116,8 @@ const Chatbot = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         ) : (
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+          <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
           </svg>
         )}
       </button>
