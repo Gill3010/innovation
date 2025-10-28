@@ -12,7 +12,7 @@ const ClientShell: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <Navbar />
       <Sidebar />
 
-      <main className="pt-16 landscape:pt-14 pl-4 md:pl-20 lg:pl-20 landscape:pl-2 transition-all duration-300 grow">
+      <main className="pt-16 landscape:pt-14 pl-4 md:pl-20 lg:pl-20 landscape:pl-2 transition-all duration-300 grow overflow-x-hidden">
         {children}
       </main>
 

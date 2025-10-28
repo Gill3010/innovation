@@ -89,7 +89,7 @@ const UserProfile: React.FC = () => {
         <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 rounded-full blur-3xl -z-10"></div>
         
         <div className="mb-8 landscape:mb-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
             <div className="flex items-center gap-3 landscape:gap-2">
               <div className="w-12 h-12 landscape:w-10 landscape:h-10 bg-linear-to-br from-blue-100 to-blue-50 rounded-2xl landscape:rounded-xl flex items-center justify-center">
                 <svg className="w-6 h-6 landscape:w-5 landscape:h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -101,13 +101,13 @@ const UserProfile: React.FC = () => {
                 <p className="text-slate-600 font-light text-sm landscape:text-xs">{translate('Manage your account information')}</p>
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2 sm:mt-0 w-full sm:w-auto">
               {isEditing ? (
                 <>
                   <button
                     onClick={handleSave}
                     disabled={isLoading}
-                    className="group inline-flex items-center gap-2 px-6 landscape:px-4 py-3 landscape:py-2 bg-linear-to-r from-blue-600 to-blue-700 text-white rounded-xl landscape:rounded-lg shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5 transition-all duration-300 font-semibold text-sm landscape:text-xs"
+                    className="group inline-flex items-center justify-center gap-2 px-6 landscape:px-4 py-3 landscape:py-2 bg-linear-to-r from-blue-600 to-blue-700 text-white rounded-xl landscape:rounded-lg shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5 transition-all duration-300 font-semibold text-sm landscape:text-xs w-full sm:w-auto"
                   >
                     {isLoading ? (
                       <>
@@ -128,7 +128,7 @@ const UserProfile: React.FC = () => {
                   </button>
                   <button
                     onClick={handleCancel}
-                    className="px-6 landscape:px-4 py-3 landscape:py-2 border-2 border-slate-200 text-slate-700 rounded-xl landscape:rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 font-semibold text-sm landscape:text-xs"
+                    className="px-6 landscape:px-4 py-3 landscape:py-2 border-2 border-slate-200 text-slate-700 rounded-xl landscape:rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 font-semibold text-sm landscape:text-xs w-full sm:w-auto"
                   >
                     {translate('Cancel')}
                   </button>
@@ -136,7 +136,7 @@ const UserProfile: React.FC = () => {
               ) : (
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="group inline-flex items-center gap-2 px-6 py-3 bg-slate-600 text-white rounded-xl hover:bg-slate-700 transition-all duration-200 font-semibold text-sm"
+                  className="group inline-flex items-center justify-center gap-2 px-6 py-3 bg-slate-600 text-white rounded-xl hover:bg-slate-700 transition-all duration-200 font-semibold text-sm w-full sm:w-auto"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
