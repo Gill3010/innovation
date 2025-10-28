@@ -37,7 +37,7 @@ export default function SuccessCasesMetrics() {
       delay: '100ms',
       color: 'blue',
       icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-8 h-8 landscape:w-6 landscape:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
         </svg>
       ),
@@ -49,7 +49,7 @@ export default function SuccessCasesMetrics() {
       delay: '150ms',
       color: 'purple',
       icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-8 h-8 landscape:w-6 landscape:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
       ),
@@ -61,7 +61,7 @@ export default function SuccessCasesMetrics() {
       delay: '200ms',
       color: 'emerald',
       icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-8 h-8 landscape:w-6 landscape:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
         </svg>
       ),
@@ -73,7 +73,7 @@ export default function SuccessCasesMetrics() {
       delay: '250ms',
       color: 'amber',
       icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-8 h-8 landscape:w-6 landscape:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
         </svg>
       ),
@@ -85,7 +85,7 @@ export default function SuccessCasesMetrics() {
       delay: '300ms',
       color: 'red',
       icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-8 h-8 landscape:w-6 landscape:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
         </svg>
       ),
@@ -97,7 +97,7 @@ export default function SuccessCasesMetrics() {
       delay: '350ms',
       color: 'indigo',
       icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-8 h-8 landscape:w-6 landscape:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
         </svg>
       ),
@@ -109,7 +109,7 @@ export default function SuccessCasesMetrics() {
       delay: '400ms',
       color: 'cyan',
       icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-8 h-8 landscape:w-6 landscape:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
         </svg>
       ),
@@ -450,7 +450,7 @@ export default function SuccessCasesMetrics() {
 
   return (
     <section
-      className="w-full min-h-screen bg-gray-50 py-12 md:py-16 lg:py-20 px-4 sm:px-6 lg:px-8"
+      className="w-full min-h-screen bg-gray-50 py-12 md:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 landscape:pl-20"
       aria-labelledby="success-cases-heading"
     >
       <div className="max-w-7xl mx-auto">
@@ -467,17 +467,17 @@ export default function SuccessCasesMetrics() {
           </div>
           <h1
             id="success-cases-heading"
-            className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 tracking-tight"
+            className="text-4xl md:text-5xl lg:text-6xl landscape:text-3xl font-bold text-gray-900 mb-4 landscape:mb-2 tracking-tight"
           >
             Success Cases
           </h1>
-          <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-base md:text-lg landscape:text-sm text-gray-600 max-w-2xl mx-auto">
             Our achievements speak for themselves — measurable results across multiple platforms
           </p>
         </div>
 
         {/* Metrics Grid */}
-        <ul className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4 md:gap-5 lg:gap-6 mb-12">
+        <ul className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 landscape:grid-cols-7 gap-4 md:gap-5 lg:gap-6 landscape:gap-2 mb-12 landscape:mb-6">
           {metrics.map((metric) => {
             const isHovered = hoveredId === metric.id;
             const colorClasses = getColorClasses(metric.color, isHovered);
@@ -485,7 +485,7 @@ export default function SuccessCasesMetrics() {
             return (
               <li key={metric.id} className="list-none">
                 <div 
-                  className={`${colorClasses.bg} rounded-2xl border-2 ${colorClasses.border} p-6 md:p-7 transition-all duration-300 h-full flex flex-col items-center text-center cursor-pointer transform ${
+                  className={`${colorClasses.bg} rounded-2xl landscape:rounded-lg border-2 ${colorClasses.border} p-6 md:p-7 landscape:p-3 transition-all duration-300 h-full flex flex-col items-center text-center cursor-pointer transform ${
                     isHovered ? 'scale-105 -translate-y-1' : 'scale-100'
                   } ${
                     isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
@@ -497,25 +497,25 @@ export default function SuccessCasesMetrics() {
                   aria-label={`${metric.label}: ${metric.value}`}
                 >
                   {/* Icon Container */}
-                  <div className={`${colorClasses.icon} mb-4 transition-all duration-300 ${
+                  <div className={`${colorClasses.icon} mb-4 landscape:mb-2 transition-all duration-300 ${
                     isHovered ? 'scale-110' : 'scale-100'
                   }`}>
                     {metric.icon}
                   </div>
                   
                   {/* Value */}
-                  <p className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 transition-all duration-300">
+                  <p className="text-3xl md:text-4xl landscape:text-xl font-bold text-gray-900 mb-2 landscape:mb-1 transition-all duration-300">
                     {metric.value}
                   </p>
                   
                   {/* Label */}
-                  <p className="text-xs md:text-sm font-medium text-gray-600 uppercase tracking-wider">
+                  <p className="text-xs md:text-sm landscape:text-[10px] font-medium text-gray-600 uppercase tracking-wider">
                     {metric.label}
                   </p>
 
                   {/* Accent Bar */}
-                  <div className={`mt-4 h-1 w-12 ${colorClasses.accent} rounded-full transition-all duration-300 ${
-                    isHovered ? 'w-full' : 'w-12'
+                  <div className={`mt-4 landscape:mt-2 h-1 landscape:h-0.5 w-12 landscape:w-8 ${colorClasses.accent} rounded-full transition-all duration-300 ${
+                    isHovered ? 'w-full' : 'w-12 landscape:w-8'
                   }`}></div>
                 </div>
               </li>

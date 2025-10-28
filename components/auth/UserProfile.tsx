@@ -80,25 +80,25 @@ const UserProfile: React.FC = () => {
   if (!user) return null;
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12 lg:py-20">
+    <div className="max-w-7xl mx-auto px-6 landscape:px-4 py-12 lg:py-20 landscape:py-6">
       <div 
-        className={`max-w-3xl mx-auto bg-linear-to-br from-white to-slate-50/50 p-8 md:p-10 rounded-3xl shadow-xl border border-slate-200/60 relative overflow-hidden transition-all duration-1000 ease-out ${
+        className={`max-w-3xl mx-auto bg-linear-to-br from-white to-slate-50/50 p-8 md:p-10 landscape:p-6 rounded-3xl landscape:rounded-2xl shadow-xl border border-slate-200/60 relative overflow-hidden transition-all duration-1000 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
       >
         <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 rounded-full blur-3xl -z-10"></div>
         
-        <div className="mb-8">
+        <div className="mb-8 landscape:mb-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-linear-to-br from-blue-100 to-blue-50 rounded-2xl flex items-center justify-center">
-                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex items-center gap-3 landscape:gap-2">
+              <div className="w-12 h-12 landscape:w-10 landscape:h-10 bg-linear-to-br from-blue-100 to-blue-50 rounded-2xl landscape:rounded-xl flex items-center justify-center">
+                <svg className="w-6 h-6 landscape:w-5 landscape:h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </div>
               <div>
-                <h2 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">{translate('Profile')}</h2>
-                <p className="text-slate-600 font-light text-sm">{translate('Manage your account information')}</p>
+                <h2 className="text-2xl md:text-3xl landscape:text-xl font-bold text-slate-900 tracking-tight">{translate('Profile')}</h2>
+                <p className="text-slate-600 font-light text-sm landscape:text-xs">{translate('Manage your account information')}</p>
               </div>
             </div>
             <div className="flex gap-2">
@@ -107,7 +107,7 @@ const UserProfile: React.FC = () => {
                   <button
                     onClick={handleSave}
                     disabled={isLoading}
-                    className="group inline-flex items-center gap-2 px-6 py-3 bg-linear-to-r from-blue-600 to-blue-700 text-white rounded-xl shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5 transition-all duration-300 font-semibold text-sm"
+                    className="group inline-flex items-center gap-2 px-6 landscape:px-4 py-3 landscape:py-2 bg-linear-to-r from-blue-600 to-blue-700 text-white rounded-xl landscape:rounded-lg shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5 transition-all duration-300 font-semibold text-sm landscape:text-xs"
                   >
                     {isLoading ? (
                       <>
@@ -128,7 +128,7 @@ const UserProfile: React.FC = () => {
                   </button>
                   <button
                     onClick={handleCancel}
-                    className="px-6 py-3 border-2 border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 font-semibold text-sm"
+                    className="px-6 landscape:px-4 py-3 landscape:py-2 border-2 border-slate-200 text-slate-700 rounded-xl landscape:rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 font-semibold text-sm landscape:text-xs"
                   >
                     {translate('Cancel')}
                   </button>
@@ -166,7 +166,7 @@ const UserProfile: React.FC = () => {
           </div>
         )}
 
-        <div className="space-y-6">
+        <div className="space-y-6 landscape:space-y-3">
           <div className="flex flex-col group">
             <span className="text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
               <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -179,7 +179,7 @@ const UserProfile: React.FC = () => {
                 type="text"
                 value={formData.name}
                 onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                className="px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all duration-200"
+                className="px-4 landscape:px-3 py-3 landscape:py-2 bg-white border border-slate-200 rounded-xl landscape:rounded-lg text-slate-900 landscape:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all duration-200"
               />
             ) : (
               <p className="px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900">{user.name || translate('Not specified')}</p>

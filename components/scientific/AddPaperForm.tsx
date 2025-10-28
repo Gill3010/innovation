@@ -216,23 +216,23 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 py-8 md:py-12 z-50 backdrop-blur-sm">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 py-8 md:py-12 landscape:py-4 landscape:p-2 z-50 backdrop-blur-sm">
       <div 
-        className={`bg-linear-to-br from-white to-slate-50/50 rounded-3xl p-6 pt-10 md:p-10 md:pt-12 max-w-3xl w-full max-h-[85vh] md:max-h-[88vh] overflow-y-auto shadow-xl border border-slate-200/60 relative transition-all duration-1000 ease-out ${
+        className={`bg-linear-to-br from-white to-slate-50/50 rounded-3xl landscape:rounded-2xl p-6 pt-10 md:p-10 md:pt-12 landscape:p-4 landscape:pt-6 max-w-3xl w-full max-h-[85vh] md:max-h-[88vh] landscape:max-h-[90vh] overflow-y-auto shadow-xl border border-slate-200/60 relative transition-all duration-1000 ease-out ${
           isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
         }`}
       >
         <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 rounded-full blur-3xl -z-10"></div>
         
-        <div className="mb-6 md:mb-8">
+        <div className="mb-6 md:mb-8 landscape:mb-4">
           <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 md:w-12 md:h-12 bg-linear-to-br from-blue-100 to-blue-50 rounded-2xl flex items-center justify-center shrink-0">
-                <svg className="w-5 h-5 md:w-6 md:h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex items-center gap-3 landscape:gap-2 min-w-0">
+              <div className="w-10 h-10 md:w-12 md:h-12 landscape:w-8 landscape:h-8 bg-linear-to-br from-blue-100 to-blue-50 rounded-2xl landscape:rounded-xl flex items-center justify-center shrink-0">
+                <svg className="w-5 h-5 md:w-6 md:h-6 landscape:w-4 landscape:h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
               </div>
-              <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-900 tracking-tight truncate">Add New Paper</h2>
+              <h2 className="text-xl md:text-2xl lg:text-3xl landscape:text-lg font-bold text-slate-900 tracking-tight truncate">Add New Paper</h2>
             </div>
             <button
               onClick={onClose}
@@ -246,8 +246,8 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
         </div>
 
         {/* Search by DOI */}
-        <div className="mb-6 p-5 bg-blue-50/50 border border-blue-100 rounded-2xl">
-          <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+        <div className="mb-6 landscape:mb-3 p-5 landscape:p-3 bg-blue-50/50 border border-blue-100 rounded-2xl landscape:rounded-xl">
+          <h3 className="font-semibold landscape:text-sm text-slate-900 mb-3 landscape:mb-2 flex items-center gap-2">
             <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
             </svg>
@@ -259,12 +259,12 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
               placeholder="Enter DOI (e.g., 10.1038/nature12373)"
               value={formData.doi}
               onChange={(e) => handleInputChange('doi', e.target.value)}
-              className="flex-1 px-4 py-3 border border-slate-200 rounded-xl text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all duration-200"
+              className="flex-1 px-4 landscape:px-3 py-3 landscape:py-2 border border-slate-200 rounded-xl landscape:rounded-lg text-slate-900 landscape:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all duration-200"
             />
             <button
               onClick={handleSearchByDOI}
               disabled={searching}
-              className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 transition-all duration-200 font-semibold shadow-md hover:shadow-lg"
+              className="px-6 landscape:px-4 py-3 landscape:py-2 bg-blue-600 text-white rounded-xl landscape:rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-all duration-200 landscape:text-sm font-semibold shadow-md hover:shadow-lg"
             >
               {searching ? 'Searching...' : 'Search'}
             </button>
@@ -272,7 +272,7 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
         </div>
 
         {/* Search by Title */}
-        <div className="mb-6 p-5 bg-emerald-50/50 border border-emerald-100 rounded-2xl">
+        <div className="mb-6 landscape:mb-3 p-5 landscape:p-3 bg-emerald-50/50 border border-emerald-100 rounded-2xl landscape:rounded-xl">
           <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
             <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -330,7 +330,7 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
         )}
 
         {/* Manual Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6 landscape:space-y-3">
           <div className="flex flex-col group">
             <span className="text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
               <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -342,7 +342,7 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
               type="text"
               value={formData.title}
               onChange={(e) => handleInputChange('title', e.target.value)}
-              className="px-4 py-3 border border-slate-200 rounded-xl text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all duration-200"
+              className="px-4 landscape:px-3 py-3 landscape:py-2 border border-slate-200 rounded-xl landscape:rounded-lg text-slate-900 landscape:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all duration-200"
               required
             />
           </div>
@@ -375,7 +375,7 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
               value={formData.abstract}
               onChange={(e) => handleInputChange('abstract', e.target.value)}
               rows={4}
-              className="px-4 py-3 border border-slate-200 rounded-xl text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all duration-200 resize-none"
+              className="px-4 landscape:px-3 py-3 landscape:py-2 border border-slate-200 rounded-xl landscape:rounded-lg text-slate-900 landscape:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all duration-200 resize-none landscape:rows-3"
             />
           </div>
 

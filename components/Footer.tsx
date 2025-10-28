@@ -54,7 +54,7 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer className="bg-linear-to-b from-slate-900 via-slate-900 to-slate-950 text-slate-300 relative overflow-hidden">
+    <footer className="bg-linear-to-b from-slate-900 via-slate-900 to-slate-950 text-slate-300 relative overflow-hidden landscape:overflow-x-hidden">
       {/* Decorative background elements */}
       <div className="absolute inset-0 opacity-30">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
@@ -63,23 +63,23 @@ const Footer = () => {
 
       {/* Main footer content */}
       <div 
-        className={`relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 transition-all duration-1000 ease-out ${
+        className={`relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 landscape:px-3 py-12 landscape:py-6 transition-all duration-1000 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
       >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 landscape:gap-4 lg:gap-12">
           {/* Brand section */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-linear-to-br from-blue-600 to-blue-700 rounded-2xl flex items-center justify-center shadow-lg">
-                <span className="text-white text-xl font-bold">IP</span>
+          <div className="space-y-4 landscape:space-y-2">
+            <div className="flex items-center gap-3 landscape:gap-2">
+              <div className="w-12 h-12 landscape:w-10 landscape:h-10 bg-linear-to-br from-blue-600 to-blue-700 rounded-2xl landscape:rounded-xl flex items-center justify-center shadow-lg">
+                <span className="text-white text-xl landscape:text-base font-bold">IP</span>
               </div>
-              <div className="flex flex-col">
-                <h3 className="text-xl font-bold text-white leading-tight">Innova Proyectos</h3>
-                <span className="text-xs text-slate-400 font-medium">Development & Consulting</span>
+              <div className="flex flex-col min-w-0">
+                <h3 className="text-xl landscape:text-base font-bold text-white leading-tight truncate">Innova Proyectos</h3>
+                <span className="text-xs landscape:text-[10px] text-slate-400 font-medium truncate">Development & Consulting</span>
               </div>
             </div>
-            <p className="text-sm text-slate-400 leading-relaxed">
+            <p className="text-sm landscape:text-xs text-slate-400 leading-relaxed landscape:leading-snug">
             Empowering the future through innovative solutions. We transform ideas into reality, creating meaningful impact in the digital world.
             </p>
             <div className="flex items-center gap-2 text-sm">

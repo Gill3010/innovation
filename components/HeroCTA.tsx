@@ -95,7 +95,7 @@ const HeroCTA = () => {
   return (
     <section 
       ref={sectionRef}
-      className={`relative z-10 py-16 md:py-20 overflow-hidden transition-all duration-1000 ${
+      className={`relative z-10 py-16 md:py-20 landscape:py-8 overflow-hidden transition-all duration-1000 ${
         isInViewport ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
       }`}
     >
@@ -116,7 +116,7 @@ const HeroCTA = () => {
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main CTA Card with glassmorphism */}
         <div 
-          className={`bg-white/85 backdrop-blur-md rounded-2xl shadow-2xl border border-white/60 p-6 md:p-8 transition-all duration-1000 ${
+          className={`bg-white/85 backdrop-blur-md rounded-2xl shadow-2xl border border-white/60 p-6 md:p-8 landscape:p-4 transition-all duration-1000 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >
@@ -130,22 +130,22 @@ const HeroCTA = () => {
             </div>
 
             {/* Heading with animated gradient */}
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 mb-3 leading-tight">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl landscape:text-2xl font-black text-gray-900 mb-3 landscape:mb-2 leading-tight">
               Ready to Accelerate Your
               <span className="block mt-1 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent animate-pulse bg-[length:200%_auto]">
                 Innovation Journey?
               </span>
             </h2>
 
-            <p className="text-base md:text-lg text-gray-800 max-w-2xl mx-auto mb-6 font-medium">
+            <p className="text-base md:text-lg landscape:text-sm text-gray-800 max-w-2xl mx-auto mb-6 landscape:mb-3 font-medium">
               Join <strong className="text-blue-600">10,000+ teams</strong> powering their digital transformation. Start building today.
             </p>
 
             {/* CTA Buttons with enhanced animations */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-6">
+            <div className="flex flex-col sm:flex-row gap-3 landscape:gap-2 justify-center items-center mb-6 landscape:mb-3">
               <Link
                 href="/contact"
-                className="group relative inline-flex items-center gap-2 px-7 py-3.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 overflow-hidden"
+                className="group relative inline-flex items-center gap-2 px-7 landscape:px-5 py-3.5 landscape:py-2.5 landscape:text-sm bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-xl landscape:rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 overflow-hidden"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                 <span className="relative">Get Started Free</span>

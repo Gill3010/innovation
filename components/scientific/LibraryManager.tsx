@@ -115,74 +115,74 @@ const LibraryManager: React.FC = () => {
   const readCount = papers.filter(paper => paper.isRead).length;
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12">
+    <div className="max-w-7xl mx-auto px-6 landscape:pl-20 py-12 landscape:py-6">
       {/* Header */}
       <div 
-        className={`mb-8 transition-all duration-1000 ease-out ${
+        className={`mb-8 landscape:mb-4 transition-all duration-1000 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
       >
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Research Library</h1>
-        <p className="text-slate-600">Your personal collection of scientific papers</p>
+        <h1 className="text-3xl landscape:text-2xl font-bold text-slate-900 mb-2 landscape:mb-1">Research Library</h1>
+        <p className="text-slate-600 landscape:text-sm">Your personal collection of scientific papers</p>
       </div>
 
       {/* Stats */}
       <div 
-        className={`grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 transition-all duration-1000 ease-out ${
+        className={`grid grid-cols-1 md:grid-cols-4 landscape:grid-cols-4 gap-6 landscape:gap-2 mb-8 landscape:mb-3 transition-all duration-1000 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
         style={{ transitionDelay: '100ms' }}
       >
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
+        <div className="bg-white rounded-xl landscape:rounded-lg p-6 landscape:p-3 shadow-lg border border-slate-200">
           <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-600">Total Papers</p>
-              <p className="text-2xl font-bold text-slate-900">{papers.length}</p>
+            <div className="flex-1">
+              <p className="text-sm landscape:text-[10px] font-medium text-slate-600">Total Papers</p>
+              <p className="text-2xl landscape:text-lg font-bold text-slate-900">{papers.length}</p>
             </div>
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 landscape:w-8 landscape:h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
+              <svg className="w-6 h-6 landscape:w-4 landscape:h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
+        <div className="bg-white rounded-xl landscape:rounded-lg p-6 landscape:p-3 shadow-lg border border-slate-200">
           <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-600">Unread</p>
-              <p className="text-2xl font-bold text-slate-900">{unreadCount}</p>
+            <div className="flex-1">
+              <p className="text-sm landscape:text-[10px] font-medium text-slate-600">Unread</p>
+              <p className="text-2xl landscape:text-lg font-bold text-slate-900">{unreadCount}</p>
             </div>
-            <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 landscape:w-8 landscape:h-8 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
+              <svg className="w-6 h-6 landscape:w-4 landscape:h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
+        <div className="bg-white rounded-xl landscape:rounded-lg p-6 landscape:p-3 shadow-lg border border-slate-200">
           <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-600">Read</p>
-              <p className="text-2xl font-bold text-slate-900">{readCount}</p>
+            <div className="flex-1">
+              <p className="text-sm landscape:text-[10px] font-medium text-slate-600">Read</p>
+              <p className="text-2xl landscape:text-lg font-bold text-slate-900">{readCount}</p>
             </div>
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 landscape:w-8 landscape:h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
+              <svg className="w-6 h-6 landscape:w-4 landscape:h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
+        <div className="bg-white rounded-xl landscape:rounded-lg p-6 landscape:p-3 shadow-lg border border-slate-200">
           <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-600">Tags</p>
-              <p className="text-2xl font-bold text-slate-900">{allTags.length}</p>
+            <div className="flex-1">
+              <p className="text-sm landscape:text-[10px] font-medium text-slate-600">Tags</p>
+              <p className="text-2xl landscape:text-lg font-bold text-slate-900">{allTags.length}</p>
             </div>
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 landscape:w-8 landscape:h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
+              <svg className="w-6 h-6 landscape:w-4 landscape:h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
               </svg>
             </div>
@@ -192,12 +192,12 @@ const LibraryManager: React.FC = () => {
 
       {/* Filters and Controls */}
       <div 
-        className={`bg-white rounded-xl p-6 shadow-lg border border-slate-200 mb-8 transition-all duration-1000 ease-out ${
+        className={`bg-white rounded-xl landscape:rounded-lg p-6 landscape:p-4 shadow-lg border border-slate-200 mb-8 landscape:mb-3 transition-all duration-1000 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
         style={{ transitionDelay: '200ms' }}
       >
-        <div className="flex flex-col lg:flex-row gap-4">
+        <div className="flex flex-col lg:flex-row gap-4 landscape:gap-2">
           {/* Search */}
           <div className="flex-1">
             <div className="relative">
@@ -206,7 +206,7 @@ const LibraryManager: React.FC = () => {
                 placeholder="Search papers..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-3 pl-10 border border-slate-200 rounded-lg text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 landscape:px-3 py-3 landscape:py-2 pl-10 landscape:pl-8 border border-slate-200 rounded-lg landscape:text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
               <svg className="absolute left-3 top-3.5 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />

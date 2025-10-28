@@ -131,25 +131,25 @@ const ResearchManager: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12">
+    <div className="max-w-7xl mx-auto px-6 landscape:pl-20 py-12 landscape:py-6">
       {/* Header */}
       <div 
-        className={`mb-8 transition-all duration-1000 ease-out ${
+        className={`mb-8 landscape:mb-4 transition-all duration-1000 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
       >
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Research Manager</h1>
-        <p className="text-slate-600">Manage your research papers and projects</p>
+        <h1 className="text-3xl landscape:text-2xl font-bold text-slate-900 mb-2 landscape:mb-1">Research Manager</h1>
+        <p className="text-slate-600 landscape:text-sm">Manage your research papers and projects</p>
       </div>
 
       {/* Search and Add */}
       <div 
-        className={`bg-white rounded-xl p-6 shadow-lg border border-slate-200 mb-8 transition-all duration-1000 ease-out ${
+        className={`bg-white rounded-xl landscape:rounded-lg p-6 landscape:p-4 shadow-lg border border-slate-200 mb-8 landscape:mb-3 transition-all duration-1000 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
         style={{ transitionDelay: '100ms' }}
       >
-        <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex flex-col md:flex-row gap-4 landscape:gap-2">
           <div className="flex-1">
             <div className="relative">
               <input
@@ -157,7 +157,7 @@ const ResearchManager: React.FC = () => {
                 placeholder="Search papers and projects..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-3 pl-10 border border-slate-200 rounded-lg text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 landscape:px-3 py-3 landscape:py-2 pl-10 landscape:pl-8 border border-slate-200 rounded-lg landscape:text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
               <svg className="absolute left-3 top-3.5 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -165,26 +165,28 @@ const ResearchManager: React.FC = () => {
             </div>
           </div>
           
-          <div className="flex gap-2">
+          <div className="flex gap-2 landscape:gap-1.5">
             <button
               onClick={() => handleApiSearch(searchQuery)}
               disabled={apiSearching || !searchQuery.trim()}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-6 landscape:px-3 py-3 landscape:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 landscape:gap-1"
             >
               {apiSearching ? (
                 <>
-                  <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                  <svg className="animate-spin w-4 h-4 landscape:w-3 landscape:h-3" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Searching...
+                  <span className="landscape:hidden">Searching...</span>
+                  <span className="hidden landscape:inline">...</span>
                 </>
               ) : (
                 <>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 landscape:w-3 landscape:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
-                  Search APIs
+                  <span className="landscape:hidden">Search APIs</span>
+                  <span className="hidden landscape:inline">API</span>
                 </>
               )}
             </button>
@@ -197,9 +199,9 @@ const ResearchManager: React.FC = () => {
                   setShowAddForm(!showAddForm);
                 }
               }}
-              className="px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 flex items-center gap-2"
+              className="px-6 landscape:px-3 py-3 landscape:py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 flex items-center gap-2 landscape:gap-1"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 landscape:w-3 landscape:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
               Add {activeTab === 'papers' ? 'Paper' : 'Project'}
@@ -240,14 +242,14 @@ const ResearchManager: React.FC = () => {
 
       {/* Tabs */}
       <div 
-        className={`flex space-x-1 bg-slate-100 rounded-lg p-1 mb-8 transition-all duration-1000 ease-out ${
+        className={`flex space-x-1 bg-slate-100 rounded-lg p-1 mb-8 landscape:mb-3 transition-all duration-1000 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
         style={{ transitionDelay: '200ms' }}
       >
         <button
           onClick={() => setActiveTab('papers')}
-          className={`flex-1 py-2 px-4 rounded-md font-medium transition-colors ${
+          className={`flex-1 py-2 landscape:py-1.5 px-4 landscape:px-3 rounded-md font-medium landscape:text-sm transition-colors ${
             activeTab === 'papers'
               ? 'bg-white text-slate-900 shadow-sm'
               : 'text-slate-600 hover:text-slate-900'
@@ -257,7 +259,7 @@ const ResearchManager: React.FC = () => {
         </button>
         <button
           onClick={() => setActiveTab('projects')}
-          className={`flex-1 py-2 px-4 rounded-md font-medium transition-colors ${
+          className={`flex-1 py-2 landscape:py-1.5 px-4 landscape:px-3 rounded-md font-medium landscape:text-sm transition-colors ${
             activeTab === 'projects'
               ? 'bg-white text-slate-900 shadow-sm'
               : 'text-slate-600 hover:text-slate-900'

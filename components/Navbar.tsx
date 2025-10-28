@@ -79,7 +79,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
       {/* Overlay for mobile menu */}
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-60 sm:hidden transition-opacity duration-300"
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-60 transition-opacity duration-300"
           onClick={() => setIsMobileMenuOpen(false)}
           aria-hidden="true"
         />
@@ -102,18 +102,18 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
+        <div className="flex justify-between h-16 landscape:h-14 items-center">
           {/* Logo */}
           <div className="shrink-0 flex items-center group">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-linear-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg group-hover:scale-105 transition-all duration-300">
-                <span className="text-white text-lg font-bold">IP</span>
+            <Link href="/" className="flex items-center gap-3 landscape:gap-2">
+              <div className="w-10 h-10 landscape:w-8 landscape:h-8 bg-linear-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg group-hover:scale-105 transition-all duration-300">
+                <span className="text-white text-lg landscape:text-base font-bold">IP</span>
               </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold bg-linear-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent leading-tight">
+              <div className="flex flex-col min-w-0">
+                <span className="text-xl landscape:text-base font-bold bg-linear-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent leading-tight truncate">
                   {translate('Innova Proyectos')}
                 </span>
-                <span className="text-xs text-slate-500 font-medium">
+                <span className="text-xs landscape:text-[10px] text-slate-500 font-medium truncate">
                   {translate('Development & Consulting')}
                 </span>
               </div>
@@ -287,7 +287,7 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
           </div>
 
           {/* Tablet Navigation with Horizontal Scroll */}
-          <div className="hidden sm:flex lg:hidden flex-1 ml-6">
+          <div className="hidden sm:flex lg:hidden landscape:hidden flex-1 ml-6">
             <div className="flex overflow-x-auto scrollbar-hide space-x-2 py-2">
               <LanguageSelector />
               {onShowAbout ? (
@@ -364,8 +364,8 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
             </div>
           </div>
 
-          {/* Mobile menu button */}
-          <div className="sm:hidden">
+          {/* Mobile menu button - Show in mobile portrait AND landscape, NOT on desktop */}
+          <div className="sm:hidden landscape:block lg:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="inline-flex items-center justify-center p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
@@ -383,17 +383,91 @@ const Navbar = ({ onShowAbout, onShowServices }: NavbarProps) => {
               )}
             </button>
           </div>
+
+          {/* Tablet Auth Section - Hidden in landscape */}
+          {!isLoading && (
+            <div className="hidden sm:flex lg:hidden landscape:hidden ml-2">
+              {user ? (
+                <div className="flex items-center gap-2 relative">
+                  {/* User Profile Button with Dropdown */}
+                  <div className="relative user-menu-container">
+                    <button
+                      onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                      className="inline-flex items-center gap-2 px-4 py-2.5 landscape:px-3 landscape:py-2 bg-slate-100 landscape:bg-blue-50 text-slate-700 text-sm landscape:text-xs font-semibold rounded-xl border-2 border-slate-300 landscape:border-blue-500 shadow-md landscape:shadow-lg hover:bg-slate-200 hover:border-blue-600 transition-all duration-300"
+                    >
+                      <svg className="w-5 h-5 landscape:w-6 landscape:h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                      <svg 
+                        className={`w-4 h-4 landscape:w-5 landscape:h-5 text-blue-600 transition-transform duration-300 ${isUserMenuOpen ? 'transform rotate-180' : ''}`}
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+
+                    {/* Dropdown Menu for Tablet */}
+                    <div
+                      className={`absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border-2 border-slate-200 overflow-hidden transition-all duration-300 ease-in-out z-80 ${
+                        isUserMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
+                      }`}
+                    >
+                      <Link
+                        href="/profile"
+                        onClick={() => setIsUserMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 border-b border-slate-100"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        {translate('View Profile')}
+                      </Link>
+                      
+                      <button
+                        onClick={async () => {
+                          try {
+                            await logout();
+                            setIsUserMenuOpen(false);
+                          } catch (error) {
+                            console.error('Logout error:', error);
+                          }
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-red-600 hover:bg-red-50 transition-all duration-200"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        {translate('Log Out')}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <Link
+                  href="/login"
+                  className="inline-flex items-center gap-2 px-3 py-2 bg-slate-100 text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-200 transition-all duration-300"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                  </svg>
+                </Link>
+              )}
+            </div>
+          )}
+
         </div>
       </div>
 
-      {/* Mobile Navigation */}
+      {/* Mobile Navigation - Show in mobile portrait AND landscape, NOT on desktop */}
       <div 
-        className={`sm:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+        className={`sm:hidden landscape:block lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
           isMobileMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
         <div className="bg-linear-to-b from-white to-slate-50 border-b border-slate-200/60 shadow-lg">
-          <div className="px-4 pt-2 pb-4 max-h-96 overflow-y-auto scrollbar-hide">
+          <div className="px-4 pt-2 pb-4 max-h-96 landscape:max-h-[50vh] overflow-y-auto scrollbar-hide">
             <div className="space-y-2">
               {/* Language Selector - Mobile */}
               <div className="px-4 py-3 border-b border-slate-200/60">

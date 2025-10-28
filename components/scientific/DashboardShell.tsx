@@ -88,74 +88,74 @@ const DashboardShell: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12">
+    <div className="max-w-7xl mx-auto px-6 landscape:pl-20 py-12 landscape:py-6">
       {/* Header */}
       <div 
-        className={`mb-8 transition-all duration-1000 ease-out ${
+        className={`mb-8 landscape:mb-4 transition-all duration-1000 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'
         }`}
       >
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Research Dashboard</h1>
-        <p className="text-slate-600">Welcome back! Here&apos;s your research overview.</p>
+        <h1 className="text-3xl landscape:text-2xl font-bold text-slate-900 mb-2 landscape:mb-1">Research Dashboard</h1>
+        <p className="text-slate-600 landscape:text-sm">Welcome back! Here&apos;s your research overview.</p>
       </div>
 
       {/* Stats Cards */}
       <div 
-        className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 transition-all duration-1000 ease-out ${
+        className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 landscape:grid-cols-4 gap-6 landscape:gap-2 mb-8 landscape:mb-3 transition-all duration-1000 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'
         }`}
         style={{ transitionDelay: '100ms' }}
       >
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
+        <div className="bg-white rounded-xl landscape:rounded-lg p-6 landscape:p-3 shadow-lg border border-slate-200">
           <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-600">Total Papers</p>
-              <p className="text-2xl font-bold text-slate-900">{stats?.totalPapers || 0}</p>
+            <div className="flex-1">
+              <p className="text-sm landscape:text-[10px] font-medium text-slate-600">Total Papers</p>
+              <p className="text-2xl landscape:text-lg font-bold text-slate-900">{stats?.totalPapers || 0}</p>
             </div>
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 landscape:w-8 landscape:h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
+              <svg className="w-6 h-6 landscape:w-4 landscape:h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
+        <div className="bg-white rounded-xl landscape:rounded-lg p-6 landscape:p-3 shadow-lg border border-slate-200">
           <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-600">Active Projects</p>
-              <p className="text-2xl font-bold text-slate-900">{stats?.totalProjects || 0}</p>
+            <div className="flex-1">
+              <p className="text-sm landscape:text-[10px] font-medium text-slate-600">Active Projects</p>
+              <p className="text-2xl landscape:text-lg font-bold text-slate-900">{stats?.totalProjects || 0}</p>
             </div>
-            <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 landscape:w-8 landscape:h-8 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
+              <svg className="w-6 h-6 landscape:w-4 landscape:h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
+        <div className="bg-white rounded-xl landscape:rounded-lg p-6 landscape:p-3 shadow-lg border border-slate-200">
           <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-600">Collaborations</p>
-              <p className="text-2xl font-bold text-slate-900">{stats?.activeCollaborations || 0}</p>
+            <div className="flex-1">
+              <p className="text-sm landscape:text-[10px] font-medium text-slate-600">Collaborations</p>
+              <p className="text-2xl landscape:text-lg font-bold text-slate-900">{stats?.activeCollaborations || 0}</p>
             </div>
-            <div className="w-12 h-12 bg-violet-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 landscape:w-8 landscape:h-8 bg-violet-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
+              <svg className="w-6 h-6 landscape:w-4 landscape:h-4 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
+        <div className="bg-white rounded-xl landscape:rounded-lg p-6 landscape:p-3 shadow-lg border border-slate-200">
           <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-600">This Month</p>
-              <p className="text-2xl font-bold text-slate-900">{stats?.papersThisMonth || 0}</p>
+            <div className="flex-1">
+              <p className="text-sm landscape:text-[10px] font-medium text-slate-600">This Month</p>
+              <p className="text-2xl landscape:text-lg font-bold text-slate-900">{stats?.papersThisMonth || 0}</p>
             </div>
-            <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 landscape:w-8 landscape:h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
+              <svg className="w-6 h-6 landscape:w-4 landscape:h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
               </svg>
             </div>
@@ -165,36 +165,36 @@ const DashboardShell: React.FC = () => {
 
       {/* Main Content Grid */}
       <div 
-        className={`grid grid-cols-1 lg:grid-cols-3 gap-8 transition-all duration-1000 ease-out ${
+        className={`grid grid-cols-1 lg:grid-cols-3 landscape:gap-4 gap-8 transition-all duration-1000 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'
         }`}
         style={{ transitionDelay: '200ms' }}
       >
         {/* Recent Papers */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-slate-900">Recent Papers</h2>
-              <a href="/library" className="text-blue-600 hover:text-blue-700 font-medium">
+          <div className="bg-white rounded-xl landscape:rounded-lg p-6 landscape:p-4 shadow-lg border border-slate-200">
+            <div className="flex items-center justify-between mb-6 landscape:mb-3">
+              <h2 className="text-xl landscape:text-lg font-bold text-slate-900">Recent Papers</h2>
+              <a href="/library" className="text-blue-600 hover:text-blue-700 font-medium landscape:text-sm">
                 View All
               </a>
             </div>
             
-            <div className="space-y-4">
+            <div className="space-y-4 landscape:space-y-2">
               {recentPapers.length > 0 ? (
                 recentPapers.map((paper) => (
-                  <div key={paper.id} className="border border-slate-200 rounded-lg p-4 hover:bg-slate-50 transition-colors">
-                    <h3 className="font-semibold text-slate-900 mb-2 line-clamp-2">{paper.title}</h3>
-                    <p className="text-sm text-slate-600 mb-2">
+                  <div key={paper.id} className="border border-slate-200 rounded-lg landscape:rounded-md p-4 landscape:p-3 hover:bg-slate-50 transition-colors">
+                    <h3 className="font-semibold landscape:text-sm text-slate-900 mb-2 landscape:mb-1 line-clamp-2">{paper.title}</h3>
+                    <p className="text-sm landscape:text-xs text-slate-600 mb-2 landscape:mb-1">
                       {paper.authors.join(', ')}
                     </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-slate-500">
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                      <span className="text-xs landscape:text-[10px] text-slate-500">
                         {paper.journal} • {new Date(paper.publicationDate).getFullYear()}
                       </span>
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 landscape:gap-1">
                         {paper.tags.slice(0, 2).map((tag) => (
-                          <span key={tag} className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
+                          <span key={tag} className="px-2 landscape:px-1.5 py-1 landscape:py-0.5 bg-blue-100 text-blue-700 text-xs landscape:text-[10px] rounded-full">
                             {tag}
                           </span>
                         ))}
@@ -219,22 +219,22 @@ const DashboardShell: React.FC = () => {
 
         {/* Recent Projects */}
         <div>
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-slate-900">Active Projects</h2>
-              <a href="/research" className="text-blue-600 hover:text-blue-700 font-medium">
+          <div className="bg-white rounded-xl landscape:rounded-lg p-6 landscape:p-4 shadow-lg border border-slate-200">
+            <div className="flex items-center justify-between mb-6 landscape:mb-3">
+              <h2 className="text-xl landscape:text-lg font-bold text-slate-900">Active Projects</h2>
+              <a href="/research" className="text-blue-600 hover:text-blue-700 font-medium landscape:text-sm">
                 Manage
               </a>
             </div>
             
-            <div className="space-y-4">
+            <div className="space-y-4 landscape:space-y-2">
               {recentProjects.length > 0 ? (
                 recentProjects.map((project) => (
-                  <div key={project.id} className="border border-slate-200 rounded-lg p-4 hover:bg-slate-50 transition-colors">
-                    <h3 className="font-semibold text-slate-900 mb-2">{project.title}</h3>
-                    <p className="text-sm text-slate-600 mb-3 line-clamp-2">{project.description}</p>
-                    <div className="flex items-center justify-between">
-                      <span className={`px-2 py-1 text-xs rounded-full ${
+                  <div key={project.id} className="border border-slate-200 rounded-lg landscape:rounded-md p-4 landscape:p-3 hover:bg-slate-50 transition-colors">
+                    <h3 className="font-semibold landscape:text-sm text-slate-900 mb-2 landscape:mb-1">{project.title}</h3>
+                    <p className="text-sm landscape:text-xs text-slate-600 mb-3 landscape:mb-2 line-clamp-2">{project.description}</p>
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                      <span className={`px-2 landscape:px-1.5 py-1 landscape:py-0.5 text-xs landscape:text-[10px] rounded-full ${
                         project.status === 'active' ? 'bg-green-100 text-green-700' :
                         project.status === 'completed' ? 'bg-blue-100 text-blue-700' :
                         project.status === 'planning' ? 'bg-yellow-100 text-yellow-700' :
@@ -242,7 +242,7 @@ const DashboardShell: React.FC = () => {
                       }`}>
                         {project.status}
                       </span>
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs landscape:text-[10px] text-slate-500">
                         {project.collaborators.length} collaborators
                       </span>
                     </div>

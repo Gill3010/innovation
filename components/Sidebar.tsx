@@ -60,8 +60,14 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeKey }) => {
   // Handle screen resize
   const handleResize = useCallback(() => {
     const isMobileView = window.innerWidth < 768;
-    setIsMobile(isMobileView);
-    if (isMobileView) {
+    const isLandscape = window.innerHeight < window.innerWidth;
+    const isDesktop = window.innerWidth >= 1024;
+    
+    // Only treat as mobile if it's mobile view (< 768px) OR (landscape AND not desktop)
+    const shouldBeMobile = isMobileView || (isLandscape && !isDesktop);
+    setIsMobile(shouldBeMobile);
+    // Force collapsed state on mobile AND landscape (but not desktop in landscape)
+    if (shouldBeMobile) {
       setIsExpanded(false);
     }
   }, []);
@@ -72,9 +78,16 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeKey }) => {
     const timer = setTimeout(() => {
       setIsClient(true);
       const isMobileView = window.innerWidth < 768;
-      setIsMobile(isMobileView);
-      // Always start collapsed, user can expand if needed
-      setIsExpanded(false);
+      const isLandscape = window.innerHeight < window.innerWidth;
+      const isDesktop = window.innerWidth >= 1024;
+      
+      // Only treat as mobile if it's mobile view (< 768px) OR (landscape AND not desktop)
+      const shouldBeMobile = isMobileView || (isLandscape && !isDesktop);
+      setIsMobile(shouldBeMobile);
+      // Always start collapsed on mobile AND landscape (but not desktop in landscape)
+      if (shouldBeMobile) {
+        setIsExpanded(false);
+      }
     }, 0);
     
     return () => clearTimeout(timer);
@@ -85,7 +98,11 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeKey }) => {
     if (!isClient) return;
     
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleResize);
+    };
   }, [handleResize, isClient]);
 
   // Handle keyboard navigation
@@ -116,7 +133,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeKey }) => {
 
   return (
     <>
-      {/* Overlay for mobile and desktop when sidebar is expanded */}
+      {/* Overlay when sidebar is expanded */}
       {isClient && isExpanded && (
         <div
           className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity duration-300 cursor-pointer"
@@ -125,14 +142,32 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeKey }) => {
         />
       )}
 
-      {/* Mobile: small fixed toggle when closed so users can open the menu */}
-      {isClient && isMobile && !isExpanded && (
+      {/* Mobile: hamburger menu button - Always visible on mobile portrait AND landscape (when sidebar hidden) */}
+      {isClient && !isExpanded && isMobile && (
         <button
           onClick={() => setIsExpanded(true)}
           aria-label="Open sidebar"
-          className="fixed left-4 top-20 z-50 bg-white border border-gray-100 rounded-full p-2 shadow-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="fixed left-2 top-18 landscape:top-20 z-50 bg-white border-2 border-blue-500 rounded-full p-2.5 landscape:p-2 shadow-xl hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 animate-pulse"
         >
-          <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 landscape:w-4 landscape:h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      )}
+      
+      {/* Desktop/Tablet: collapse button - Show only on desktop (not mobile/landscape) */}
+      {isClient && !isMobile && (
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="absolute -right-4 top-16 z-10 bg-white border-2 border-gray-200 rounded-full p-2 shadow-md hover:bg-slate-50 hover:border-blue-500 transition-all duration-300"
+          aria-label={isExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
+        >
+          <svg 
+            className={`w-4 h-4 text-gray-600 transition-transform duration-300 ${isExpanded ? '' : 'rotate-180'}`}
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
@@ -175,14 +210,14 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeKey }) => {
         </button>
 
         {/* Menu items */}
-        <nav className="h-full py-4">
-          <ul className="space-y-1">
+        <nav className="h-full py-4 landscape:py-2">
+          <ul className="space-y-1 landscape:space-y-0.5">
             {menuItems.map((item) => (
               <li key={item.href}>
                 {onNavigate ? (
                   <button
                     onClick={() => handleItemClick(item)}
-                    className={`flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 w-full text-left group
+                    className={`flex items-center px-4 landscape:px-3 py-3 landscape:py-2 text-gray-600 hover:bg-gray-50 w-full text-left group
                       ${isItemActive(item) ? 'bg-blue-50 text-blue-600' : ''}
                       transition-colors duration-200
                     `}
@@ -204,7 +239,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeKey }) => {
                 ) : (
                   <Link
                     href={item.href}
-                    className={`flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 group
+                    className={`flex items-center px-4 landscape:px-3 py-3 landscape:py-2 text-gray-600 hover:bg-gray-50 group
                       ${isItemActive(item) ? 'bg-blue-50 text-blue-600' : ''}
                       transition-colors duration-200
                     `}

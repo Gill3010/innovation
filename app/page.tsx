@@ -54,23 +54,23 @@ export default function Home() {
       />
 
       {/* Centered content overlay — preserves original text exactly */}
-      <main className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center bg-transparent">
-        <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
+      <main className="relative z-10 flex min-h-screen landscape:min-h-[100dvh] flex-col items-center justify-center px-6 landscape:px-4 text-center bg-transparent">
+        <h1 className="text-4xl landscape:text-3xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
           <span className="block">Welcome to</span>
           <span className="block text-blue-300">Innova Proyectos</span>
         </h1>
 
-        <p className="mt-4 max-w-xl text-lg text-white/90 sm:text-lg md:mt-6 md:text-xl">
+        <p className="mt-4 landscape:mt-2 max-w-xl text-lg landscape:text-base text-white/90 sm:text-lg md:mt-6 md:text-xl">
           Discover the future of innovation with our cutting-edge platform. Start your journey today.
         </p>
 
         {/* "Get Started" button using Button component */}
-        <div className="mt-8">
+        <div className="mt-8 landscape:mt-4">
           <Button text="Get Started" />
         </div>
 
         {/* Search Component */}
-        <div className="mt-12">
+        <div className="mt-12 landscape:mt-6">
           <SearchComponent />
         </div>
       </main>
