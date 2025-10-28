@@ -11,6 +11,15 @@ export interface User {
   updatedAt: Date;
 }
 
+export interface ProjectMilestone {
+  id: string;
+  title: string;
+  description?: string;
+  dueDate?: Date;
+  completed: boolean;
+  completedAt?: Date;
+}
+
 export interface ResearchProject {
   id: string;
   title: string;
@@ -21,6 +30,8 @@ export interface ResearchProject {
   startDate: Date;
   endDate?: Date;
   tags: string[];
+  milestones?: ProjectMilestone[];
+  progress?: number; // 0-100 percentage
   createdAt: Date;
   updatedAt: Date;
 }
@@ -133,6 +144,15 @@ export interface PubMedPaper {
   url: string;
 }
 
+export interface ArxivPaper {
+  arxivId: string;
+  title: string;
+  authors: string[];
+  abstract: string;
+  publicationDate: string;
+  url: string;
+}
+
 // Tipos para el dashboard
 export interface DashboardStats {
   totalPapers: number;
@@ -175,4 +195,6 @@ export interface ProjectFormData {
   startDate: string;
   endDate?: string;
   tags: string[];
+  milestones?: ProjectMilestone[];
+  progress?: number;
 }

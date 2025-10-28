@@ -15,9 +15,10 @@ const hasOJSCredentials = () => {
 interface AddPaperFormProps {
   onClose: () => void;
   onSuccess: () => void;
+  paperToEdit?: any; // ScientificPaper with Firestore types
 }
 
-const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
+const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess, paperToEdit }) => {
   const { user } = useAuth();
   const [formData, setFormData] = useState<PaperFormData>({
     title: '',
@@ -39,7 +40,11 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [searchResults, setSearchResults] = useState<CrossRefPaper[]>([]);
+  const [arxivResults, setArxivResults] = useState<any[]>([]);
+  const [semanticResults, setSemanticResults] = useState<any[]>([]);
+  const [openalexResults, setOpenalexResults] = useState<any[]>([]);
   const [searching, setSearching] = useState(false);
+  const [searchSource, setSearchSource] = useState<'crossref' | 'arxiv' | 'semantic' | 'openalex'>('crossref');
   const [isVisible, setIsVisible] = useState(false);
   const [submitToJournal, setSubmitToJournal] = useState(false);
   const [ojsResult, setOjsResult] = useState<OJSSubmissionResponse | null>(null);
@@ -65,6 +70,31 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
     };
     loadProjects();
   }, [user]);
+
+  // Load paper data if editing
+  useEffect(() => {
+    if (paperToEdit) {
+      setFormData({
+        title: paperToEdit.title || '',
+        authors: paperToEdit.authors || [],
+        abstract: paperToEdit.abstract || '',
+        doi: paperToEdit.doi || '',
+        pmid: paperToEdit.pmid || '',
+        arxivId: paperToEdit.arxivId || '',
+        journal: paperToEdit.journal || '',
+        publicationDate: paperToEdit.publicationDate ? (
+          typeof paperToEdit.publicationDate === 'string' 
+            ? paperToEdit.publicationDate 
+            : paperToEdit.publicationDate.toISOString().split('T')[0]
+        ) : '',
+        url: paperToEdit.url || '',
+        pdfUrl: paperToEdit.pdfUrl || '',
+        tags: paperToEdit.tags || [],
+        projectId: paperToEdit.projectId || '',
+        notes: paperToEdit.notes || '',
+      });
+    }
+  }, [paperToEdit]);
 
   const handleInputChange = (field: keyof PaperFormData, value: string | string[]) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -129,6 +159,78 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
     }
   };
 
+  const handleSearchArXiv = async () => {
+    if (!formData.title) {
+      setError('Please enter a title to search arXiv');
+      return;
+    }
+
+    setSearching(true);
+    setSearchSource('arxiv');
+    setError(null);
+
+    try {
+      const results = await ScientificAPIService.searchArXiv(formData.title, 5);
+      setArxivResults(results);
+      if (results.length === 0) {
+        setError('No papers found on arXiv with this title');
+      }
+    } catch (error) {
+      setError('Error searching arXiv');
+      console.error('Error:', error);
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  const handleSearchSemantic = async () => {
+    if (!formData.title) {
+      setError('Please enter a title to search Semantic Scholar');
+      return;
+    }
+
+    setSearching(true);
+    setSearchSource('semantic');
+    setError(null);
+
+    try {
+      const results = await ScientificAPIService.searchSemanticScholar(formData.title, 5);
+      setSemanticResults(results);
+      if (results.length === 0) {
+        setError('No papers found on Semantic Scholar with this title');
+      }
+    } catch (error) {
+      setError('Error searching Semantic Scholar');
+      console.error('Error:', error);
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  const handleSearchOpenAlex = async () => {
+    if (!formData.title) {
+      setError('Please enter a title to search OpenAlex');
+      return;
+    }
+
+    setSearching(true);
+    setSearchSource('openalex');
+    setError(null);
+
+    try {
+      const results = await ScientificAPIService.searchOpenAlex(formData.title, 5);
+      setOpenalexResults(results);
+      if (results.length === 0) {
+        setError('No papers found on OpenAlex with this title');
+      }
+    } catch (error) {
+      setError('Error searching OpenAlex');
+      console.error('Error:', error);
+    } finally {
+      setSearching(false);
+    }
+  };
+
   const handleSelectSearchResult = (paper: CrossRefPaper) => {
     const normalized = ScientificAPIService.normalizePaperData(paper, 'crossref');
     setFormData(prev => ({
@@ -144,6 +246,52 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
     }));
     setSearchResults([]);
     setSuccess('Paper data loaded successfully!');
+  };
+
+  const handleSelectArxivResult = (paper: any) => {
+    setFormData(prev => ({
+      ...prev,
+      title: paper.title,
+      authors: paper.authors,
+      abstract: paper.abstract,
+      publicationDate: paper.publicationDate ? paper.publicationDate.split('T')[0] : '',
+      url: paper.url,
+      arxivId: paper.arxivId,
+    }));
+    setArxivResults([]);
+    setSuccess('arXiv paper data loaded successfully!');
+  };
+
+  const handleSelectSemanticResult = (paper: any) => {
+    setFormData(prev => ({
+      ...prev,
+      title: paper.title,
+      authors: paper.authors ? paper.authors.split(', ') : [],
+      abstract: paper.abstract,
+      publicationDate: paper.year ? `${paper.year}-01-01` : '',
+      url: paper.url,
+      doi: paper.doi,
+      journal: paper.venue,
+      citations: paper.citations,
+    }));
+    setSemanticResults([]);
+    setSuccess('Semantic Scholar paper data loaded successfully!');
+  };
+
+  const handleSelectOpenAlexResult = (paper: any) => {
+    setFormData(prev => ({
+      ...prev,
+      title: paper.title,
+      authors: paper.authors ? paper.authors.split(', ') : [],
+      abstract: paper.abstract,
+      publicationDate: paper.year ? `${paper.year}-01-01` : '',
+      url: paper.url,
+      doi: paper.doi,
+      journal: paper.venue,
+      citations: paper.citations,
+    }));
+    setOpenalexResults([]);
+    setSuccess('OpenAlex paper data loaded successfully!');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -173,11 +321,19 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
         tags: formData.tags.filter(tag => tag.trim() !== ''),
       };
 
-      // 1. Primero guardar en nuestra base de datos local
-      await ScientificDataService.createPaper(paperData);
+      // 1. Save or update in local database
+      if (paperToEdit?.id) {
+        // Edit mode - update existing paper
+        await ScientificDataService.updatePaper(paperToEdit.id, paperData);
+        setSuccess('Paper updated successfully!');
+      } else {
+        // Create mode - add new paper
+        await ScientificDataService.createPaper(paperData);
+        setSuccess('Paper added successfully to your library!');
+      }
       
-      // 2. Si el usuario quiere enviar al journal, intentar enviar a OJS
-      if (submitToJournal) {
+      // 2. If user wants to submit to journal, try OJS (only for new papers)
+      if (submitToJournal && !paperToEdit?.id) {
         try {
           const ojsPaper = OJSAPIService.convertToOJSFormat(formData);
           const ojsResponse = await OJSAPIService.submitPaper(ojsPaper);
@@ -246,7 +402,7 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
               </div>
-              <h2 className="text-xl md:text-2xl lg:text-3xl landscape:text-lg font-bold text-slate-900 tracking-tight truncate">Add New Paper</h2>
+              <h2 className="text-xl md:text-2xl lg:text-3xl landscape:text-lg font-bold text-slate-900 tracking-tight truncate">{paperToEdit ? 'Edit Paper' : 'Add New Paper'}</h2>
             </div>
             <button
               onClick={onClose}
@@ -278,7 +434,7 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
             <button
               onClick={handleSearchByDOI}
               disabled={searching}
-              className="px-4 landscape:px-4 py-3 landscape:py-2 bg-blue-600 text-white rounded-xl landscape:rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-all duration-200 landscape:text-sm font-semibold shadow-md hover:shadow-lg whitespace-nowrap flex-shrink-0"
+              className="px-4 landscape:px-4 py-3 landscape:py-2 bg-blue-600 text-white rounded-xl landscape:rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-all duration-200 landscape:text-sm font-semibold shadow-md hover:shadow-lg whitespace-nowrap shrink-0"
             >
               {searching ? 'Searching...' : 'Search'}
             </button>
@@ -304,9 +460,32 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
             <button
               onClick={handleSearchByTitle}
               disabled={searching}
-              className="px-4 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 disabled:opacity-50 transition-all duration-200 font-semibold shadow-md hover:shadow-lg whitespace-nowrap flex-shrink-0"
+              className="px-4 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 disabled:opacity-50 transition-all duration-200 font-semibold shadow-md hover:shadow-lg whitespace-nowrap shrink-0"
             >
-              {searching ? 'Searching...' : 'Search'}
+              {searching && searchSource === 'crossref' ? 'Searching...' : 'CrossRef'}
+            </button>
+            <button
+              onClick={handleSearchArXiv}
+              disabled={searching}
+              className="px-4 py-3 bg-orange-600 text-white rounded-xl hover:bg-orange-700 disabled:opacity-50 transition-all duration-200 font-semibold shadow-md hover:shadow-lg whitespace-nowrap shrink-0"
+            >
+              {searching && searchSource === 'arxiv' ? 'Searching...' : 'arXiv'}
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-3">
+            <button
+              onClick={handleSearchSemantic}
+              disabled={searching}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-all duration-200 text-sm font-semibold shadow-md hover:shadow-lg whitespace-nowrap shrink-0"
+            >
+              {searching && searchSource === 'semantic' ? 'Searching...' : 'Semantic Scholar'}
+            </button>
+            <button
+              onClick={handleSearchOpenAlex}
+              disabled={searching}
+              className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 disabled:opacity-50 transition-all duration-200 text-sm font-semibold shadow-md hover:shadow-lg whitespace-nowrap shrink-0"
+            >
+              {searching && searchSource === 'openalex' ? 'Searching...' : 'OpenAlex'}
             </button>
           </div>
         </div>
@@ -336,6 +515,98 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
                     {paper['container-title']?.[0] || 'Unknown journal'} • {paper['published-print']?.['date-parts']?.[0]?.[0] || 'Unknown year'}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* arXiv Results */}
+        {arxivResults.length > 0 && (
+          <div className="mb-6 p-5 bg-orange-50/50 border border-orange-100 rounded-2xl">
+            <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+              <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              arXiv Results
+            </h3>
+            <div className="space-y-3">
+              {arxivResults.map((paper, index) => (
+                <div
+                  key={index}
+                  className="p-4 border border-orange-200 bg-white rounded-xl hover:border-orange-400 hover:shadow-md cursor-pointer transition-all duration-200 group"
+                  onClick={() => handleSelectArxivResult(paper)}
+                >
+                  <h4 className="font-semibold text-slate-900 group-hover:text-orange-600 transition-colors">{paper.title || 'Untitled'}</h4>
+                  <p className="text-sm text-slate-600 mt-1">
+                    {paper.authors?.join(', ') || 'Unknown authors'}
+                  </p>
+                  <p className="text-xs text-slate-500 mt-2 flex items-center gap-2">
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    arXiv:{paper.arxivId} • {paper.publicationDate ? new Date(paper.publicationDate).getFullYear() : 'Unknown year'}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Semantic Scholar Results */}
+        {semanticResults.length > 0 && (
+          <div className="mb-6 p-5 bg-indigo-50/50 border border-indigo-100 rounded-2xl">
+            <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+              <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Semantic Scholar Results
+            </h3>
+            <div className="space-y-3">
+              {semanticResults.map((paper, index) => (
+                <div
+                  key={index}
+                  className="p-4 border border-indigo-200 bg-white rounded-xl hover:border-indigo-400 hover:shadow-md cursor-pointer transition-all duration-200 group"
+                  onClick={() => handleSelectSemanticResult(paper)}
+                >
+                  <h4 className="font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors">{paper.title || 'Untitled'}</h4>
+                  <p className="text-sm text-slate-600 mt-1">{paper.authors || 'Unknown authors'}</p>
+                  <p className="text-xs text-slate-500 mt-2 flex items-center gap-2">
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    {paper.venue} • {paper.year} • {paper.citations} citations
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* OpenAlex Results */}
+        {openalexResults.length > 0 && (
+          <div className="mb-6 p-5 bg-cyan-50/50 border border-cyan-100 rounded-2xl">
+            <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+              <svg className="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              OpenAlex Results
+            </h3>
+            <div className="space-y-3">
+              {openalexResults.map((paper, index) => (
+                <div
+                  key={index}
+                  className="p-4 border border-cyan-200 bg-white rounded-xl hover:border-cyan-400 hover:shadow-md cursor-pointer transition-all duration-200 group"
+                  onClick={() => handleSelectOpenAlexResult(paper)}
+                >
+                  <h4 className="font-semibold text-slate-900 group-hover:text-cyan-600 transition-colors">{paper.title || 'Untitled'}</h4>
+                  <p className="text-sm text-slate-600 mt-1">{paper.authors || 'Unknown authors'}</p>
+                  <p className="text-xs text-slate-500 mt-2 flex items-center gap-2">
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    {paper.venue} • {paper.year} • {paper.citations} citations
                   </p>
                 </div>
               ))}
@@ -535,7 +806,7 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
                   <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
-                  Add Paper
+                  {paperToEdit ? 'Update Paper' : 'Add Paper'}
                 </>
               )}
             </button>

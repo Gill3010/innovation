@@ -3,6 +3,8 @@ import { CrossRefPaper, CrossRefResponse, PubMedPaper, PubMedResponse } from '@/
 
 const CROSSREF_API_BASE = 'https://api.crossref.org/works';
 const PUBMED_API_BASE = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils';
+const SEMANTIC_SCHOLAR_API_BASE = 'https://api.semanticscholar.org/graph/v1/paper/search';
+const OPENALEX_API_BASE = 'https://api.openalex.org/works';
 
 export class ScientificAPIService {
   // Helper: Limpiar DOI (acepta URL completa o solo código)
@@ -47,6 +49,11 @@ export class ScientificAPIService {
       console.error('Error fetching paper from CrossRef:', error);
       return null;
     }
+  }
+
+  // CrossRef API - Búsqueda de papers por términos (alias)
+  static async searchCrossRef(query: string, limit: number = 10): Promise<CrossRefPaper[]> {
+    return this.searchPapers(query, limit);
   }
 
   // CrossRef API - Búsqueda de papers por términos
@@ -209,7 +216,7 @@ export class ScientificAPIService {
   }
 
   // Función helper para normalizar datos de diferentes APIs
-  static normalizePaperData(apiData: any, source: 'crossref' | 'pubmed' | 'arxiv'): any {
+  static normalizePaperData(apiData: any, source: 'crossref' | 'pubmed' | 'arxiv' | 'semantic' | 'openalex'): any {
     switch (source) {
       case 'crossref':
         return {
@@ -239,13 +246,170 @@ export class ScientificAPIService {
         return {
           title: apiData.title,
           abstract: apiData.abstract,
+          authors: apiData.authors || [],
           arxivId: apiData.arxivId,
           publicationDate: apiData.publicationDate,
           url: apiData.url,
         };
       
+      case 'semantic':
+        return {
+          title: apiData.title || '',
+          abstract: apiData.abstract || '',
+          authors: typeof apiData.authors === 'string' ? apiData.authors.split(', ') : [],
+          year: apiData.year || new Date().getFullYear(),
+          citations: apiData.citations || 0,
+          url: apiData.url,
+          venue: apiData.venue || '',
+          doi: apiData.doi || '',
+        };
+      
+      case 'openalex':
+        return {
+          title: apiData.title || '',
+          abstract: apiData.abstract || '',
+          authors: typeof apiData.authors === 'string' ? apiData.authors.split(', ') : [],
+          year: apiData.year || new Date().getFullYear(),
+          citations: apiData.citations || 0,
+          url: apiData.url,
+          venue: apiData.venue || '',
+          doi: apiData.doi,
+        };
+      
       default:
         return apiData;
+    }
+  }
+
+  // arXiv API - Search for papers on arXiv
+  static async searchArXiv(query: string, maxResults: number = 10): Promise<any[]> {
+    try {
+      const response = await fetch(`https://export.arxiv.org/api/query?search_query=all:${encodeURIComponent(query)}&start=0&max_results=${maxResults}`, {
+        headers: {
+          'Accept': 'application/atom+xml',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`arXiv API error: ${response.status}`);
+      }
+
+      const xmlText = await response.text();
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+
+      const entries = Array.from(xmlDoc.getElementsByTagName('entry'));
+      const papers = entries.map(entry => {
+        const title = entry.getElementsByTagName('title')[0]?.textContent || '';
+        const summary = entry.getElementsByTagName('summary')[0]?.textContent || '';
+        const authors = Array.from(entry.getElementsByTagName('author')).map(auth => auth.getElementsByTagName('name')[0]?.textContent || '').filter(Boolean);
+        const published = entry.getElementsByTagName('published')[0]?.textContent || '';
+        const id = entry.getElementsByTagName('id')[0]?.textContent || '';
+        const arxivId = id.split('/').pop() || '';
+
+        return {
+          title: title.replace(/\s+/g, ' ').trim(),
+          abstract: summary.trim(),
+          authors,
+          arxivId,
+          publicationDate: published,
+          url: id,
+        };
+      });
+
+      return papers;
+    } catch (error) {
+      console.error('Error fetching papers from arXiv:', error);
+      return [];
+    }
+  }
+
+  // CrossRef API - Search for papers by title
+  static async searchByTitle(title: string, maxResults: number = 10): Promise<CrossRefPaper[]> {
+    try {
+      const response = await fetch(`${CROSSREF_API_BASE}?query.title=${encodeURIComponent(title)}&rows=${maxResults}`, {
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`CrossRef API error: ${response.status}`);
+      }
+
+      const data: CrossRefResponse = await response.json();
+      return data.message.items || [];
+    } catch (error) {
+      console.error('Error searching papers from CrossRef:', error);
+      return [];
+    }
+  }
+
+  // Semantic Scholar API - Search for papers
+  static async searchSemanticScholar(query: string, maxResults: number = 10): Promise<any[]> {
+    try {
+      const response = await fetch(
+        `${SEMANTIC_SCHOLAR_API_BASE}?query=${encodeURIComponent(query)}&limit=${maxResults}&fields=title,authors,abstract,year,citationCount,url,venue,externalIds`,
+        {
+          headers: {
+            'Accept': 'application/json',
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Semantic Scholar API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      return (data.data || []).map((paper: any) => ({
+        title: paper.title || '',
+        abstract: paper.abstract || '',
+        authors: paper.authors?.map((a: any) => a.name).join(', ') || '',
+        year: paper.year || new Date().getFullYear(),
+        citations: paper.citationCount || 0,
+        url: paper.url,
+        venue: paper.venue || '',
+        doi: paper.externalIds?.DOI || '',
+      }));
+    } catch (error) {
+      console.error('Error searching papers from Semantic Scholar:', error);
+      return [];
+    }
+  }
+
+  // OpenAlex API - Search for papers
+  static async searchOpenAlex(query: string, maxResults: number = 10): Promise<any[]> {
+    try {
+      const response = await fetch(
+        `${OPENALEX_API_BASE}?search=${encodeURIComponent(query)}&per_page=${maxResults}`,
+        {
+          headers: {
+            'Accept': 'application/json',
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`OpenAlex API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      return (data.results || []).map((paper: any) => ({
+        title: paper.title || '',
+        abstract: paper.abstract || '',
+        authors: paper.authorships?.map((a: any) => a.author?.display_name).filter(Boolean).join(', ') || '',
+        year: paper.publication_year || new Date().getFullYear(),
+        citations: paper.cited_by_count || 0,
+        url: paper.doi || paper.primary_location?.landing_page_url,
+        venue: paper.primary_location?.source?.display_name || '',
+        doi: paper.doi,
+      }));
+    } catch (error) {
+      console.error('Error searching papers from OpenAlex:', error);
+      return [];
     }
   }
 }

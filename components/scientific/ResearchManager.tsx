@@ -59,14 +59,42 @@ const ResearchManager: React.FC = () => {
     loadData(); // Recargar datos después de agregar un paper
   };
 
-  const handleApiSearch = async (query: string) => {
+  const handleApiSearch = async (query: string, source: 'all' | 'crossref' | 'arxiv' | 'semantic' | 'openalex' = 'all') => {
     if (!query.trim()) return;
     
     setApiSearching(true);
     try {
-      // Buscar en CrossRef
-      const crossrefResults = await ScientificAPIService.searchPapers(query, 5);
-      setApiSearchResults(crossrefResults);
+      if (source === 'all') {
+        // Buscar en todas las fuentes (hasta 8 resultados por fuente = 32 total)
+        const [crossrefResults, arxivResults, semanticResults, openalexResults] = await Promise.all([
+          ScientificAPIService.searchCrossRef(query, 8),
+          ScientificAPIService.searchArXiv(query, 8),
+          ScientificAPIService.searchSemanticScholar(query, 8),
+          ScientificAPIService.searchOpenAlex(query, 8),
+        ]);
+        
+        // Combinar y etiquetar resultados
+        const allResults = [
+          ...crossrefResults.map((r: any) => ({ ...r, source: 'CrossRef' })),
+          ...arxivResults.map((r: any) => ({ ...r, source: 'arXiv' })),
+          ...semanticResults.map((r: any) => ({ ...r, source: 'Semantic Scholar' })),
+          ...openalexResults.map((r: any) => ({ ...r, source: 'OpenAlex' })),
+        ];
+        
+        setApiSearchResults(allResults);
+      } else if (source === 'crossref') {
+        const results = await ScientificAPIService.searchCrossRef(query, 20);
+        setApiSearchResults(results.map((r: any) => ({ ...r, source: 'CrossRef' })));
+      } else if (source === 'arxiv') {
+        const results = await ScientificAPIService.searchArXiv(query, 20);
+        setApiSearchResults(results.map((r: any) => ({ ...r, source: 'arXiv' })));
+      } else if (source === 'semantic') {
+        const results = await ScientificAPIService.searchSemanticScholar(query, 20);
+        setApiSearchResults(results.map((r: any) => ({ ...r, source: 'Semantic Scholar' })));
+      } else if (source === 'openalex') {
+        const results = await ScientificAPIService.searchOpenAlex(query, 20);
+        setApiSearchResults(results.map((r: any) => ({ ...r, source: 'OpenAlex' })));
+      }
     } catch (error) {
       console.error('Error searching APIs:', error);
     } finally {
@@ -78,17 +106,35 @@ const ResearchManager: React.FC = () => {
     if (!user) return;
     
     try {
-      const normalizedPaper = ScientificAPIService.normalizePaperData(apiPaper, 'crossref');
+      // Determine source from paper.source or default to crossref
+      const source = apiPaper.source?.toLowerCase() || 'crossref';
+      let normalizedPaper;
+      
+      if (source.includes('arxiv')) {
+        normalizedPaper = apiPaper; // ArXiv data already normalized
+      } else if (source.includes('semantic')) {
+        normalizedPaper = ScientificAPIService.normalizePaperData(apiPaper, 'semantic');
+      } else if (source.includes('openalex')) {
+        normalizedPaper = ScientificAPIService.normalizePaperData(apiPaper, 'openalex');
+      } else {
+        normalizedPaper = ScientificAPIService.normalizePaperData(apiPaper, 'crossref');
+      }
+      
+      // Handle different author formats
+      const authors = Array.isArray(normalizedPaper.authors) 
+        ? normalizedPaper.authors 
+        : (typeof normalizedPaper.authors === 'string' ? [normalizedPaper.authors] : []);
       
       const paperData: Partial<ScientificPaper> = {
-        title: normalizedPaper.title,
-        authors: normalizedPaper.authors,
-        abstract: normalizedPaper.abstract,
-        doi: normalizedPaper.doi,
-        journal: normalizedPaper.journal,
-        publicationDate: normalizedPaper.publicationDate,
-        url: normalizedPaper.url,
-        citations: normalizedPaper.citations,
+        title: normalizedPaper.title || apiPaper.title,
+        authors: authors,
+        abstract: normalizedPaper.abstract || apiPaper.abstract || '',
+        doi: normalizedPaper.doi || apiPaper.doi,
+        arxivId: apiPaper.arxivId || apiPaper.arxivId,
+        journal: normalizedPaper.journal || apiPaper.venue || apiPaper['container-title']?.[0],
+        publicationDate: normalizedPaper.publicationDate || `${apiPaper.year || new Date().getFullYear()}-01-01`,
+        url: normalizedPaper.url || apiPaper.url,
+        citations: normalizedPaper.citations || apiPaper.citationCount || 0,
         tags: [],
         ownerId: user.id,
         isRead: false,
@@ -168,7 +214,7 @@ const ResearchManager: React.FC = () => {
           
           <div className="flex gap-2 landscape:gap-1.5">
             <button
-              onClick={() => handleApiSearch(searchQuery)}
+              onClick={() => handleApiSearch(searchQuery, 'all')}
               disabled={apiSearching || !searchQuery.trim()}
               className="px-6 landscape:px-3 py-3 landscape:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 landscape:gap-1"
             >
@@ -186,7 +232,7 @@ const ResearchManager: React.FC = () => {
                   <svg className="w-4 h-4 landscape:w-3 landscape:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
-                  <span className="landscape:hidden">Search APIs</span>
+                  <span className="landscape:hidden">Search All Sources</span>
                   <span className="hidden landscape:inline">API</span>
                 </>
               )}
@@ -213,23 +259,27 @@ const ResearchManager: React.FC = () => {
         {/* API Search Results */}
         {apiSearchResults.length > 0 && (
           <div className="mt-6 border-t border-slate-200 pt-6">
-            <h3 className="text-lg font-semibold text-slate-900 mb-4">Search Results from CrossRef</h3>
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">Search Results ({apiSearchResults.length} found)</h3>
+            <p className="text-sm text-slate-600 mb-4">Showing up to 8 results per source (max 32 total)</p>
             <div className="space-y-3">
               {apiSearchResults.map((paper, index) => (
-                <div key={index} className="border border-slate-200 rounded-lg p-4 hover:bg-slate-50 transition-colors">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-slate-900 mb-2">{paper.title?.[0] || 'Untitled'}</h4>
-                      <p className="text-sm text-slate-600 mb-2">
-                        {paper.author?.map((a: any) => `${a.given} ${a.family}`).join(', ') || 'Unknown authors'}
+                <div key={index} className="border border-slate-200 rounded-lg p-3 sm:p-4 hover:bg-slate-50 transition-colors">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-col gap-2 mb-2">
+                        <h4 className="font-semibold text-slate-900 text-sm sm:text-base break-words">{paper.title?.[0] || paper.title || 'Untitled'}</h4>
+                        {paper.source && <span className="w-fit px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full whitespace-nowrap">{paper.source}</span>}
+                      </div>
+                      <p className="text-xs sm:text-sm text-slate-600 mb-2 break-words">
+                        {paper.author?.map((a: any) => `${a.given} ${a.family}`).join(', ') || paper.authors || 'Unknown authors'}
                       </p>
-                      <p className="text-xs text-slate-500">
-                        {paper['container-title']?.[0] || 'Unknown journal'} • {paper['published-print']?.['date-parts']?.[0]?.[0] || 'Unknown year'}
+                      <p className="text-xs text-slate-500 break-words">
+                        {paper['container-title']?.[0] || paper.venue || 'Unknown journal'} • {paper['published-print']?.['date-parts']?.[0]?.[0] || paper.year || 'Unknown year'}
                       </p>
                     </div>
                     <button
                       onClick={() => addPaperFromAPI(paper)}
-                      className="ml-4 px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
+                      className="w-full sm:w-auto shrink-0 px-4 py-2 bg-blue-600 text-white text-xs sm:text-sm rounded-lg hover:bg-blue-700 transition-colors"
                     >
                       Add to Library
                     </button>

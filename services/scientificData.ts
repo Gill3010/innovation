@@ -72,10 +72,17 @@ export class ScientificDataService {
     );
     
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    })) as ResearchProject[];
+    return querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        startDate: data.startDate?.toDate ? data.startDate.toDate() : data.startDate,
+        endDate: data.endDate?.toDate ? data.endDate.toDate() : data.endDate,
+        createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : data.createdAt,
+        updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : data.updatedAt,
+      };
+    }) as ResearchProject[];
   }
 
   static async getProject(projectId: string): Promise<ResearchProject | null> {
@@ -119,10 +126,16 @@ export class ScientificDataService {
     );
     
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    })) as ScientificPaper[];
+    return querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        publicationDate: data.publicationDate?.toDate ? data.publicationDate.toDate() : new Date(data.publicationDate),
+        createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : data.createdAt,
+        updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : data.updatedAt,
+      };
+    }) as ScientificPaper[];
   }
 
   static async getPaper(paperId: string): Promise<ScientificPaper | null> {
@@ -218,9 +231,19 @@ export class ScientificDataService {
     const currentMonth = new Date();
     currentMonth.setDate(1);
     const papersThisMonth = papersSnapshot.docs.filter(doc => {
-      const paper = doc.data() as ScientificPaper;
-      return paper.createdAt && new Date(paper.createdAt) >= currentMonth;
+      const data = doc.data();
+      const createdAt = data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
+      return createdAt >= currentMonth;
     }).length;
+
+    // Calcular colaboradores únicos en proyectos
+    const allCollaborators = new Set<string>();
+    projectsSnapshot.docs.forEach(doc => {
+      const project = doc.data() as ResearchProject;
+      if (project.collaborators && Array.isArray(project.collaborators)) {
+        project.collaborators.forEach(collab => allCollaborators.add(collab));
+      }
+    });
 
     // Obtener actividad reciente (simplificado)
     const recentActivity: ActivityItem[] = [];
@@ -228,7 +251,7 @@ export class ScientificDataService {
     return {
       totalPapers: papersSnapshot.size,
       totalProjects: projectsSnapshot.size,
-      activeCollaborations: collaborationsSnapshot.size,
+      activeCollaborations: allCollaborators.size,
       papersThisMonth,
       recentActivity,
     };

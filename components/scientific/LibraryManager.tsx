@@ -19,6 +19,8 @@ const LibraryManager: React.FC = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showAddPaperForm, setShowAddPaperForm] = useState(false);
   const [showAddProjectForm, setShowAddProjectForm] = useState(false);
+  const [paperToEdit, setPaperToEdit] = useState<ScientificPaper | null>(null);
+  const [projectToEdit, setProjectToEdit] = useState<ResearchProject | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -61,6 +63,24 @@ const LibraryManager: React.FC = () => {
 
   const handleProjectAdded = () => {
     loadData(); // Recargar datos después de agregar un project
+  };
+
+  const handleEditPaper = (paper: ScientificPaper) => {
+    setPaperToEdit(paper);
+  };
+
+  const handleEditProject = (project: ResearchProject) => {
+    setProjectToEdit(project);
+  };
+
+  const handlePaperEdited = () => {
+    setPaperToEdit(null);
+    loadData();
+  };
+
+  const handleProjectEdited = () => {
+    setProjectToEdit(null);
+    loadData();
   };
 
   const handleMarkAsRead = async (paperId: string, isRead: boolean) => {
@@ -155,6 +175,10 @@ const LibraryManager: React.FC = () => {
     return project?.title || null;
   };
 
+  const getProjectPapers = (projectId: string): ScientificPaper[] => {
+    return papers.filter(paper => paper.projectId === projectId);
+  };
+
   const unreadCount = papers.filter(paper => !paper.isRead).length;
   const readCount = papers.filter(paper => paper.isRead).length;
 
@@ -183,7 +207,7 @@ const LibraryManager: React.FC = () => {
               <p className="text-sm landscape:text-[10px] font-medium text-slate-600">Total {activeTab === 'papers' ? 'Papers' : 'Projects'}</p>
               <p className="text-2xl landscape:text-lg font-bold text-slate-900">{activeTab === 'papers' ? papers.length : projects.length}</p>
             </div>
-            <div className="w-12 h-12 landscape:w-8 landscape:h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
+            <div className="w-12 h-12 landscape:w-8 landscape:h-8 bg-blue-100 rounded-lg flex items-center justify-center shrink-0 ml-2">
               <svg className="w-6 h-6 landscape:w-4 landscape:h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
@@ -197,7 +221,7 @@ const LibraryManager: React.FC = () => {
               <p className="text-sm landscape:text-[10px] font-medium text-slate-600">Unread</p>
               <p className="text-2xl landscape:text-lg font-bold text-slate-900">{unreadCount}</p>
             </div>
-            <div className="w-12 h-12 landscape:w-8 landscape:h-8 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
+            <div className="w-12 h-12 landscape:w-8 landscape:h-8 bg-yellow-100 rounded-lg flex items-center justify-center shrink-0 ml-2">
               <svg className="w-6 h-6 landscape:w-4 landscape:h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -211,7 +235,7 @@ const LibraryManager: React.FC = () => {
               <p className="text-sm landscape:text-[10px] font-medium text-slate-600">Read</p>
               <p className="text-2xl landscape:text-lg font-bold text-slate-900">{readCount}</p>
             </div>
-            <div className="w-12 h-12 landscape:w-8 landscape:h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
+            <div className="w-12 h-12 landscape:w-8 landscape:h-8 bg-green-100 rounded-lg flex items-center justify-center shrink-0 ml-2">
               <svg className="w-6 h-6 landscape:w-4 landscape:h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -225,7 +249,7 @@ const LibraryManager: React.FC = () => {
               <p className="text-sm landscape:text-[10px] font-medium text-slate-600">Tags</p>
               <p className="text-2xl landscape:text-lg font-bold text-slate-900">{allTags.length}</p>
             </div>
-            <div className="w-12 h-12 landscape:w-8 landscape:h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
+            <div className="w-12 h-12 landscape:w-8 landscape:h-8 bg-purple-100 rounded-lg flex items-center justify-center shrink-0 ml-2">
               <svg className="w-6 h-6 landscape:w-4 landscape:h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
               </svg>
@@ -259,7 +283,7 @@ const LibraryManager: React.FC = () => {
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          Projects ({projects.length})
+          Research Hub ({projects.length})
         </button>
       </div>
 
@@ -432,6 +456,15 @@ const LibraryManager: React.FC = () => {
                         </a>
                       )}
                       <button
+                        onClick={() => handleEditPaper(paper)}
+                        className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
+                        title="Edit paper"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                      </button>
+                      <button
                         onClick={() => setItemToDelete(paper.id)}
                         className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
                         title="Delete paper"
@@ -524,8 +557,89 @@ const LibraryManager: React.FC = () => {
                   {project.status}
                 </span>
               </div>
+              {project.progress !== undefined && (
+                <div className="mb-3">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs font-medium text-slate-600">Progress</span>
+                    <span className="text-xs font-semibold text-slate-900">{project.progress}%</span>
+                  </div>
+                  <div className="w-full bg-slate-200 rounded-full h-2">
+                    <div 
+                      className="bg-emerald-500 h-2 rounded-full transition-all duration-300" 
+                      style={{ width: `${project.progress}%` }}
+                    ></div>
+                  </div>
+                </div>
+              )}
               <p className="text-sm text-slate-600 mb-3 line-clamp-2">{project.description}</p>
-              <p className="text-xs text-slate-500 mb-4">Started: {new Date(project.startDate).toLocaleDateString()}</p>
+              <p className="text-xs text-slate-500 mb-4">Started: {project.startDate instanceof Date ? project.startDate.toLocaleDateString() : project.startDate ? new Date(project.startDate).toLocaleDateString() : 'N/A'}</p>
+              
+              {/* Deliverables Section */}
+              {getProjectPapers(project.id).length > 0 && (
+                <div className="mb-4 p-3 bg-blue-50 border border-blue-100 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span className="text-xs font-semibold text-blue-700">Deliverables</span>
+                    <span className="px-2 py-0.5 bg-blue-200 text-blue-800 text-xs rounded-full">{getProjectPapers(project.id).length}</span>
+                  </div>
+                  <div className="space-y-1">
+                    {getProjectPapers(project.id).slice(0, 2).map((paper) => (
+                      <div key={paper.id} className="flex items-start gap-2">
+                        <svg className="w-3 h-3 text-blue-500 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                        <span className="text-xs text-blue-700 line-clamp-1">{paper.title}</span>
+                      </div>
+                    ))}
+                    {getProjectPapers(project.id).length > 2 && (
+                      <p className="text-xs text-blue-600">+{getProjectPapers(project.id).length - 2} more papers</p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Milestones Section */}
+              {project.milestones && project.milestones.length > 0 && (
+                <div className="mb-4 p-3 bg-purple-50 border border-purple-100 rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <svg className="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      </svg>
+                      <span className="text-xs font-semibold text-purple-700">Milestones</span>
+                    </div>
+                    <span className="text-xs text-purple-600">
+                      {project.milestones.filter(m => m.completed).length} / {project.milestones.length} complete
+                    </span>
+                  </div>
+                  <div className="space-y-1">
+                    {project.milestones.slice(0, 3).map((milestone) => (
+                      <div key={milestone.id} className="flex items-center gap-2">
+                        <div className={`w-3 h-3 rounded-full flex items-center justify-center ${
+                          milestone.completed ? 'bg-green-500' : 'bg-purple-300'
+                        }`}>
+                          {milestone.completed && (
+                            <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          )}
+                        </div>
+                        <span className={`text-xs line-clamp-1 ${
+                          milestone.completed ? 'text-purple-600 line-through' : 'text-purple-700'
+                        }`}>
+                          {milestone.title}
+                        </span>
+                      </div>
+                    ))}
+                    {project.milestones.length > 3 && (
+                      <p className="text-xs text-purple-600 mt-1">+{project.milestones.length - 3} more milestones</p>
+                    )}
+                  </div>
+                </div>
+              )}
+              
               <div className="flex flex-wrap gap-1 mb-4">
                 {project.tags.slice(0, 3).map((tag) => (
                   <span key={tag} className="px-2 py-1 bg-emerald-100 text-emerald-700 text-xs rounded-full">
@@ -540,14 +654,26 @@ const LibraryManager: React.FC = () => {
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">{project.collaborators.length} collaborators</span>
-                <button
-                  onClick={() => setItemToDelete(project.id)}
-                  className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
-                >
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handleEditProject(project)}
+                    className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
+                    title="Edit project"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => setItemToDelete(project.id)}
+                    className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
+                    title="Delete project"
+                  >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
                 </button>
+                </div>
               </div>
             </div>
           ))}
@@ -594,6 +720,24 @@ const LibraryManager: React.FC = () => {
         <AddProjectForm
           onClose={() => setShowAddProjectForm(false)}
           onSuccess={handleProjectAdded}
+        />
+      )}
+
+      {/* Edit Paper Form Modal */}
+      {paperToEdit && (
+        <AddPaperForm
+          paperToEdit={paperToEdit}
+          onClose={() => setPaperToEdit(null)}
+          onSuccess={handlePaperEdited}
+        />
+      )}
+
+      {/* Edit Project Form Modal */}
+      {projectToEdit && (
+        <AddProjectForm
+          projectToEdit={projectToEdit}
+          onClose={() => setProjectToEdit(null)}
+          onSuccess={handleProjectEdited}
         />
       )}
 

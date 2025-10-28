@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from '@/contexts/TranslationContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { ChatMessage, ChatService } from '@/services/chatService';
 
 const Chatbot = () => {
@@ -9,7 +10,7 @@ const Chatbot = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: 'assistant',
-      content: 'Hello! I\'m your scientific research assistant. I can help you with research papers, academic publications, and scientific knowledge. How can I assist you today?',
+      content: 'Hello! I\'m your contextual research assistant. I can search your papers/projects AND search public databases (CrossRef, arXiv, Semantic Scholar, OpenAlex) in real-time. Try: "Show me my papers", "Search CrossRef machine learning", or "help" to see all capabilities.',
       timestamp: new Date(),
     },
   ]);
@@ -18,6 +19,7 @@ const Chatbot = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { translate } = useTranslation();
+  const { user } = useAuth();
 
   // Auto-scroll to bottom when new messages are added
   useEffect(() => {
@@ -66,7 +68,7 @@ const Chatbot = () => {
 
     try {
       // Get response from chat service
-      const response = await ChatService.getResponse(userMessage, messages);
+      const response = await ChatService.getResponse(userMessage, messages, user?.id);
       
       const assistantMessage: ChatMessage = {
         role: 'assistant',
@@ -130,6 +132,9 @@ const Chatbot = () => {
             : 'opacity-0 translate-y-4 pointer-events-none'
           }
           inset-0 sm:inset-auto sm:right-6 sm:bottom-24 sm:w-96 sm:h-[600px] sm:rounded-2xl
+          md:w-[750px] md:h-[850px]
+          lg:w-[850px] lg:h-[900px]
+          xl:w-[950px] xl:h-[950px]
           landscape:inset-auto landscape:right-2 landscape:bottom-16 landscape:w-80 landscape:h-[70vh] landscape:rounded-2xl landscape:max-h-[400px]
         `}
       >

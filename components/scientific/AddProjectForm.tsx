@@ -10,9 +10,17 @@ const initialState: ProjectFormData = {
   startDate: new Date().toISOString().slice(0, 10),
   endDate: undefined,
   tags: [],
+  progress: 0,
+  milestones: [],
 };
 
-const AddProjectForm: React.FC<{ onClose: () => void; onSuccess: () => void }> = ({ onClose, onSuccess }) => {
+interface AddProjectFormProps {
+  onClose: () => void;
+  onSuccess: () => void;
+  projectToEdit?: any; // ResearchProject with Firestore types
+}
+
+const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose, onSuccess, projectToEdit }) => {
   const { user } = useAuth();
   const [form, setForm] = useState<ProjectFormData>(initialState);
   const [saving, setSaving] = useState(false);
@@ -23,6 +31,30 @@ const AddProjectForm: React.FC<{ onClose: () => void; onSuccess: () => void }> =
     const t = setTimeout(() => setIsVisible(true), 50);
     return () => clearTimeout(t);
   }, []);
+
+  // Load project data if editing
+  useEffect(() => {
+    if (projectToEdit) {
+      setForm({
+        title: projectToEdit.title || '',
+        description: projectToEdit.description || '',
+        collaborators: projectToEdit.collaborators || [],
+        startDate: projectToEdit.startDate ? (
+          typeof projectToEdit.startDate === 'string'
+            ? projectToEdit.startDate
+            : projectToEdit.startDate.toISOString().split('T')[0]
+        ) : new Date().toISOString().slice(0, 10),
+        endDate: projectToEdit.endDate ? (
+          typeof projectToEdit.endDate === 'string'
+            ? projectToEdit.endDate
+            : projectToEdit.endDate.toISOString().split('T')[0]
+        ) : undefined,
+        tags: projectToEdit.tags || [],
+        progress: projectToEdit.progress || 0,
+        milestones: projectToEdit.milestones || [],
+      });
+    }
+  }, [projectToEdit]);
 
   const set = (field: keyof ProjectFormData) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const v = e.target.value;
@@ -35,26 +67,68 @@ const AddProjectForm: React.FC<{ onClose: () => void; onSuccess: () => void }> =
     }
   };
 
+  const addMilestone = () => {
+    const newMilestone = {
+      id: `milestone-${Date.now()}`,
+      title: '',
+      description: '',
+      dueDate: undefined,
+      completed: false,
+    };
+    setForm(prev => ({
+      ...prev,
+      milestones: [...(prev.milestones || []), newMilestone]
+    }));
+  };
+
+  const updateMilestone = (id: string, field: 'title' | 'description' | 'dueDate' | 'completed', value: any) => {
+    setForm(prev => ({
+      ...prev,
+      milestones: prev.milestones?.map(m =>
+        m.id === id ? { ...m, [field]: value } : m
+      )
+    }));
+  };
+
+  const removeMilestone = (id: string) => {
+    setForm(prev => ({
+      ...prev,
+      milestones: prev.milestones?.filter(m => m.id !== id)
+    }));
+  };
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
     if (!form.title.trim()) { setError('Title is required'); return; }
     try {
       setSaving(true);
-      await ScientificDataService.createProject({
+      
+      const projectData = {
         title: form.title.trim(),
         description: form.description.trim(),
         ownerId: user.id,
         collaborators: form.collaborators,
-        status: 'planning',
+        status: projectToEdit?.status || 'planning',
         startDate: new Date(form.startDate),
         endDate: form.endDate ? new Date(form.endDate) : undefined,
         tags: form.tags,
-      });
+        progress: form.progress || 0,
+        milestones: form.milestones || [],
+      };
+
+      if (projectToEdit?.id) {
+        // Edit mode
+        await ScientificDataService.updateProject(projectToEdit.id, projectData);
+      } else {
+        // Create mode
+        await ScientificDataService.createProject(projectData);
+      }
+      
       onSuccess();
       onClose();
     } catch (err) {
-      setError('Failed to create project');
+      setError(projectToEdit ? 'Failed to update project' : 'Failed to create project');
     } finally {
       setSaving(false);
     }
@@ -73,7 +147,7 @@ const AddProjectForm: React.FC<{ onClose: () => void; onSuccess: () => void }> =
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
               </div>
-              <h2 className="text-xl md:text-2xl lg:text-3xl landscape:text-lg font-bold text-slate-900 tracking-tight truncate">Add New Project</h2>
+              <h2 className="text-xl md:text-2xl lg:text-3xl landscape:text-lg font-bold text-slate-900 tracking-tight truncate">{projectToEdit ? 'Edit Project' : 'Add New Project'}</h2>
             </div>
             <button onClick={onClose} className="text-slate-400 hover:text-slate-600 transition-colors p-2 hover:bg-slate-100 rounded-xl shrink-0">
               <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,6 +211,44 @@ const AddProjectForm: React.FC<{ onClose: () => void; onSuccess: () => void }> =
           <div className="flex flex-col group">
             <span className="text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
               <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.545 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              Collaborators
+            </span>
+            <input placeholder="Enter email addresses separated by commas" onChange={set('collaborators')} className="px-4 landscape:px-3 py-3 landscape:py-2 border border-slate-200 rounded-xl landscape:rounded-lg text-slate-900 landscape:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent hover:border-slate-300 transition-all duration-200" />
+            <p className="text-xs text-slate-500 mt-1">Add multiple emails separated by commas (e.g., email1@example.com, email2@example.com)</p>
+          </div>
+
+          <div className="flex flex-col group">
+            <span className="text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+              <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              Progress
+            </span>
+            <div className="space-y-2">
+              <input 
+                type="range" 
+                min="0" 
+                max="100" 
+                value={form.progress || 0} 
+                onChange={(e) => setForm(prev => ({ ...prev, progress: parseInt(e.target.value) }))}
+                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer"
+                style={{
+                  background: `linear-gradient(to right, rgb(16, 185, 129) 0%, rgb(16, 185, 129) ${form.progress || 0}%, rgb(226, 232, 240) ${form.progress || 0}%, rgb(226, 232, 240) 100%)`
+                }}
+              />
+              <div className="flex items-center justify-between text-xs text-slate-600">
+                <span>0%</span>
+                <span className="font-semibold text-slate-900">{form.progress || 0}%</span>
+                <span>100%</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col group">
+            <span className="text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+              <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
               </svg>
               Tags
@@ -159,7 +271,7 @@ const AddProjectForm: React.FC<{ onClose: () => void; onSuccess: () => void }> =
                   <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
-                  Create Project
+                  {projectToEdit ? 'Update Project' : 'Create Project'}
                 </>
               )}
             </button>
