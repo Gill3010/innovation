@@ -253,18 +253,18 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
             </svg>
             Search by DOI
           </h3>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
             <input
               type="text"
               placeholder="Enter DOI (e.g., 10.1038/nature12373)"
               value={formData.doi}
               onChange={(e) => handleInputChange('doi', e.target.value)}
-              className="flex-1 px-4 landscape:px-3 py-3 landscape:py-2 border border-slate-200 rounded-xl landscape:rounded-lg text-slate-900 landscape:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all duration-200"
+              className="flex-1 min-w-[200px] px-4 landscape:px-3 py-3 landscape:py-2 border border-slate-200 rounded-xl landscape:rounded-lg text-slate-900 landscape:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all duration-200"
             />
             <button
               onClick={handleSearchByDOI}
               disabled={searching}
-              className="px-6 landscape:px-4 py-3 landscape:py-2 bg-blue-600 text-white rounded-xl landscape:rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-all duration-200 landscape:text-sm font-semibold shadow-md hover:shadow-lg"
+              className="px-4 landscape:px-4 py-3 landscape:py-2 bg-blue-600 text-white rounded-xl landscape:rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-all duration-200 landscape:text-sm font-semibold shadow-md hover:shadow-lg whitespace-nowrap flex-shrink-0"
             >
               {searching ? 'Searching...' : 'Search'}
             </button>
@@ -279,18 +279,18 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
             </svg>
             Search by Title
           </h3>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
             <input
               type="text"
               placeholder="Enter paper title"
               value={formData.title}
               onChange={(e) => handleInputChange('title', e.target.value)}
-              className="flex-1 px-4 py-3 border border-slate-200 rounded-xl text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all duration-200"
+              className="flex-1 min-w-[200px] px-4 py-3 border border-slate-200 rounded-xl text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all duration-200"
             />
             <button
               onClick={handleSearchByTitle}
               disabled={searching}
-              className="px-6 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 disabled:opacity-50 transition-all duration-200 font-semibold shadow-md hover:shadow-lg"
+              className="px-4 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 disabled:opacity-50 transition-all duration-200 font-semibold shadow-md hover:shadow-lg whitespace-nowrap flex-shrink-0"
             >
               {searching ? 'Searching...' : 'Search'}
             </button>

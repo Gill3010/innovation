@@ -362,58 +362,56 @@ const LibraryManager: React.FC = () => {
                 </>
               ) : (
                 // List View
-                <div className="flex items-start gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="font-semibold text-slate-900 line-clamp-1 flex-1 mr-4">{paper.title}</h3>
-                      <button
-                        onClick={() => handleMarkAsRead(paper.id, !paper.isRead)}
-                        className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
-                          paper.isRead ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
-                        }`}
-                      >
-                        {paper.isRead ? 'Read' : 'Unread'}
-                      </button>
-                    </div>
-                    
-                    <p className="text-sm text-slate-600 mb-2">
-                      {paper.authors.join(', ')}
-                    </p>
-                    
-                    <p className="text-xs text-slate-500 mb-3">
-                      {paper.journal} • {new Date(paper.publicationDate).getFullYear()}
-                      {paper.citations && ` • ${paper.citations} citations`}
-                    </p>
-                    
-                    <div className="flex flex-wrap gap-1">
-                      {paper.tags.map((tag) => (
-                        <span key={tag} className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
+                <div>
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-semibold text-slate-900 line-clamp-1 flex-1 mr-4">{paper.title}</h3>
+                    <button
+                      onClick={() => handleMarkAsRead(paper.id, !paper.isRead)}
+                      className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
+                        paper.isRead ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
+                      }`}
+                    >
+                      {paper.isRead ? 'Read' : 'Unread'}
+                    </button>
                   </div>
                   
-                  <div className="flex flex-col gap-2">
+                  <p className="text-sm text-slate-600 mb-2">
+                    {paper.authors.join(', ')}
+                  </p>
+                  
+                  <p className="text-xs text-slate-500 mb-3">
+                    {paper.journal} • {new Date(paper.publicationDate).getFullYear()}
+                    {paper.citations && ` • ${paper.citations} citations`}
+                  </p>
+                  
+                  <div className="flex flex-wrap gap-1 mb-3">
+                    {paper.tags.map((tag) => (
+                      <span key={tag} className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  <div className="flex flex-wrap gap-2 landscape:gap-1.5">
                     {paper.doi && (
                       <a
                         href={`https://doi.org/${paper.doi}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-3 py-1 bg-blue-600 text-white text-xs rounded-lg hover:bg-blue-700 transition-colors"
+                        className="px-3 py-1.5 bg-blue-600 text-white text-xs sm:text-sm landscape:text-[10px] rounded-md landscape:rounded-md hover:bg-blue-700 transition-colors whitespace-nowrap"
                       >
                         View Paper
                       </a>
                     )}
                     <button
                       onClick={() => setPaperToDelete(paper.id)}
-                      className="px-3 py-1 bg-red-600 text-white text-xs rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-1.5"
+                      className="px-3 py-1.5 bg-red-600 text-white text-xs sm:text-sm landscape:text-[10px] rounded-md landscape:rounded-md hover:bg-red-700 transition-colors flex items-center justify-center gap-1.5"
                       title="Delete paper"
                     >
-                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                       </svg>
-                      Delete
+                      <span className="hidden sm:inline">Delete</span>
                     </button>
                   </div>
                 </div>
