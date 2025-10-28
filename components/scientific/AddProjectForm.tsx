@@ -35,6 +35,11 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose, onSuccess, pro
   // Load project data if editing
   useEffect(() => {
     if (projectToEdit) {
+      // Ensure tags is always an array
+      const loadedTags = Array.isArray(projectToEdit.tags) ? projectToEdit.tags : [];
+      console.log('Loading project to edit:', projectToEdit);
+      console.log('Tags loaded:', loadedTags);
+      console.log('Tags type:', typeof projectToEdit.tags);
       setForm({
         title: projectToEdit.title || '',
         description: projectToEdit.description || '',
@@ -49,10 +54,13 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose, onSuccess, pro
             ? projectToEdit.endDate
             : projectToEdit.endDate.toISOString().split('T')[0]
         ) : undefined,
-        tags: projectToEdit.tags || [],
+        tags: loadedTags,
         progress: projectToEdit.progress || 0,
         milestones: projectToEdit.milestones || [],
       });
+    } else {
+      // Reset form when not editing
+      setForm(initialState);
     }
   }, [projectToEdit]);
 
@@ -253,7 +261,13 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose, onSuccess, pro
               </svg>
               Tags
             </span>
-            <input placeholder="Enter tags separated by commas" onChange={set('tags')} className="px-4 landscape:px-3 py-3 landscape:py-2 border border-slate-200 rounded-xl landscape:rounded-lg text-slate-900 landscape:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent hover:border-slate-300 transition-all duration-200" />
+            <input 
+              type="text"
+              placeholder="Enter tags separated by commas" 
+              value={form.tags.join(', ')}
+              onChange={set('tags')}
+              className="px-4 landscape:px-3 py-3 landscape:py-2 border border-slate-200 rounded-xl landscape:rounded-lg text-slate-900 landscape:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent hover:border-slate-300 transition-all duration-200" 
+            />
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 pt-4">

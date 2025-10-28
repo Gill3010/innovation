@@ -120,31 +120,65 @@ const ResearchManager: React.FC = () => {
         normalizedPaper = ScientificAPIService.normalizePaperData(apiPaper, 'crossref');
       }
       
-      // Handle different author formats
-      const authors = Array.isArray(normalizedPaper.authors) 
-        ? normalizedPaper.authors 
-        : (typeof normalizedPaper.authors === 'string' ? [normalizedPaper.authors] : []);
+      // Handle different author formats - support arrays, strings, and CrossRef format
+      let authors: string[] = [];
+      if (source.includes('crossref')) {
+        // CrossRef format has author array with given/family
+        authors = apiPaper.author?.map((a: any) => `${a.given || ''} ${a.family || ''}`.trim()).filter(Boolean) || [];
+      } else if (Array.isArray(normalizedPaper.authors)) {
+        authors = normalizedPaper.authors;
+      } else if (typeof normalizedPaper.authors === 'string') {
+        authors = normalizedPaper.authors.split(',').map((a: string) => a.trim()).filter(Boolean);
+      }
+      
+      // Ensure we have at least a fallback author
+      if (authors.length === 0) {
+        authors = ['Unknown authors'];
+      }
+      
+      // Parse publication date - handle different formats
+      let publicationDate: Date = new Date();
+      const dateStr = normalizedPaper.publicationDate || 
+                     (apiPaper.year ? `${apiPaper.year}-01-01` : '') ||
+                     (apiPaper['published-print']?.['date-parts']?.[0]?.join('-') || '');
+      
+      if (dateStr) {
+        publicationDate = new Date(dateStr);
+        // If date is invalid, use current date
+        if (isNaN(publicationDate.getTime())) {
+          publicationDate = new Date();
+        }
+      }
       
       const paperData: Partial<ScientificPaper> = {
-        title: normalizedPaper.title || apiPaper.title,
+        title: normalizedPaper.title || apiPaper.title?.[0] || apiPaper.title || 'Untitled',
         authors: authors,
         abstract: normalizedPaper.abstract || apiPaper.abstract || '',
-        doi: normalizedPaper.doi || apiPaper.doi,
-        arxivId: apiPaper.arxivId || apiPaper.arxivId,
-        journal: normalizedPaper.journal || apiPaper.venue || apiPaper['container-title']?.[0],
-        publicationDate: normalizedPaper.publicationDate || `${apiPaper.year || new Date().getFullYear()}-01-01`,
-        url: normalizedPaper.url || apiPaper.url,
-        citations: normalizedPaper.citations || apiPaper.citationCount || 0,
+        doi: normalizedPaper.doi || apiPaper.doi || apiPaper.DOI || undefined,
+        arxivId: normalizedPaper.arxivId || apiPaper.arxivId || undefined,
+        journal: normalizedPaper.journal || apiPaper.venue || apiPaper['container-title']?.[0] || undefined,
+        publicationDate: publicationDate,
+        url: normalizedPaper.url || apiPaper.url || apiPaper.URL || undefined,
+        citations: normalizedPaper.citations || apiPaper.citationCount || apiPaper['is-referenced-by-count'] || 0,
         tags: [],
         ownerId: user.id,
         isRead: false,
       };
 
-      await ScientificDataService.createPaper(paperData);
+      // Remove undefined values before saving to Firestore
+      const cleanPaperData = Object.fromEntries(
+        Object.entries(paperData).filter(([, value]) => value !== undefined)
+      );
+
+      await ScientificDataService.createPaper(cleanPaperData as Partial<ScientificPaper>);
       await loadData(); // Recargar datos
       setApiSearchResults([]);
+      
+      // Show success feedback
+      alert('Paper added to library successfully!');
     } catch (error) {
       console.error('Error adding paper:', error);
+      alert('Error adding paper. Please check the console for details.');
     }
   };
 
@@ -352,7 +386,7 @@ const ResearchManager: React.FC = () => {
                     ))}
                   </div>
                   
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between mb-3">
                     <span className={`px-2 py-1 text-xs rounded-full ${
                       paper.isRead ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
                     }`}>
@@ -362,6 +396,19 @@ const ResearchManager: React.FC = () => {
                       <span className="text-xs text-slate-500">
                         {paper.citations} citations
                       </span>
+                    )}
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    {(paper.doi || paper.url) && (
+                      <a
+                        href={paper.doi ? `https://doi.org/${paper.doi}` : paper.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1.5 bg-blue-600 text-white text-xs rounded-md hover:bg-blue-700 transition-colors whitespace-nowrap"
+                      >
+                        View Paper
+                      </a>
                     )}
                   </div>
                 </div>
