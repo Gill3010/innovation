@@ -6,6 +6,7 @@ import { ScientificDataService } from '@/services/scientificData';
 import { ScientificAPIService } from '@/services/scientificAPI';
 import { useAuth } from '@/contexts/AuthContext';
 import AddPaperForm from './AddPaperForm';
+import AddProjectForm from './AddProjectForm';
 
 const ResearchManager: React.FC = () => {
   const { user } = useAuth();
@@ -390,6 +391,14 @@ const ResearchManager: React.FC = () => {
         <AddPaperForm
           onClose={() => setShowAddPaperForm(false)}
           onSuccess={handlePaperAdded}
+        />
+      )}
+
+      {/* Add Project Form Modal */}
+      {showAddForm && (
+        <AddProjectForm
+          onClose={() => setShowAddForm(false)}
+          onSuccess={loadData}
         />
       )}
     </div>

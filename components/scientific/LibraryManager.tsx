@@ -1,22 +1,26 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ScientificPaper } from '@/types/scientific';
+import { ScientificPaper, ResearchProject } from '@/types/scientific';
 import { ScientificDataService } from '@/services/scientificData';
 import { useAuth } from '@/contexts/AuthContext';
 import AddPaperForm from './AddPaperForm';
+import AddProjectForm from './AddProjectForm';
 
 const LibraryManager: React.FC = () => {
   const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState<'papers' | 'projects'>('papers');
   const [papers, setPapers] = useState<ScientificPaper[]>([]);
+  const [projects, setProjects] = useState<ResearchProject[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string>('');
   const [sortBy, setSortBy] = useState<'date' | 'title' | 'citations'>('date');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showAddPaperForm, setShowAddPaperForm] = useState(false);
+  const [showAddProjectForm, setShowAddProjectForm] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [paperToDelete, setPaperToDelete] = useState<string | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
@@ -29,32 +33,40 @@ const LibraryManager: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      loadPapers();
+      loadData();
     }
   }, [user]);
 
-  const loadPapers = async () => {
+  const loadData = async () => {
     if (!user) return;
     
     try {
       setLoading(true);
-      const papersData = await ScientificDataService.getPapers(user.id);
+      const [papersData, projectsData] = await Promise.all([
+        ScientificDataService.getPapers(user.id),
+        ScientificDataService.getProjects(user.id)
+      ]);
       setPapers(papersData);
+      setProjects(projectsData);
     } catch (error) {
-      console.error('Error loading papers:', error);
+      console.error('Error loading data:', error);
     } finally {
       setLoading(false);
     }
   };
 
   const handlePaperAdded = () => {
-    loadPapers(); // Recargar datos después de agregar un paper
+    loadData(); // Recargar datos después de agregar un paper
+  };
+
+  const handleProjectAdded = () => {
+    loadData(); // Recargar datos después de agregar un project
   };
 
   const handleMarkAsRead = async (paperId: string, isRead: boolean) => {
     try {
       await ScientificDataService.updatePaper(paperId, { isRead });
-      await loadPapers(); // Recargar datos
+      await loadData(); // Recargar datos
     } catch (error) {
       console.error('Error updating paper:', error);
     }
@@ -63,30 +75,36 @@ const LibraryManager: React.FC = () => {
   const handleAddNote = async (paperId: string, notes: string) => {
     try {
       await ScientificDataService.updatePaper(paperId, { notes });
-      await loadPapers(); // Recargar datos
+      await loadData(); // Recargar datos
     } catch (error) {
       console.error('Error updating paper:', error);
     }
   };
 
-  const handleDeletePaper = async () => {
-    if (!paperToDelete || !user) return;
+  const handleDeleteItem = async () => {
+    if (!itemToDelete || !user) return;
     
     try {
       setDeleting(true);
-      await ScientificDataService.deletePaper(paperToDelete);
-      setPaperToDelete(null);
-      await loadPapers(); // Recargar datos
+      if (activeTab === 'papers') {
+        await ScientificDataService.deletePaper(itemToDelete);
+      } else {
+        await ScientificDataService.deleteProject(itemToDelete);
+      }
+      setItemToDelete(null);
+      await loadData(); // Recargar datos
     } catch (error) {
-      console.error('Error deleting paper:', error);
-      alert('Error deleting paper. Please try again.');
+      console.error('Error deleting item:', error);
+      alert('Error deleting item. Please try again.');
     } finally {
       setDeleting(false);
     }
   };
 
-  // Obtener todas las tags únicas
-  const allTags = Array.from(new Set(papers.flatMap(paper => paper.tags)));
+  // Obtener todas las tags únicas (mezcladas de papers y projects)
+  const paperTags = papers.flatMap(paper => paper.tags);
+  const projectTags = projects.flatMap(project => project.tags);
+  const allTags = Array.from(new Set([...paperTags, ...projectTags]));
 
   // Filtrar y ordenar papers
   const filteredPapers = papers
@@ -111,6 +129,32 @@ const LibraryManager: React.FC = () => {
       }
     });
 
+  // Filtrar y ordenar projects
+  const filteredProjects = projects
+    .filter(project => {
+      const matchesSearch = project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        project.description.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      const matchesTag = !selectedTag || project.tags.includes(selectedTag);
+      
+      return matchesSearch && matchesTag;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'title':
+          return a.title.localeCompare(b.title);
+        case 'date':
+        default:
+          return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+      }
+    });
+
+  const getProjectTitle = (projectId?: string): string | null => {
+    if (!projectId) return null;
+    const project = projects.find(p => p.id === projectId);
+    return project?.title || null;
+  };
+
   const unreadCount = papers.filter(paper => !paper.isRead).length;
   const readCount = papers.filter(paper => paper.isRead).length;
 
@@ -123,7 +167,7 @@ const LibraryManager: React.FC = () => {
         }`}
       >
         <h1 className="text-3xl landscape:text-2xl font-bold text-slate-900 mb-2 landscape:mb-1">Research Library</h1>
-        <p className="text-slate-600 landscape:text-sm">Your personal collection of scientific papers</p>
+        <p className="text-slate-600 landscape:text-sm">Your personal collection of papers and projects</p>
       </div>
 
       {/* Stats */}
@@ -136,8 +180,8 @@ const LibraryManager: React.FC = () => {
         <div className="bg-white rounded-xl landscape:rounded-lg p-6 landscape:p-3 shadow-lg border border-slate-200">
           <div className="flex items-center justify-between">
             <div className="flex-1">
-              <p className="text-sm landscape:text-[10px] font-medium text-slate-600">Total Papers</p>
-              <p className="text-2xl landscape:text-lg font-bold text-slate-900">{papers.length}</p>
+              <p className="text-sm landscape:text-[10px] font-medium text-slate-600">Total {activeTab === 'papers' ? 'Papers' : 'Projects'}</p>
+              <p className="text-2xl landscape:text-lg font-bold text-slate-900">{activeTab === 'papers' ? papers.length : projects.length}</p>
             </div>
             <div className="w-12 h-12 landscape:w-8 landscape:h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
               <svg className="w-6 h-6 landscape:w-4 landscape:h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -190,6 +234,35 @@ const LibraryManager: React.FC = () => {
         </div>
       </div>
 
+      {/* Tabs */}
+      <div 
+        className={`flex space-x-1 bg-slate-100 rounded-lg p-1 mb-8 landscape:mb-3 transition-all duration-1000 ease-out ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}
+        style={{ transitionDelay: '150ms' }}
+      >
+        <button
+          onClick={() => setActiveTab('papers')}
+          className={`flex-1 py-2 landscape:py-1.5 px-4 landscape:px-3 rounded-md font-medium landscape:text-sm transition-colors ${
+            activeTab === 'papers'
+              ? 'bg-white text-slate-900 shadow-sm'
+              : 'text-slate-600 hover:text-slate-900'
+          }`}
+        >
+          Papers ({papers.length})
+        </button>
+        <button
+          onClick={() => setActiveTab('projects')}
+          className={`flex-1 py-2 landscape:py-1.5 px-4 landscape:px-3 rounded-md font-medium landscape:text-sm transition-colors ${
+            activeTab === 'projects'
+              ? 'bg-white text-slate-900 shadow-sm'
+              : 'text-slate-600 hover:text-slate-900'
+          }`}
+        >
+          Projects ({projects.length})
+        </button>
+      </div>
+
       {/* Filters and Controls */}
       <div 
         className={`bg-white rounded-xl landscape:rounded-lg p-6 landscape:p-4 shadow-lg border border-slate-200 mb-8 landscape:mb-3 transition-all duration-1000 ease-out ${
@@ -203,7 +276,7 @@ const LibraryManager: React.FC = () => {
             <div className="relative">
               <input
                 type="text"
-                placeholder="Search papers..."
+                placeholder={`Search ${activeTab}...`}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full px-4 landscape:px-3 py-3 landscape:py-2 pl-10 landscape:pl-8 border border-slate-200 rounded-lg landscape:text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -237,7 +310,7 @@ const LibraryManager: React.FC = () => {
             >
               <option value="date">Sort by Date</option>
               <option value="title">Sort by Title</option>
-              <option value="citations">Sort by Citations</option>
+              {activeTab === 'papers' && <option value="citations">Sort by Citations</option>}
             </select>
           </div>
 
@@ -267,7 +340,7 @@ const LibraryManager: React.FC = () => {
         </div>
       </div>
 
-      {/* Papers List */}
+      {/* Items List */}
       {loading ? (
         <div className="animate-pulse">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -283,7 +356,7 @@ const LibraryManager: React.FC = () => {
           }`}
           style={{ transitionDelay: '300ms' }}
         >
-          {filteredPapers.map((paper) => (
+          {activeTab === 'papers' ? filteredPapers.map((paper) => (
             <div key={paper.id} className={`bg-white rounded-xl shadow-lg border border-slate-200 hover:shadow-xl transition-shadow ${
               viewMode === 'list' ? 'p-6' : 'p-6'
             }`}>
@@ -332,11 +405,21 @@ const LibraryManager: React.FC = () => {
                   </div>
                   
                   <div className="flex items-center justify-between">
-                    {paper.citations && (
-                      <span className="text-xs text-slate-500">
-                        {paper.citations} citations
-                      </span>
-                    )}
+                    <div className="flex items-center gap-3">
+                      {paper.projectId && (
+                        <div className="flex items-center gap-1.5 px-2 py-1 bg-emerald-50 border border-emerald-200 rounded-lg">
+                          <svg className="w-3 h-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                          </svg>
+                          <span className="text-xs font-medium text-emerald-700">{getProjectTitle(paper.projectId)}</span>
+                        </div>
+                      )}
+                      {paper.citations && (
+                        <span className="text-xs text-slate-500">
+                          {paper.citations} citations
+                        </span>
+                      )}
+                    </div>
                     <div className="flex items-center gap-2">
                       {paper.doi && (
                         <a
@@ -349,7 +432,7 @@ const LibraryManager: React.FC = () => {
                         </a>
                       )}
                       <button
-                        onClick={() => setPaperToDelete(paper.id)}
+                        onClick={() => setItemToDelete(paper.id)}
                         className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
                         title="Delete paper"
                       >
@@ -374,6 +457,17 @@ const LibraryManager: React.FC = () => {
                       {paper.isRead ? 'Read' : 'Unread'}
                     </button>
                   </div>
+                  
+                  {paper.projectId && getProjectTitle(paper.projectId) && (
+                    <div className="mb-2">
+                      <div className="inline-flex items-center gap-1.5 px-2 py-1 bg-emerald-50 border border-emerald-200 rounded-lg">
+                        <svg className="w-3 h-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                        <span className="text-xs font-medium text-emerald-700">{getProjectTitle(paper.projectId)}</span>
+                      </div>
+                    </div>
+                  )}
                   
                   <p className="text-sm text-slate-600 mb-2">
                     {paper.authors.join(', ')}
@@ -404,7 +498,7 @@ const LibraryManager: React.FC = () => {
                       </a>
                     )}
                     <button
-                      onClick={() => setPaperToDelete(paper.id)}
+                      onClick={() => setItemToDelete(paper.id)}
                       className="px-3 py-1.5 bg-red-600 text-white text-xs sm:text-sm landscape:text-[10px] rounded-md landscape:rounded-md hover:bg-red-700 transition-colors flex items-center justify-center gap-1.5"
                       title="Delete paper"
                     >
@@ -417,11 +511,50 @@ const LibraryManager: React.FC = () => {
                 </div>
               )}
             </div>
+          )) : filteredProjects.map((project) => (
+            <div key={project.id} className="bg-white rounded-xl shadow-lg border border-slate-200 hover:shadow-xl transition-shadow p-6">
+              <div className="flex items-start justify-between mb-4">
+                <h3 className="font-semibold text-slate-900 line-clamp-2 flex-1 mr-4">{project.title}</h3>
+                <span className={`px-2 py-1 text-xs rounded-full shrink-0 ${
+                  project.status === 'active' ? 'bg-green-100 text-green-700' :
+                  project.status === 'completed' ? 'bg-blue-100 text-blue-700' :
+                  project.status === 'planning' ? 'bg-yellow-100 text-yellow-700' :
+                  'bg-gray-100 text-gray-700'
+                }`}>
+                  {project.status}
+                </span>
+              </div>
+              <p className="text-sm text-slate-600 mb-3 line-clamp-2">{project.description}</p>
+              <p className="text-xs text-slate-500 mb-4">Started: {new Date(project.startDate).toLocaleDateString()}</p>
+              <div className="flex flex-wrap gap-1 mb-4">
+                {project.tags.slice(0, 3).map((tag) => (
+                  <span key={tag} className="px-2 py-1 bg-emerald-100 text-emerald-700 text-xs rounded-full">
+                    {tag}
+                  </span>
+                ))}
+                {project.tags.length > 3 && (
+                  <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+                    +{project.tags.length - 3}
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-slate-500">{project.collaborators.length} collaborators</span>
+                <button
+                  onClick={() => setItemToDelete(project.id)}
+                  className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </div>
+            </div>
           ))}
         </div>
       )}
 
-      {!loading && filteredPapers.length === 0 && (
+      {!loading && ((activeTab === 'papers' && filteredPapers.length === 0) || (activeTab === 'projects' && filteredProjects.length === 0)) && (
         <div 
           className={`text-center py-12 text-slate-500 transition-all duration-1000 ease-out ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
@@ -431,15 +564,19 @@ const LibraryManager: React.FC = () => {
           <svg className="w-16 h-16 mx-auto mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
-          <p className="text-lg mb-2">No papers found</p>
+          <p className="text-lg mb-2">No {activeTab} found</p>
           <p className="text-sm mb-4">
-            {searchQuery || selectedTag ? 'Try adjusting your filters' : 'Add your first paper to get started'}
+            {searchQuery || selectedTag ? 'Try adjusting your filters' : `Add your first ${activeTab.slice(0, -1)} to get started`}
           </p>
           <button 
-            onClick={() => setShowAddPaperForm(true)}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            onClick={() => activeTab === 'papers' ? setShowAddPaperForm(true) : setShowAddProjectForm(true)}
+            className={`px-6 py-3 rounded-lg transition-colors ${
+              activeTab === 'papers' 
+                ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                : 'bg-emerald-600 text-white hover:bg-emerald-700'
+            }`}
           >
-            Add Papers
+            Add {activeTab === 'papers' ? 'Paper' : 'Project'}
           </button>
         </div>
       )}
@@ -452,8 +589,16 @@ const LibraryManager: React.FC = () => {
         />
       )}
 
+      {/* Add Project Form Modal */}
+      {showAddProjectForm && (
+        <AddProjectForm
+          onClose={() => setShowAddProjectForm(false)}
+          onSuccess={handleProjectAdded}
+        />
+      )}
+
       {/* Delete Confirmation Modal */}
-      {paperToDelete && (
+      {itemToDelete && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
           <div 
             className="bg-white rounded-3xl p-8 max-w-md w-full shadow-xl border border-slate-200/60 relative"
@@ -465,18 +610,18 @@ const LibraryManager: React.FC = () => {
                 </svg>
               </div>
               <div>
-                <h3 className="text-xl font-bold text-slate-900">Delete Paper?</h3>
+                <h3 className="text-xl font-bold text-slate-900">Delete {activeTab === 'papers' ? 'Paper' : 'Project'}?</h3>
                 <p className="text-sm text-slate-600">This action cannot be undone.</p>
               </div>
             </div>
 
             <p className="text-slate-700 mb-8">
-              Are you sure you want to remove this paper from your library? This will delete it permanently from your collection.
+              Are you sure you want to remove this {activeTab === 'papers' ? 'paper' : 'project'} from your library? This will delete it permanently from your collection.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3">
               <button
-                onClick={handleDeletePaper}
+                onClick={handleDeleteItem}
                 disabled={deleting}
                 className="flex-1 group inline-flex items-center justify-center gap-3 px-6 py-3 bg-linear-to-r from-red-600 to-red-700 text-white rounded-xl shadow-lg hover:shadow-xl hover:from-red-700 hover:to-red-800 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5 transition-all duration-300 font-semibold"
               >
@@ -493,12 +638,12 @@ const LibraryManager: React.FC = () => {
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
-                    Delete Paper
+                    Delete {activeTab === 'papers' ? 'Paper' : 'Project'}
                   </>
                 )}
               </button>
               <button
-                onClick={() => setPaperToDelete(null)}
+                onClick={() => setItemToDelete(null)}
                 disabled={deleting}
                 className="flex-1 px-6 py-3 border-2 border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
               >

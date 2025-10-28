@@ -1,16 +1,16 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { PaperFormData, CrossRefPaper } from '@/types/scientific';
+import { PaperFormData, CrossRefPaper, ResearchProject } from '@/types/scientific';
 import { ScientificAPIService } from '@/services/scientificAPI';
 import { ScientificDataService } from '@/services/scientificData';
 import { OJSAPIService, OJSSubmissionResponse } from '@/services/ojsAPI';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Verificar si OJS está configurado
 const hasOJSCredentials = () => {
   return !!(process.env.NEXT_PUBLIC_OJS_API_KEY && process.env.NEXT_PUBLIC_OJS_API_SECRET);
 };
-import { useAuth } from '@/contexts/AuthContext';
 
 interface AddPaperFormProps {
   onClose: () => void;
@@ -43,6 +43,7 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [submitToJournal, setSubmitToJournal] = useState(false);
   const [ojsResult, setOjsResult] = useState<OJSSubmissionResponse | null>(null);
+  const [projects, setProjects] = useState<ResearchProject[]>([]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -51,6 +52,19 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
     
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    const loadProjects = async () => {
+      if (!user) return;
+      try {
+        const projectsData = await ScientificDataService.getProjects(user.id);
+        setProjects(projectsData);
+      } catch (error) {
+        console.error('Error loading projects:', error);
+      }
+    };
+    loadProjects();
+  }, [user]);
 
   const handleInputChange = (field: keyof PaperFormData, value: string | string[]) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -409,6 +423,38 @@ const AddPaperForm: React.FC<AddPaperFormProps> = ({ onClose, onSuccess }) => {
               />
             </div>
           </div>
+
+          {/* Project Selector */}
+          {projects.length > 0 && (
+            <div className="flex flex-col group">
+              <span className="text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+                Associate with Project (optional)
+              </span>
+              <select
+                value={formData.projectId}
+                onChange={(e) => handleInputChange('projectId', e.target.value)}
+                className="px-4 py-3 border border-slate-200 rounded-xl text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all duration-200"
+              >
+                <option value="">No project</option>
+                {projects.map((project) => (
+                  <option key={project.id} value={project.id}>
+                    {project.title}
+                  </option>
+                ))}
+              </select>
+              {formData.projectId && (
+                <p className="text-xs text-slate-500 mt-1 flex items-center gap-1">
+                  <svg className="w-3 h-3 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  This paper will be linked to your project
+                </p>
+              )}
+            </div>
+          )}
 
           <div className="flex flex-col group">
             <span className="text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
