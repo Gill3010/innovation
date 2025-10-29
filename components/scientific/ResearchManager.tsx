@@ -35,6 +35,16 @@ const ResearchManager: React.FC = () => {
     }
   }, [user]);
 
+  // Leer parámetro de búsqueda de la URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const query = params.get('q');
+    if (query && query.trim()) {
+      setSearchQuery(query);
+      handleApiSearch(query, 'all');
+    }
+  }, []);
+
   const loadData = async () => {
     if (!user) return;
     

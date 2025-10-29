@@ -1,12 +1,17 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 
 const SearchComponent: React.FC = () => {
+  const { user } = useAuth();
+  const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [placeholder, setPlaceholder] = useState('Search research papers, projects, or topics...');
+  const [showLimitModal, setShowLimitModal] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -15,6 +20,13 @@ const SearchComponent: React.FC = () => {
     
     return () => clearTimeout(timer);
   }, []);
+
+  // Limpiar contador cuando el usuario se autentica
+  useEffect(() => {
+    if (user) {
+      localStorage.removeItem('searchCount');
+    }
+  }, [user]);
 
   useEffect(() => {
     const updatePlaceholder = () => {
@@ -47,10 +59,23 @@ const SearchComponent: React.FC = () => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Aquí puedes agregar la lógica de búsqueda
-      console.log('Searching for:', searchQuery);
-      // Por ahora, redirigir a la página de research con el query
-      window.location.href = `/research?q=${encodeURIComponent(searchQuery)}`;
+      // Si el usuario está autenticado, búsqueda ilimitada
+      if (user) {
+        router.push(`/research?q=${encodeURIComponent(searchQuery)}`);
+        return;
+      }
+
+      // Para usuarios no autenticados, verificar límite
+      const searchCount = parseInt(localStorage.getItem('searchCount') || '0', 10);
+      
+      if (searchCount >= 5) {
+        // Mostrar modal de límite alcanzado
+        setShowLimitModal(true);
+      } else {
+        // Incrementar contador y permitir búsqueda
+        localStorage.setItem('searchCount', (searchCount + 1).toString());
+        router.push(`/research?q=${encodeURIComponent(searchQuery)}`);
+      }
     }
   };
 
@@ -123,6 +148,41 @@ const SearchComponent: React.FC = () => {
           </button>
         ))}
       </div>
+
+      {/* Modal de límite alcanzado */}
+      {showLimitModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl">
+            <div className="text-center">
+              <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-yellow-100 mb-4">
+                <svg className="h-8 w-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                Límite de búsquedas alcanzado
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Has usado tus 5 búsquedas gratuitas. ¡Regístrate para búsquedas ilimitadas!
+              </p>
+              <div className="flex gap-3">
+                <button
+                    onClick={() => router.push('/register')}
+                    className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+                  >
+                    Regístrate Gratis
+                  </button>
+                <button
+                  onClick={() => setShowLimitModal(false)}
+                  className="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-semibold"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
